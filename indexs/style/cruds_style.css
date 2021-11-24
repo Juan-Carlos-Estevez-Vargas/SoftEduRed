@@ -1,0 +1,28 @@
+body {
+ background: #E6E6E6;
+}
+.center-on-page {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+}
+select {
+ font-size: 18px;
+ background: #1883ba;
+ border-radius: 18px;
+ color: white;
+ padding-bottom: 5px;
+ text-align: center;
+ text-decoration-style: dashed;
+}
+option {
+ background: #008E89;
+}
+label{
+ color: white;
+ font-size: 18px;
+ font-weight: bold;
+ text-align: center;
+}
+

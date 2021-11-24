@@ -1,0 +1,182 @@
+body{
+	background-image: url("img.jpg");
+	font-family: arial;
+	font-size: 20px;
+}
+
+header{
+	background-color:white;
+	margin-top:30px;
+	border-style: dotted;
+	border-radius: 10px 10px 10px 10px;
+	width:800px;
+	font-size:32px;
+	margin-right:25px;
+	transition:.60s;
+	border-style:dotted;
+	padding: 5px 5px;
+	-webkit-border-radius: 25px;
+   	-moz-border-radius: 25px;
+ 	border: 3px dashed; 
+}
+
+#contenedorr{
+	margin-top:30px;
+	background-color: white;
+	width:800px; 
+	height:650px;
+	border-radius: 20px 20px 20px 20px;
+	border-style: dotted;
+	margin-left: -25px;
+ 	border: 3px dashed;
+}
+
+#text{
+	margin:20px;
+	text-align-last:left; 
+
+}
+
+#select{
+	border-radius: 10px 10px 10px 10px;
+}
+
+#id{
+	border-radius: 10px 10px 10px 10px;
+}
+
+#space{
+	margin-right: 10px;
+	border-radius: 10px 10px 10px 10px;
+
+}
+
+#Spacen{
+	border-radius: 10px 10px 10px 10px;
+}
+
+#sspace{
+	margin-right: 28px;
+	border-radius: 10px 10px 10px 10px;
+}
+
+#name{
+	margin-right:15px;
+}
+
+#ape{
+	border-radius: 10px 10px 10px 10px;
+	margin-right: 15px;
+}
+
+#Apellido{
+	margin-right: 2px;
+}
+
+#sa{
+	border-radius: 10px 10px 10px 10px;
+}
+
+#slect{
+	border-radius: 10px 10px 10px 10px;
+}
+
+#dir{
+	border-radius: 10px 10px 10px 10px;
+}
+
+#mail{
+	border-radius: 10px 10px 10px 10px;
+}
+
+#email{
+	margin-right: 20px;
+}
+
+#User{
+	border-radius: 10px 10px 10px 10px;
+}
+
+#nickname{
+	border-radius: 10px 10px 10px 10px;
+}
+
+#tel{
+}
+#phone{
+	border-radius: 10px 10px 10px 10px;
+}
+
+#pasw{
+	border-radius: 10px 10px 10px 10px;
+}
+
+#pass{
+	border-radius: 10px 10px 10px 10px;	
+}
+
+#photo{ 
+	border-radius: 10px 10px 10px 10px;
+}
+
+#sphoto{ 
+	border-radius: 20px 20px 20px 20px;
+	width:400px;
+	background-color: #00B010;
+	color:white;
+	cursor: pointer;
+	transition:.60s;
+	border-style:dotted;
+	padding: 5px 5px;
+	-webkit-border-radius: 25px;
+   	-moz-border-radius: 25px;
+ 	border: 3px dashed; 
+ 	margin-right: 15px;
+}
+
+#position{
+	margin-right: 100px;
+}
+
+#ask{
+	border-radius: 10px 10px 10px 10px;
+}
+
+#listp{
+	border-radius: 10px 10px 10px 10px;
+}
+
+#ans{
+	border-radius: 10px 10px 10px 10px;
+	width: 250px;	
+}
+#boton{
+	color:white;
+	background-color:#00B010;
+	border-radius: 10px 10px 10px 10px;	
+	font-size: 22px;
+	margin-right:20px;
+	cursor: pointer;
+	transition:.60s;
+	border-style:dotted;
+	padding: 5px 5px;
+	-webkit-border-radius: 25px;
+   	-moz-border-radius: 25px;
+ 	border: 3px dashed; 
+}
+
+
+#reg{
+	color:white;
+	background-color:#00B010;
+	border-radius: 4px 4px 4px 4px;	
+	font-size: 20px;
+	margin-right:650px;
+	cursor: pointer;
+	transition:.60s;
+	border-style:dotted;
+	padding: 5px 5px;
+	-webkit-border-radius: 25px;
+   	-moz-border-radius: 25px;
+ 	border: 3px dashed; 
+}

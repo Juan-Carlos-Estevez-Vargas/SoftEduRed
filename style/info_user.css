@@ -1,0 +1,72 @@
+td{
+	border: #008E89 9px solid;
+	border-radius: 4px 4px 4px 4px;
+}
+
+th{
+	border:  #008E89 9px solid;
+	border-radius: 4px 4px 4px 4px;
+}
+
+#asist{
+	background-color: #008E89;
+	width:1000px;
+	height:400px;
+	border-radius: 9px;
+    color:white;
+    height:auto;
+ 
+}
+
+h2{
+	color:white;
+    text-align: center;
+}
+#boton{
+	text-decoration: none;
+    padding: 5px;
+	color: #ffffff;
+    background-color: #1883ba;
+    border-radius: 6px;
+    border-radius: 6px;
+    border: 2px solid #0016b0;
+    margin-left: 200px;
+}
+#buton{
+	text-decoration: none;
+    padding: 5px;
+	color: #ffffff;
+    background-color: #1883ba;
+    border-radius: 6px;
+    border-radius: 6px;
+    border: 2px solid #0016b0;
+}
+#reg{
+	text-decoration: none;
+    padding: 5px;
+	color: #ffffff;
+    background-color: #1883ba;
+    border-radius: 6px;
+    border-radius: 6px;
+    border: 2px solid #0016b0;
+    margin-left:710px;
+}
+#space{
+	border-radius: 10px 10px 10px 10px;
+}
+#new{
+	background-color: #008E89;
+	border-radius: 9px;
+    color:white;
+    margin:auto;
+    height: auto;
+    width: 750px;
+}
+input, select{
+ text-align: center;
+ border-radius: 10px 10px 10px 10px;
+}
+#text{
+	margin:20px;
+	text-align-last: left; 
+ }
