@@ -212,11 +212,11 @@ if ($query->rowCount()>0): ?>
 		<tr>
 
 <?php
-    echo "<td>"$row['pk_fk_tdoc_user'] . "</td>";
-    echo "<td>"$row['pk_fk_user_id'] . "</td>";
-    echo "<td>"$row['fk_attendat_cod_doc'] . "</td>";
-    echo "<td>"$row['fk_attendant_id'] . "</td>"; 
-    echo "<td>"$row['fk_cod_course'] . "</td>"; 
+    echo "<td>".$row['pk_fk_tdoc_user'] . "</td>";
+    echo "<td>".$row['pk_fk_user_id'] . "</td>";
+    echo "<td>".$row['fk_attendat_cod_doc'] . "</td>";
+    echo "<td>".$row['fk_attendant_id'] . "</td>"; 
+    echo "<td>".$row['fk_cod_course'] . "</td>"; 
 
 
 ?>

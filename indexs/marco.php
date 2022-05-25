@@ -9,7 +9,7 @@
 
 <body>
  <div  align="center">
- <img src="../images/escudo.jpg">
+ <img src="../images/escudo-seminario.png">
  </div>
  <div id="new" align="left">
  <br><br><header>CONTENIDO INFORMATIVO DE LA INSTITUCIÓN.</header>  
@@ -30,7 +30,9 @@ Para cumplir con nuestros objetivos contamos con un excelente grupo de docentes 
 <section id="encabezado">OBJETIVO DE NUESTRA INSTITUCIÓN:</section>
  <div id="colegio">
   <div id="objetivo">
-<br>Colegio privado fundado en el año de 1950 por Lilia Rangel de Antorveza, ubicado en la Cra. 20 No. 68 - 31 en Bogotá Colombia, reconocido amplimente por su excelencia academica y cuya misión es brindar a la comunidad educativa una formación integral en los diferentes niveles de educación desde el Preescolar hasta la Media Vocacional, con todos los servicios de apoyo pedagógico y técnico necesarios, para que el estudiante Liceísta discierna sobre su vida, desarrollando todas las dimensiones de su ser comprometiéndose en la construcción de un mundo nuevo sin barreras geográficas; abierto a lo trascendente y sensible a los problemas humanos y del Medio Ambiente, vivenciando principios y valores en los distintos espacios de la convivencia.<br>
+<br>Somos la Diócesis Mariana de Colombia que está pastoreada por Monseñor Luis Felipe Sánchez Aponte con la colaboración de 92 sacerdotes, 5 Comunidades Religiosas Masculinas, 8 Comunidades Religiosas Femeninas, 25 Seminaristas, 35 novicios y 250.000 Fieles. La Diócesis de Chiquinquirá fue creada mediante la Bula Pontificia “Qui Divino  Consilio” del 26 de abril de 1977.El Primer Obispo fue Monseñor Alberto Giraldo Jaramillo y tomó posesión de la Diócesis Mariana de Colombia el día 14 de junio de 1977. Estamos ubicados en la República de Colombia, Departamento de Boyacá.
+
+La ciudad de Chiquinquirá, Capital Religiosa de Colombia está situada a 5 grados, 36 minutos y 48 segundos de latitud Norte y a 0 grados, 15 minutos y 21 segundos de longitud meridiano de Bogotá. La Temperatura promedio es de 15 grados centígrados. La extensión territorial de la Diócesis es de  4019 Kilómetros cuadrados y está sectorizada en 5 Vicarías Foráneas conformadas por 40 Parroquias. Además están organizadas las Vicarías: Vida Consagrada, Educación y Reconciliación y Paz.<br>
    <br>
   </div>
   </div>
@@ -38,7 +40,7 @@ Para cumplir con nuestros objetivos contamos con un excelente grupo de docentes 
   </div>
  
   <div align="right">
- <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d591.1316309210476!2d-74.06751449274874!3d4.657456359703426!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3f9a5039086067%3A0x618b0bc91b32cd2f!2sColegio+Liceo+Pedag%C3%B3gico!5e0!3m2!1ses!2sco!4v1530042355317" width="100" height="350" frameborder="40" style="border:5"></iframe>
+ <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3970.7570303004395!2d-73.8363275860141!3d5.602866434736157!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e41c9e6ef25506f%3A0x8c14bfc8c22cba89!2sColegio%20Seminario%20Menor%20Diocesano%20de%20Chiquinquir%C3%A1!5e0!3m2!1ses-419!2sco!4v1653437435079!5m2!1ses-419!2sco" width="100" height="350" frameborder="40" style="border:5"></iframe>
  </div>
 </body>
 </html>
