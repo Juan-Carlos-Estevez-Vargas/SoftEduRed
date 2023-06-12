@@ -1,37 +1,78 @@
-<?php 
-	class user_tea_cruds {
-		private $pdo;
+<?php
 
-		public function __CONSTRUCT() {
-			try {
-				$this->pdo = database::conectar();
-			} catch (Exception $e) {
-				die($e->getMessage());
-			}
-		}
+class UserTeaCruds
+{
+    private $pdo;
 
-		public function registrar($tdoc,$id_user,$f_name,$s_name,$f_lname,$s_lname,$gender,$adress,$email,$phone,$u_name,$pass,$s_ans,$s_ques)	{    
-			$sql = "INSERT INTO user (pk_fk_cod_doc, id_user, first_name, second_name, surname, second_surname, `fk_gender`, adress, email, phone, user_name, pass, security_answer, `fk_s_question`) VALUES ('$tdoc','$id_user','$f_name','$s_name','$f_lname','$s_lname','$gender','$adress','$email','$phone','$u_name','$pass','$s_ans','$s_ques')";
-			$this->pdo->query($sql);
-            $sql2 = "INSERT INTO teacher (user_pk_fk_cod_doc,user_id_user) VALUES ('$tdoc','$id_user')";
-            $this->pdo->query($sql2);
-			$sql3 = "INSERT INTO user_has_role (tdoc_role,pk_fk_id_user,pk_fk_role,state) VALUES ('$tdoc','$id_user','TEACHER',1)";
-			$this->pdo->query($sql3);
-			print "<script>alert('Registro Agregado Exitosamente.'); window.location='formu_view.php';</script>";
-		}
+    public function __construct()
+    {
+        try {
+            $this->pdo = Database::conectar();
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+    }
 
-		public function actualizar($tdoc,$id_user,$f_name,$s_name,$f_lname,$s_lname,$gender,$adress,$email,$phone,$u_name,$pass,$s_ans,$s_ques)	{
-			$sql ="UPDATE user SET first_name= '$f_name', second_name = '$s_name', surname = '$f_lname', second_surname = '$s_lname', `fk_gender`= '$gender', adress = '$adress', email = '$email', phone = '$phone', user_name = '$u_name', pass = '$pass', security_answer = '$s_ans', fk_s_question = '$s_ques' WHERE pk_fk_cod_doc = '$tdoc' AND id_user = '$id_user'";
-			$this->pdo->query($sql);
-			print "<script>alert('Registro Actualizado Exitosamente.'); window.location='formu_view.php';</script>";
-		}
+    public function registrar($tdoc, $id_user, $f_name, $s_name, $f_lname, $s_lname, $gender, $address, $email, $phone, $u_name, $pass, $s_ans, $s_ques)
+    {
+        $sql = "INSERT INTO user (pk_fk_cod_doc, id_user, first_name, second_name, surname, second_surname, `fk_gender`, address, email, phone, user_name, pass, security_answer, `fk_s_question`) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$tdoc, $id_user, $f_name, $s_name, $f_lname, $s_lname, $gender, $address, $email, $phone, $u_name, $pass, $s_ans, $s_ques]);
 
-		public function eliminar($id_user,$tdoc) {
-			$sql = "DELETE FROM user WHERE id_user = '$id_user' AND pk_fk_cod_doc = '$tdoc'";
-			$this->pdo->query($sql);
-			print "<script>alert('Registro Eliminado Exitosamente.'); window.location='formu_view.php';</script>";
-		}
+        $this->registrarTeacher($tdoc, $id_user);
+        $this->registrarUserRole($tdoc, $id_user);
+        
+        echo "<script>alert('Registro Agregado Exitosamente.'); window.location='formu_view.php';</script>";
+    }
 
+    private function registrarTeacher($tdoc, $id_user)
+    {
+        $sql = "INSERT INTO teacher (user_pk_fk_cod_doc, user_id_user) VALUES (?, ?)";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$tdoc, $id_user]);
+    }
+
+    private function registrarUserRole($tdoc, $id_user)
+    {
+        $sql = "INSERT INTO user_has_role (tdoc_role, pk_fk_id_user, pk_fk_role, state) VALUES (?, ?, 'TEACHER', 1)";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$tdoc, $id_user]);
+    }
+
+    public function actualizar($tdoc, $id_user, $f_name, $s_name, $f_lname, $s_lname, $gender, $address, $email, $phone, $u_name, $pass, $s_ans, $s_ques)
+    {
+        $sql = "UPDATE user SET first_name = ?, second_name = ?, surname = ?, second_surname = ?, `fk_gender` = ?, address = ?, email = ?, phone = ?, user_name = ?, pass = ?, security_answer = ?, fk_s_question = ? 
+                WHERE pk_fk_cod_doc = ? AND id_user = ?";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$f_name, $s_name, $f_lname, $s_lname, $gender, $address, $email, $phone, $u_name, $pass, $s_ans, $s_ques, $tdoc, $id_user]);
+
+        echo "<script>alert('Registro Actualizado Exitosamente.'); window.location='formu_view.php';</script>";
+    }
+
+	/**
+	 * Deletes a user from the database with the given id and document type.
+	 *
+	 * @param int $userId the id of the user to be deleted
+	 * @param string $docType the document type of the user to be deleted
+	 * @throws PDOException if there was an error executing the SQL query
+	 * @return void
+	 */
+	public function deleteUser(int $userId, string $docType): void
+	{
+		// Prepare the SQL statement to delete the user with the given ID and document type from the database
+		$sql = "DELETE FROM user WHERE id_user = ? AND pk_fk_cod_doc = ?";
+		$stmt = $this->pdo->prepare($sql);
+		
+		// Execute the prepared statement with the given user ID and document type as parameters
+		$stmt->execute([$userId, $docType]);
+	
+		// Log a message indicating that the user was successfully deleted from the database
+		error_log("User with id $userId and document type $docType was deleted from the database.");
+		
+		// Display an alert message indicating that the user was successfully deleted and redirect to the formu_view.php page
+		echo "<script>alert('Registro Eliminado Exitosamente.');</script>";
 	}
-
- ?>
+}
