@@ -20,24 +20,24 @@
 		/**
 		 * Registers a new user with the provided information
 		 *
-		 * @param string $tdoc - Primary key of the document type
-		 * @param string $id_user - User's ID
-		 * @param string $f_name - User's first name
-		 * @param string $s_name - User's second name
-		 * @param string $f_lname - User's first last name
-		 * @param string $s_lname - User's second last name
+		 * @param string $documentType - Primary key of the document type
+		 * @param string $userId - User's ID
+		 * @param string $firstName - User's first name
+		 * @param string $secondName - User's second name
+		 * @param string $firstLastName - User's first last name
+		 * @param string $secondLastName - User's second last name
 		 * @param string $gender - User's gender
 		 * @param string $address - User's address
 		 * @param string $email - User's email
 		 * @param string $phone - User's phone number
-		 * @param string $u_name - User's username
+		 * @param string $username - User's username
 		 * @param string $pass - User's password
-		 * @param string $s_ans - User's security answer
-		 * @param string $s_ques - User's security question
+		 * @param string $securityAnswer - User's security answer
+		 * @param string $securityQuestion - User's security question
 		 *
 		 * @return void
 		 */
-		public function registrar(
+		public function register(
 			$documentType, $userId, $firstName, $secondName, $firstLastName, $secondLastName, $gender,
 			$address, $email, $phone, $username, $pass, $securityAnswer, $securityQuestion
 		) {
@@ -55,7 +55,10 @@
 			$this->registerTeacher($documentType, $userId);
 			$this->registerUserAsTeacherRole($documentType, $userId);
 
-			echo "<script>alert('Registro Agregado Exitosamente.'); window.location='formu_view.php';</script>";
+			echo "<script>
+				alert('Registro Agregado Exitosamente.');
+				window.location='../views/user/teacher/user_teacher.php';
+			</script>";
 		}
 
 		/**
@@ -150,6 +153,9 @@
 			$stmt->execute([$userId, $docType]);
 		
 			error_log("User with id $userId and document type $docType was deleted from the database.");
-			echo "<script>alert('Registro Eliminado Exitosamente.'); window.location='formu_view.php';</script>";
+			echo "<script>
+				alert('Registro Eliminado Exitosamente.');
+				window.location='../views/user/teacher/user_teacher.php';
+			</script>";
 		}
 	}
