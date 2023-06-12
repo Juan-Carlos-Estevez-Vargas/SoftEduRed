@@ -57,7 +57,7 @@
 
 			echo "<script>
 				alert('Registro Agregado Exitosamente.');
-				window.location='../views/user/teacher/user_teacher.php';
+				window.location='../views/user/userTeacherView.php';
 			</script>";
 		}
 
@@ -155,7 +155,7 @@
 			error_log("User with id $userId and document type $docType was deleted from the database.");
 			echo "<script>
 				alert('Registro Eliminado Exitosamente.');
-				window.location='../views/user/teacher/user_teacher.php';
+				window.location='../views/user/userTeacherView.php';
 			</script>";
 		}
 	}
