@@ -64,7 +64,7 @@
 
     echo "<script>
         alert('Registro Agregado Exitosamente.');
-        window.location='formu_view.php';
+        window.location='../views/user/userAttendantView.php';
     </script>";
 	}
 
@@ -112,7 +112,7 @@
 		// Redirect the user to a new page after the update is complete.
 		print "<script>
 			alert('Registro Actualizado Exitosamente.');
-			window.location='formu_view.php';
+			window.location='../views/user/userAttendantView.php';
 		</script>";
 		exit();
 	}
@@ -130,7 +130,7 @@
 		$statement->execute([$userId, $documentCode]);
 		echo "<script>
 			alert('Registro Eliminado Exitosamente.');
-			window.location='formu_view.php';
+			window.location='../views/user/userAttendantView.php';
 		</script>";
 	}
 

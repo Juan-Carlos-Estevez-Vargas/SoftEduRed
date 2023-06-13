@@ -38,7 +38,7 @@
         
         } elseif ($action === 'delete') {
 
-            $delete = new user_att_cruds();
+            $delete = new UserAttendantDAO();
             $delete->deleteAttendantUser($_GET['id_user'],$_GET['t_doc']);
 
         } elseif ($action === 'editar') {
