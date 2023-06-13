@@ -7,7 +7,7 @@
 </head>
 <body>
 <?php
-    require_once "cruds.php";
+    require_once "../persistence/user/UserStudentDAO.php";
     require_once "../Database/conexion.php";
     include "../indexs/cruds.php";
 
@@ -35,12 +35,12 @@
                 $_POST['u_name'], $_POST['pass'], $_POST['s_ans'], $_POST['s_ques'], $_POST['att_doc'],
                 $_POST['att_id'], $_POST['course']);
         
-        } elseif ($action === 'eliminar') {
+        } elseif ($action === 'delete') {
 
             $eliminar = new UserStudentDAO();
             $eliminar->deleteStudentUser($_GET['id_user'], $_GET['t_doc']);
 
-        } elseif ($action === 'editar') {
+        } elseif ($action === 'edit') {
 
             $id = $_GET['id_user'];
             $tdoc = $_GET['t_doc'];

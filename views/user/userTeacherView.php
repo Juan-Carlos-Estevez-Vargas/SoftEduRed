@@ -10,7 +10,7 @@
 
 <?php
 	require_once "../Database/conexion.php";
-	require_once "../persistence/user/teacher/UserTeacherDAO.php";
+	require_once "../persistence/user/UserTeacherDAO.php";
 
 	$db = database::conectar();
 
@@ -190,7 +190,7 @@
 				<label>Answer:</label>
 				<input id="ans" type="text" name="s_ans" value="<?php echo $r['security_answer'];?>" required />
 			</div>
-			<input id="boton" type="submit" value="Update" onclick="this.form.action = '?action=actualizar';">
+			<input id="boton" type="submit" value="Update" onclick="this.form.action = '?action=update';">
 		</form>
 	</div>
 <?php endwhile; ?>
