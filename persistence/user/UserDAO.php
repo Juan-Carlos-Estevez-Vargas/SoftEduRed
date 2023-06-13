@@ -47,7 +47,7 @@
 			$this->pdo->query($sql);
 			print "<script>
 				alert('Registro Agregado Exitosamente.');
-				window.location='formu_view.php';
+				window.location='../views/user/UserView.php';
 			</script>";
 		}
 
@@ -87,7 +87,7 @@
 			// Display success message and redirect to formu_view.php
 			print "<script>
 				alert('Registro Actualizado Exitosamente.');
-				window.location='formu_view.php';
+				window.location='../views/user/UserView.php';
 			</script>";
 		}
 
@@ -104,7 +104,7 @@
 				$this->pdo->query($sql);
 				print "<script>
 					alert('Registro Eliminado Exitosamente.');
-					window.location='formu_view.php';
+					window.location='../views/user/UserView.php';
 				</script>";
 		}
 

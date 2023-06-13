@@ -132,7 +132,7 @@
 				<label>Answer:</label>
 				<input type="text" name="s_ans" placeholder="Answer" required />
      	</div>
-			<input type="submit" value="Save" onclick="this.form.action ='?action=registrar';">
+			<input type="submit" value="Save" onclick="this.form.action ='?action=register';">
 		</form>
 	</div>
 <?php } ?>
