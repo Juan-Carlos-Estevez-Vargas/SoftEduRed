@@ -138,8 +138,8 @@
     $query = $db ->query($sql);
 
     if ($query->rowCount()>0): ?>
-    <table>
-        <caption>Attendant Role Information Results</caption>
+    <table><caption>Attendant Role Information Results</caption>
+        
         <thead>
             <tr>
                 <th>Type of Document</th>
