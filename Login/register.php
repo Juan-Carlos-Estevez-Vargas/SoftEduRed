@@ -1,85 +1,128 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="utf-8"/>
-    <title>Bienvenidos</title>
-    <link rel="shortcut icon" href="../images/register.ico" />
-    <link rel="stylesheet" type="text/css" href="../style/style_reg.css" />
+	<meta charset="utf-8"\/>
+	<title>Register</title>
 </head>
 <body>
-    <?php require_once "../Database/conexion.php"; $db = database::conectar();?>
-    <header>Registro</header>
-    <div id="contenedorr">
-        <div id="text">
-        <form method="post" action="insert_login.php">
-            <label id="titulo">Tipo de Documento</label>
-            <select id="select"class="form-control" name="tipo_doc">
-            <?php
-                foreach ($db->query('SELECT * FROM type_of_document') as $row) {
-                    echo '<option value="'.$row['cod_document'].'">'.$row["Des_doc"].'</option>';
-                }
-            ?>
-            </select>
-
-            <label id="id">No° Identificación </label>
-            <input id="space" type="text" name="n_id" placeholder="N° de Identificación" required />
-        
-            <label id="name">Primer Nombre</label>
-            <input id="Spacen"type="text" name="name" placeholder="Primer Nombre" required />
-        
-            <label id="sname">Segundo Nombre</label>
-            <input id="sspace" type="text" name="sname" placeholder="Segundo Nombre" />
-
-            <label id="Apellido">Primer Apellido</label>
-            <input id="ape" type="text" name="lname" placeholder="Primer Apellido" required />
-        
-            <label id="sape">Segundo Apellido</label>
-            <input id="sa" type="text" name="slname" placeholder=" Segundo Apellido" />
-        
-            <label id="gender">Gender</label>
-            <select id="slect"class="form-control" name="gender">
-            <?php
-                $resultado = $db->query('SELECT * FROM gender WHERE state = 1');
-            ?>
-            <?php foreach ($resultado as $row): ?>
-                <option value="<?php echo $row['desc_gender']; ?>"><?php echo $row['desc_gender'];?></option>
-            <?php endforeach; ?>
-            </select>
-        
-            <label id="direc">Dirección</label>
-            <input id="dir" type="text" name="direc" placeholder="Dirección" />
-        
-            <label id="email">E-Mail</label>
-            <input id="mail" type="email" name="emai" placeholder="Email" required />
+<?php
+    class Register
+    {
+        /**
+         * Registers a new user in the database with the provided data.
+         *
+         * @param string $id_doc The type of identification document of the user.
+         * @param string $id The identification number of the user.
+         * @param string $fname The first name of the user.
+         * @param string $sname The second name of the user.
+         * @param string $flname The first last name of the user.
+         * @param string $slname The second last name of the user.
+         * @param string $gender The gender of the user.
+         * @param string $address The address of the user.
+         * @param string $email The email of the user.
+         * @param string $username The username of the user.
+         * @param string $password The password of the user.
+         * @param string $phone The phone number of the user.
+         * @param string $photo The photo of the user.
+         * @param string $question The security question of the user.
+         * @param string $answer The security answer of the user.
+         * @return void
+         */
+        public function register(
+            string $id_doc, string $id, string $fname, string $sname,
+            string $flname, string $slname, string $gender, string $address,
+            string $email, string $username, string $password, string $phone,
+            string $photo, string $question, string $answer
+        ) {
+            session_start();
             
-            <label id="nickname">User Name</label>
-            <input id="User" type="text" name="usern" placeholder="User Name" required />
-
-            <label id="pasw">Password</label>
-            <input id="pass" type="password" name="pass" maxlength="20" minlength="10" placeholder="Password" required />
+            require_once "../persistence/Database/Database.php";
+            $db = database::conectar();
             
-            <label id="tel">Teléfono</label>
-            <input id="phone" type="numb" name="phone" placeholder="Telefono" />
-        
-            <label id="photo">Seleccione Foto de Perfil:</label>
-            <input id="sphoto" type="file" name="photo" placeholder="Photo" accept="image/*" />
-            <img src="../style/img2.jpg" align="center" width="5%" />
-        
-            <label id="ask">Pregunta De Seguridad</label>
-            <select id="listp"class="form-control" name="p_seg">
-            <?php $resultado = $db->query('SELECT * FROM security_question WHERE state =1'); ?>
-                <?php foreach ($resultado as $row): ?>
-                <option value="<?php echo $row['question']; ?>"><?php echo $row['question'];?></option>
-            <?php endforeach; ?>
-            </select>
-
-            <label id="answer">Ingrese Su Respuesta De Seguridad (MAYÚSCULA):</label>
-            <input id="ans" type="text" name="r_seg" style="text-transform:uppercase" placeholder="Respuesta De Seguridad" required />
-        </div>
-
-        <button id="boton" type="submit" class="boton" name="a_registro">Registrar</button>
-            <a id="reg" href="../index.php" class="b_rcontra">Regresar</a>
-        </div>
-    </form>
+            $role = "INVITED";
+            $state = 1;
+            
+            $sql = "
+                INSERT INTO `user`
+                    (`pk_fk_cod_doc`,
+                    `id_user`,
+                    `first_name`,
+                    `second_name`,
+                    `surname`,
+                    `second_surname`,
+                    `fk_gender`,
+                    `adress`,
+                    `email`,
+                    `phone`,
+                    `user_name`,
+                    `pass`,
+                    `photo`,
+                    `security_answer`,
+                    `fk_s_question`)
+                VALUES (
+                    '$id_doc',
+                    '$id',
+                    '$fname',
+                    '$sname',
+                    '$flname',
+                    '$slname',
+                    '$gender',
+                    '$address',
+                    '$email',
+                    '$phone',
+                    '$username',
+                    '$password',
+                    '$photo',
+                    UPPER('$answer'),
+                    '$question')
+            ";
+            $db->query($sql);
+            
+            $sql1 = "
+                INSERT INTO user_has_role
+                    (tdoc_role,
+                    pk_fk_id_user,
+                    pk_fk_role,
+                    state_role_user)
+                VALUES (
+                    '$id_doc',
+                    '$id',
+                    '$role',
+                    '$state')
+            ";
+            
+            try {
+                $db->query($sql1);
+                print "
+                    <script>
+                        alert(\"Agregado Exitosamente.\");
+                        window.location='../index.php';
+                    </script>
+                ";
+            } catch (Exception $e){
+                echo $e->getMessage();
+            }
+        }
+    }
+    $Nuevo = new Register();
+    $Nuevo->register(
+        $_POST['tipo_doc'],
+        $_POST['n_id'],
+        $_POST['name'],
+        $_POST['sname'],
+        $_POST['lname'],
+        $_POST['slname'],
+        $_POST['gender'],
+        $_POST['direc'],
+        $_POST['emai'],
+        $_POST['usern'],
+        $_POST['pass'],
+        $_POST['phone'],
+        $_POST['photo'],
+        $_POST['p_seg'],
+        $_POST['r_seg']
+    );
+?>
 </body>
 </html>
+

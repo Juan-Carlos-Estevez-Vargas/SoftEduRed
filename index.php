@@ -21,7 +21,7 @@
       <div class="container">
         <?php
           require_once "persistence/database/Database.php";
-          $db = database::conectar();
+          $db = Database::conectar();
           session_start();
 
           if (isset($_SESSION['active'])) {
@@ -58,7 +58,7 @@
           <div class="col-lg-6 mb-5 mb-lg-0">
             <div class="card">
               <div class="card-body py-5 px-md-5">
-                <form method="POST" action="Login/validacion_login.php">
+                <form method="POST" action="login/loginValidation.php">
                   <h1 class="text-primary mb-4">Iniciar Sesión</h1>
                   <div class="row">
                     <div class="col-md-12 mb-4">
@@ -70,7 +70,7 @@
                         <option value="<?php echo $row['cod_document']; ?>"><?php echo $row['Des_doc'];?></option>
                         <?php endforeach; ?>
                       </select>
-                      <label id="doc" class="form-label" for="tipo_doc">Tipo de Documento de Identidad</label>
+                      <label id="tipo_doc" class="form-label" for="tipo_doc">Tipo de Documento de Identidad</label>
                     </div>
 
                     <div class="col-md-6 mb-4">
@@ -109,14 +109,14 @@
                       </button>
                     </div>
                     <div class="col">
-                      <a id="reg" href="Login/registro.php" class="btn btn-success btn-block col">
+                      <a id="reg" href="login/registerView.php" class="btn btn-success btn-block col">
                         Registrarse
                       </a>
                     </div>
                   </div>
 
                   <div class="col">
-                    <a id="olv" href="Login/formulario_rec_contrasena.php">Olvidé mi contraseña</a>
+                    <a id="olv" href="login/formRecPassword.php">Olvidé mi contraseña</a>
                   </div>
                 </form>
               </div>

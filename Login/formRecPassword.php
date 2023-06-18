@@ -8,7 +8,7 @@
 <body>
     <header>Recuperar Password</header>
     <div id="contenedor">
-    <?php require_once "../Database/conexion.php"; $db = database::conectar(); ?>
+    <?php require_once "../persistence/Database/Database.php"; $db = database::conectar(); ?>
         <div id="text">
         <form method="post" action="recuperar_pass.php">
             <label id="Titulo">Tipo De Documento</label>
