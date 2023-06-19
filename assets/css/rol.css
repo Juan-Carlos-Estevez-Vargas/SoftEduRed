@@ -1,0 +1,20 @@
+body {
+  background-color: #e6e6e6;
+  margin: 1em;
+}
+
+select {
+  background-color: #046986;
+  border-radius: 18px;
+  color: #e6e6e6;
+}
+
+option {
+  background-color: #1297bc;
+}
+
+label {
+  color: #012a36;
+  font-size: 18px;
+  font-weight: bold;
+}
