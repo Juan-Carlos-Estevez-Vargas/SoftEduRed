@@ -31,7 +31,7 @@
 			<p class="text">Contáctenos</p>
 		</div>
 		<div class="container" id="four">
-			<a href="../Login/cerrar_sesion.php" target="_parent">
+			<a href="../login/closeSession.php" target="_parent">
 				<img class="icon" src="../assets/icons/logout-icon.png" alt="Cerrar Sesión">
 			</a>
 			<p class="text">Cerrar Sesión</p>
@@ -50,7 +50,7 @@
 			<p class="text">Inicio</p>
 	 	</div>
 		<div class="container" id="two">
-			<a href="../no_attendance/stu_asistance.php" target="mainFrame">
+			<a href="../views/atributes/studentAsistance.php" target="mainFrame">
 				<img class="icon" src="../assets/icons/assistance-icon.png" alt="Asistencias">
 			</a>
 			<p class="text">Asistencias</p>
@@ -62,7 +62,7 @@
 			<p class="text">Información Personal</p>
 		</div>
 		<div class="container" id="four">
-			<a href="../login/cerrar_sesion.php" target="_parent">
+			<a href="../login/closeSession.php" target="_parent">
 				<img class="icon" src="../assets/icons/logout-icon.png" alt="Cerrar Sesión">
 			</a>
 			<p class="text">Cerrar Sesión</p>
@@ -80,7 +80,7 @@
 			<p class="text">Inicio</p>
 	    </div>
 		<div class="container" id="two">
-			<a href="../no_attendance/stu_asistance.php" target="mainFrame">
+			<a href="../views/atributes/studentAsistance.php" target="mainFrame">
 				<img class="icon" src="../assets/icons/assistance-icon.png" alt="Asistencias">
 			</a>
 			<p class="text">Mis Asistencias</p>
@@ -92,7 +92,7 @@
 			<p class="text">Información Personal</p>
 		</div>
 		<div class="container" id="four">
-			<a href="../Login/cerrar_sesion.php" target="_parent">
+			<a href="../login/closeSession.php" target="_parent">
 				<img class="icon" src="../assets/icons/logout-icon.png" alt="Cerrar Sesión">
 			</a>
 			<p class="text">Cerrar Sesión</p>
@@ -110,7 +110,7 @@
 			<p class="text">Inicio</p>
 	    </div>
 		<div class="container" id="two">
-			<a href="../no_attendance/formu_view.php" target="mainFrame">
+			<a href="../views/atributes/noAttendance.php" target="mainFrame">
 				<img class="icon" src="../assets/icons/assistance-icon.png" alt="Asistencias">
 			</a>
 			<p class="text">Asistencias</p>
@@ -122,7 +122,7 @@
 			<p class="text">Información Personal</p>
 		</div>
 		<div class="container" id="four">
-			<a href="../Login/cerrar_sesion.php" target="_parent">
+			<a href="../login/closeSession.php" target="_parent">
 				<img class="icon" src="../assets/icons/logout-icon.png" alt="Cerrar Sesión">
 			</a>
 			<p class="text">Cerrar Sesión</p>

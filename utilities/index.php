@@ -12,7 +12,7 @@
   ?>
   <frameset rows="225,*" cols="*" framespacing="0" frameborder="no">
     <frame src="buttons.php" name="topFrame" noresize="noresize" id="topFrame" title="titulo"></frame>
-    <frame src="marco.php" name="mainFrame" id="mainFrame" title="contenido"></frame>
+    <frame src="home.php" name="mainFrame" id="mainFrame" title="contenido"></frame>
   </frameset>
 
   <noframes>
