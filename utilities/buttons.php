@@ -15,7 +15,7 @@
 	</div>
 	<header>
 		<div class="container" id="one">
-			<a href="marco.php" target="mainFrame">
+			<a href="home.php" target="mainFrame">
 				<img src="../assets/icons/home-icon.png" class="icon" alt="Inicio">
 			</a>
 			<p class="text">Inicio</p>
@@ -44,7 +44,7 @@
 	</div>
 	<header>
 		<div class="container" id="one">
-			<a href="marco.php" target="mainFrame">
+			<a href="home.php" target="mainFrame">
 				<img src="../assets/icons/home-icon.png" class="icon" alt="Inicio">
 			</a>
 			<p class="text">Inicio</p>
@@ -56,7 +56,7 @@
 			<p class="text">Asistencias</p>
 		</div>
 		<div class="container" id="three">
-      <a href="info_user.php" target="mainFrame">
+      <a href="userInformation.php" target="mainFrame">
 				<img class="icon" src="../assets/icons/personal-info-icon.png" alt="Información Personal">
 			</a>
 			<p class="text">Información Personal</p>
@@ -74,7 +74,7 @@
 	</div>
 	<header>
 		<div class="container" id="one">
-			<a href="marco.php" target="mainFrame">
+			<a href="home.php" target="mainFrame">
 				<img src="../assets/icons/home-icon.png" class="icon" alt="Inicio">
 			</a>
 			<p class="text">Inicio</p>
@@ -86,7 +86,7 @@
 			<p class="text">Mis Asistencias</p>
 		</div>
 		<div class="container" id="three">
-      <a href="info_user.php" target="mainFrame">
+      <a href="userInformation.php" target="mainFrame">
 				<img class="icon" src="../assets/icons/personal-info-icon.png" alt="Información Personal">
 			</a>
 			<p class="text">Información Personal</p>
@@ -104,7 +104,7 @@
 	</div>
 	<header>
 		<div class="container" id="one">
-			<a href="marco.php" target="mainFrame">
+			<a href="home.php" target="mainFrame">
 				<img src="../assets/icons/home-icon.png" class="icon" alt="Inicio">
 			</a>
 			<p class="text">Inicio</p>
@@ -116,7 +116,7 @@
 			<p class="text">Asistencias</p>
 		</div>
 		<div class="container" id="three">
-      <a href="info_user.php" target="mainFrame">
+      <a href="userInformation.php" target="mainFrame">
 				<img class="icon" src="../assets/icons/personal-info-icon.png" alt="Información Personal">
 			</a>
 			<p class="text">Información Personal</p>

@@ -21,7 +21,7 @@
         session_destroy();
         print "
           <script>
-            alert(\"No Se Ha Iniciado Sesion\");
+            alert(\"No se ha iniciado sesion\");
             window.location='../index.php';
           </script>
         ";

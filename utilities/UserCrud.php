@@ -1,5 +1,5 @@
 <?php 
-	class user_cruds {
+	class UserCrud {
 		private $pdo;
 
 		// Creando la conexion a la base de datos
@@ -12,7 +12,7 @@
 		}
 
 		// Actualizando user
-		public function actualizar($tdoc,$id_user,$f_name,$s_name, $f_lname,$s_lname,$gender,$adress,
+		public function updateUser($tdoc,$id_user,$f_name,$s_name, $f_lname,$s_lname,$gender,$adress,
 									$email,$phone,$u_name,$pass,$s_ans,$s_ques) {
 			$sql ="UPDATE user SET first_name= '$f_name', second_name = '$s_name', surname = '$f_lname', 
 					second_surname = '$s_lname', `fk_gender`= '$gender', adress = '$adress', email = '$email', 
