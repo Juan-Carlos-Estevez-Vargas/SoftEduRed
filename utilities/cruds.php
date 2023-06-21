@@ -1,28 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
+
 <head>
- <meta charset="UTF-8">
- <link rel="stylesheet" href="style/cruds_style.css" >
- </head>
-	<body>
-     <div class="select">
-		<select name="select_crud" onchange="window.location.href=this.value">
-		
-			<option selected disabled>Action:</option>
-			<option value='../Type_Document/formu_view.php'>Type Document</option>
-			<option value='../gender/formu_view.php'>Gender</option>
-                        <option value='../relationship/formu_view.php'>Relationship</option>
-			<option value='../question/formu_view.php'>Question</option>
-			<option value='../role/formu_view.php'>Role</option>
-			<option value='../rol_has_user/formu_view.php'>Rol Of User</option>
-			<option value='../user_student/formu_view.php'>Student</option>
-			<option value='../user_teacher/formu_view.php'>Teacher</option>
-			<option value='../user_attendant/formu_view.php'>Attendant</option>
-			<option value='../subject/formu_view.php'>Subject</option>
-			<option value='../course/formu_view.php'>Course</option>
-			<option value='../subject_has_course/formu_view.php'>Subject of the Course</option>
-            <option value='../no_attendance/formu_view.php'>Asistance</option>
-		</select>
-        </div>
-	 </body>
-</html>		
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="style/cruds_style.css">
+</head>
+
+<body>
+  <div class="select">
+    <select name="select_crud" onchange="window.location.href=this.value">
+
+      <option selected disabled>Acción:</option>
+      <option value='../views/atributes/documentTypeView.php'>Tipo de Documento</option>
+      <option value='../views/atributes/genderView.php'>Género</option>
+      <option value='../views/relationship/relationshipView.php'>Relación</option>
+      <option value='../views/atributes/questionView.php'>Pregunta se Seguridad</option>
+      <option value='../views/relationship/roleView.php'>Rol</option>
+      <option value='../views/relationship/roleHasUser.php'>Rol de Usuario</option>
+      <option value='../views/user/userStudentView.php'>Estudiante</option>
+      <option value='../views/user/userTeacherView.php'>Profesor</option>
+      <option value='../views/use/uaserAttendantView.php'>Acudiente</option>
+      <option value='../views/atributes/subjectView.php'>Asunto</option>
+      <option value='../views/atributes/courseView.php'>Curso</option>
+      <option value='../views/relationship/subjectHasCourseView.php'>Asunto del Curso</option>
+      <option value='../views/atributes/noAttendanceView.php'>Asistencia</option>
+    </select>
+  </div>
+</body>
+
+</html>

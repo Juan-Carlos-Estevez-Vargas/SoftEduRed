@@ -1,7 +1,7 @@
 <?php
-	require_once "../persistence/atributes/DocumentType.php";
-	require_once "../Database/conexion.php";
-	include "../indexs/cruds.php";
+	require_once "../../persistence/database/Database.php";
+	require_once "../../persistence/atributes/DocumentType.php";
+//	include "../indexs/cruds.php";
 	$db = database::conectar();
 
 	if (isset($_REQUEST['action'])) {
@@ -24,90 +24,151 @@
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-	<meta charset="utf-8">
-	<title>Tupe of Document</title>
-	<link rel="stylesheet" type="text/css" href="../style/style_tables.css">
-	<link rel="stylesheet" href="../indexs/style/cruds_style.css" >
+  <meta charset="utf-8">
+  <title>Tipo de Documento</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
+
 <body>
-	<a href="?action=ver&m=1">New Record</a>
-	<?php if (!empty($_GET['m']) && !empty($_GET['action'])) { ?>
-	<div id="new">
-		<form action="#" method="post" enctype="multipart/form-data">
-			<h2>New Document</h2>
-			<label>Document:</label>
-			<input id="space" type="text" name="doc" placeholder="Ej: C.C" required style="text-transform:uppercase" />
-			
-			<label>Type of Document</label>
-			<input id="spacen" type="text" name="desc_doc" placeholder="Ej:Cedula de Ciudadania" style="text-transform:uppercase" required />
+  <section class="h-100 bg-dark">
+    <div class="container py-4 h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col">
+          <div class="card card-registration my-4">
+            <div class="row g-0">
+              <div class="col-xl-12">
+                <div class="card-body p-md-5 text-black">
+                  <h3 class="mb-5 text-uppercase text-center"><a href="?action=ver&m=1">New Record</a></h3>
 
-			<input id="boton" type="submit" value="Save" onclick="this.form.action ='?action=register'" />
-		</form>
-	</div>
-	<?php } ?>
+                  <div class="container-fluid">
+                    <div class="row">
+                      <div class="col-md-12 mb-4">
+                        <?php if (!empty($_GET['m']) && !empty($_GET['action'])) { ?>
+                        <form action="#" method="post" enctype="multipart/form-data">
+                          <h4 class="mb-5 text-uppercase text-center">Nuevo Registro</h4>
 
-	<?php if (!empty($_GET['id_doc']) && !empty($_GET['action']) ) { ?>
-	<div id="update">
-		<form action="#" method="post" enctype="multipart/form-data">
-			<?php $sql = "SELECT * FROM type_of_document WHERE cod_document = '$id'";
-				$query = $db->query($sql);
-				while ($r = $query->fetch(PDO::FETCH_ASSOC)) {
-			?>
-			<h2>Update Document</h2>
-			<label>Type of Document:</label>
-			<input id="Space" type="text" name="queryy" value="<?php echo $r['cod_document']?>" required />
+                          <div class="row">
+                            <div class="col-md-4">
+                              <div class="form-outline">
+                                <input id="space" type="text" name="doc" placeholder="Ej: C.C" required
+                                  style="text-transform:uppercase" class="form-control" />
+                                <label class="form-label">Tipo de Documento:</label>
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div class="form-outline">
+                                <input id="spacen" type="text" name="desc_doc" placeholder="Ej:Cedula de Ciudadania"
+                                  style="text-transform:uppercase" class="form-control " required />
+                                <label class="form-label">Descripción</label>
+                              </div>
+                            </div>
+                            <div class="col-auto">
+                              <div class="form-outline">
+                                <input id="boton" type="submit" class="btn btn-primary" value="Guardar"
+                                  onclick="this.form.action ='?action=register'" />
+                              </div>
+                            </div>
+                          </div>
+                        </form>
+                        <?php } ?>
+                      </div>
+                    </div>
+                  </div>
 
-			<label>Desc Document:</label>
-			<input id="Space" type="text" name="desc_doc" value="<?php echo $r['Des_doc']?>" required style="text-transform:uppercase" />
+                  <div class="container-fluid">
+                    <div class="row">
+                      <div class="col-md-12 mb-4">
+                        <?php if (!empty($_GET['id_doc']) && !empty($_GET['action']) ) { ?>
+                        <form action="#" method="post" enctype="multipart/form-data">
+                          <?php $sql = "SELECT * FROM type_of_document WHERE cod_document = '$id'";
+														$query = $db->query($sql);
+														while ($r = $query->fetch(PDO::FETCH_ASSOC)) {
+													?>
+                          <h4 class="mb-5 text-uppercase text-center">Actualizar egistro</h4>
 
-			<input id="boton" type="submit" value="Update" onclick="this.form.action = '?action=update';" />
-		</form>
-	</div>
-	<?php
-			}
-		}
+                          <div class="row">
+                            <div class="col-md-4">
+                              <div class="form-outline">
+                                <input id="space" type="text" name="doc" placeholder="Ej: C.C" required
+                                  style="text-transform:uppercase" class="form-control"
+                                  value="<?php echo $r['cod_document']?>" />
+                                <label class="form-label">Tipo de Documento:</label>
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div class="form-outline">
+                                <input id="spacen" type="text" name="desc_doc" placeholder="Ej:Cedula de Ciudadania"
+                                  style="text-transform:uppercase" class="form-control"
+                                  value="<?php echo $r['Des_doc']?>" required />
+                                <label class="form-label">Descripción</label>
+                              </div>
+                            </div>
+                            <div class="col-auto">
+                              <div class="form-outline">
+                                <input id="boton" type="submit" class="btn btn-primary" value="Actualizar"
+                                  onclick="this.form.action = '?action=update';" />
+                              </div>
+                            </div>
+                          </div>
+                        </form>
+                        <?php } } ?>
+                      </div>
+                    </div>
+                  </div>
 
-		$sql = "SELECT * FROM type_of_document";
-		$query = $db ->query($sql);
+                  <div class="col-md-12 text-center mt-5">
+                    <?php
+											$sql = "SELECT * FROM type_of_document";
+											$query = $db ->query($sql);
 
-		if ($query->rowCount()>0): ?>
+											if ($query->rowCount()>0):
+										?>
+                    <h4 class="mb-5 text-uppercase">Registros</h4>
+                    <div class="table-responsive">
+                      <table class="table table-bordered">
+                        <thead>
+                          <tr>
+                            <th>Código</th>
+                            <th>Tipo de Documento</th>
+                            <th>Acciones</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <?php while ($row = $query->fetch(PDO::FETCH_ASSOC)): ?>
+                          <tr>
+                            <td><?php echo $row['cod_document']; ?></td>
+                            <td><?php echo $row['Des_doc']; ?></td>
+                            <td>
+                              <a href="?action=edit&id_doc=<?php echo $row['cod_document'];?>">
+                                Update
+                              </a>
+                              <a href="?action=delete&id_doc=<?php echo $row['cod_document'];?>"
+                                onclick="return confirm('�Esta seguro de eliminar este usuario?')">
+                                Delete
+                              </a>
+                            </td>
+                          </tr>
+                          <?php endwhile ?>
+                        </tbody>
+                      </table>
+                    </div>
 
-	<div>
-		<header>Document</header>
-		<table>
-			<caption>Document Type Information Results</caption>
-			<thead>
-				<tr>
-					<h3><th>Code</th></h3>
-					<th>Type of Document</th>
-					<th>Actions</th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php while ($row = $query->fetch(PDO::FETCH_ASSOC)): ?>
-				<tr>
-					<?php
-					echo "<td>".$row['cod_document']."</td>";
-					echo "<td>".$row['Des_doc']."</td>";
-					?>
-					<td>
-						<a href="?action=edit&id_doc=<?php echo $row['cod_document'];?>">
-							Update
-						</a>
-						<a href="?action=delete&id_doc=<?php echo $row['cod_document'];?>"
-								onclick="return confirm('�Esta seguro de eliminar este usuario?')">
-							Delete
-						</a>
-					</td>
-				</tr>
-				<?php endwhile; ?>
-			</tbody>
-		</table>
-	</div>
-	<?php else: ?>
-		<h4>Mr.User DO NOT find registration</h4>
-	<?php endif; ?>
+                  </div>
+                  <?php else: ?>
+                  <h4>Mr.User DO NOT find registration</h4>
+                  <?php endif; ?>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 </body>
-</html>
 
+</html>
