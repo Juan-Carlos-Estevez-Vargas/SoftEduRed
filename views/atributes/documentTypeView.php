@@ -33,22 +33,23 @@
 </head>
 
 <body>
-  <section class="h-100 bg-dark">
+  <section class="h-100 bg-white">
     <div class="container py-4 h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col">
           <div class="card card-registration my-4">
             <div class="row g-0">
               <div class="col-xl-12">
-                <div class="card-body p-md-5 text-black">
-                  <h3 class="mb-5 text-uppercase text-center"><a href="?action=ver&m=1">New Record</a></h3>
-
+                <div class="card-body p-md-5 text-black" style="background-color: hsl(0, 0%, 96%)">
                   <div class="container-fluid">
                     <div class="row">
-                      <div class="col-md-12 mb-4">
+                      <div class="col-md-12">
+                        <h3 class="text-center d-flex justify-content-center justify-content-md-end">
+                          <a class="btn btn-success" href="?action=ver&m=1">Agregar Registro</a>
+                        </h3>
                         <?php if (!empty($_GET['m']) && !empty($_GET['action'])) { ?>
                         <form action="#" method="post" enctype="multipart/form-data">
-                          <h4 class="mb-5 text-uppercase text-center">Nuevo Registro</h4>
+                          <h4 class="mb-5 text-uppercase text-center text-success">Nuevo Registro</h4>
 
                           <div class="row">
                             <div class="col-md-4">
@@ -65,9 +66,9 @@
                                 <label class="form-label">Descripción</label>
                               </div>
                             </div>
-                            <div class="col-auto">
+                            <div class="col-md-2">
                               <div class="form-outline">
-                                <input id="boton" type="submit" class="btn btn-primary" value="Guardar"
+                                <input id="boton" type="submit" class="btn btn-primary btn-block" value="Guardar"
                                   onclick="this.form.action ='?action=register'" />
                               </div>
                             </div>
@@ -80,14 +81,14 @@
 
                   <div class="container-fluid">
                     <div class="row">
-                      <div class="col-md-12 mb-4">
+                      <div class="col-md-12">
                         <?php if (!empty($_GET['id_doc']) && !empty($_GET['action']) ) { ?>
                         <form action="#" method="post" enctype="multipart/form-data">
                           <?php $sql = "SELECT * FROM type_of_document WHERE cod_document = '$id'";
 														$query = $db->query($sql);
 														while ($r = $query->fetch(PDO::FETCH_ASSOC)) {
 													?>
-                          <h4 class="mb-5 text-uppercase text-center">Actualizar egistro</h4>
+                          <h4 class="mb-5 text-uppercase text-center text-success">Actualizar Registro</h4>
 
                           <div class="row">
                             <div class="col-md-4">
@@ -114,21 +115,25 @@
                             </div>
                           </div>
                         </form>
-                        <?php } } ?>
+                        <?php
+                            }
+                          }
+                        ?>
                       </div>
                     </div>
                   </div>
 
-                  <div class="col-md-12 text-center mt-5">
+                  <div class="col-md-12 text-center mt-4">
                     <?php
 											$sql = "SELECT * FROM type_of_document";
 											$query = $db ->query($sql);
 
 											if ($query->rowCount()>0):
 										?>
-                    <h4 class="mb-5 text-uppercase">Registros</h4>
+                    <h4 class="mb-5 text-uppercase text-primary">Registros</h4>
                     <div class="table-responsive">
                       <table class="table table-bordered">
+                        <caption class="text-center">Listado de Registros</caption>
                         <thead>
                           <tr>
                             <th>Código</th>
@@ -142,12 +147,12 @@
                             <td><?php echo $row['cod_document']; ?></td>
                             <td><?php echo $row['Des_doc']; ?></td>
                             <td>
-                              <a href="?action=edit&id_doc=<?php echo $row['cod_document'];?>">
-                                Update
+                              <a class="btn btn-primary" href="?action=edit&id_doc=<?php echo $row['cod_document'];?>">
+                                Actualizar
                               </a>
-                              <a href="?action=delete&id_doc=<?php echo $row['cod_document'];?>"
+                              <a class="btn btn-danger" href="?action=delete&id_doc=<?php echo $row['cod_document'];?>"
                                 onclick="return confirm('�Esta seguro de eliminar este usuario?')">
-                                Delete
+                                Eliminar
                               </a>
                             </td>
                           </tr>
@@ -169,6 +174,13 @@
       </div>
     </div>
   </section>
+
+  <footer class="bg-light text-center text-lg-start">
+    <div class="text-center p-3" style="background-color: hsl(0, 0%, 96%)">
+      © 2023 Copyright:
+      <a class="text-blue" href="https://github.com/Juan-Carlos-Estevez-Vargas/SoftEduRed">SoftEduRed.com</a>
+    </div>
+  </footer>
 </body>
 
 </html>
