@@ -44,37 +44,37 @@
                   <div class="container-fluid">
                     <div class="row">
                       <div class="col-md-12">
-                        <h3 class="text-center d-flex justify-content-center justify-content-md-end">
+                        <h4 class="text-center d-flex justify-content-center justify-content-md-end">
                           <a class="btn btn-success" href="?action=ver&m=1">Agregar Registro</a>
-                        </h3>
-                        <?php if (!empty($_GET['m']) && !empty($_GET['action'])) { ?>
-                        <form action="#" method="post" enctype="multipart/form-data">
-                          <h4 class="mb-5 text-uppercase text-center text-success">Nuevo Registro</h4>
+                          <h4>
+                            <?php if (!empty($_GET['m']) && !empty($_GET['action'])) { ?>
+                            <form action="#" method="post" enctype="multipart/form-data">
+                              <h4 class="mb-5 text-uppercase text-center text-success">Nuevo Registro</h4>
 
-                          <div class="row">
-                            <div class="col-md-4">
-                              <div class="form-outline">
-                                <input id="space" type="text" name="doc" placeholder="Ej: C.C" required
-                                  style="text-transform:uppercase" class="form-control" />
-                                <label class="form-label">Tipo de Documento:</label>
+                              <div class="row">
+                                <div class="col-md-4">
+                                  <div class="form-outline">
+                                    <input id="space" type="text" name="doc" placeholder="Ej: C.C" required
+                                      style="text-transform:uppercase" class="form-control" />
+                                    <label class="form-label">Tipo de Documento:</label>
+                                  </div>
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="form-outline">
+                                    <input id="spacen" type="text" name="desc_doc" placeholder="Ej:Cedula de Ciudadania"
+                                      style="text-transform:uppercase" class="form-control " required />
+                                    <label class="form-label">Descripción</label>
+                                  </div>
+                                </div>
+                                <div class="col-md-2">
+                                  <div class="form-outline">
+                                    <input id="boton" type="submit" class="btn btn-primary btn-block" value="Guardar"
+                                      onclick="this.form.action ='?action=register'" />
+                                  </div>
+                                </div>
                               </div>
-                            </div>
-                            <div class="col-md-6">
-                              <div class="form-outline">
-                                <input id="spacen" type="text" name="desc_doc" placeholder="Ej:Cedula de Ciudadania"
-                                  style="text-transform:uppercase" class="form-control " required />
-                                <label class="form-label">Descripción</label>
-                              </div>
-                            </div>
-                            <div class="col-md-2">
-                              <div class="form-outline">
-                                <input id="boton" type="submit" class="btn btn-primary btn-block" value="Guardar"
-                                  onclick="this.form.action ='?action=register'" />
-                              </div>
-                            </div>
-                          </div>
-                        </form>
-                        <?php } ?>
+                            </form>
+                            <?php } ?>
                       </div>
                     </div>
                   </div>
@@ -163,7 +163,7 @@
 
                   </div>
                   <?php else: ?>
-                  <h4>Mr.User DO NOT find registration</h4>
+                  <h4>No se encontraron registros</h4>
                   <?php endif; ?>
 
                 </div>
