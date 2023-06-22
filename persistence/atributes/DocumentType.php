@@ -1,4 +1,17 @@
-<?php
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tipo de Documento</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+</head>
+
+<body>
+  <?php
+	require_once "../../persistence/database/Database.php";
 	class DocumentType
 	{
 		private $pdo;
@@ -30,16 +43,21 @@
 			$sql = "INSERT INTO type_of_document (cod_document, Des_doc)
 							VALUES (:doc, :descDoc)";
 			$stmt = $this->pdo->prepare($sql);
-			
 			$stmt->bindParam(':doc', $doc);
 			$stmt->bindParam(':descDoc', $descDoc);
-			
 			$stmt->execute();
-			
-			echo "
+
+			print "
 				<script>
-					alert('Registro Agregado Exitosamente.');
-					window.location='../views/atributes/documentTypeView.php';
+					Swal.fire({
+						position: 'top-end',
+						icon: 'success',
+						title: 'Registro Agregado Exitosamente.',
+						showConfirmButton: false,
+						timer: 2000
+					}).then(() => {
+							window.location = '../../views/atributes/documentTypeView.php';
+					});
 				</script>
 			";
 		}
@@ -64,9 +82,19 @@
 					':oldCode' => $oldCode
 			]);
 
-			$message = "Registro Eliminado Exitosamente.";
-			$redirect = "../views/atributes/documentTypeView.php";
-			echo "<script>alert('$message'); window.location='$redirect';</script>";
+			echo "
+				<script>
+					Swal.fire({
+						position: 'top-end',
+						icon: 'success',
+						title: 'Registro Actualizado Exitosamente.',
+						showConfirmButton: false,
+						timer: 2000
+					}).then(() => {
+							window.location = '../../views/atributes/documentTypeView.php';
+					});
+				</script>
+			";
 		}
 
 		/**
@@ -81,9 +109,22 @@
 			$statement = $this->pdo->prepare($query);
 			$statement->execute([':doc' => $doc]);
 
-			$message = "Registro Eliminado Exitosamente.";
-			$redirect = "../views/atributes/documentTypeView.php";
-			echo "<script>alert('$message'); window.location='$redirect';</script>";
+			echo "
+				<script>
+					Swal.fire({
+						position: 'top-end',
+						icon: 'success',
+						title: 'Registro Eliminado Exitosamente.',
+						showConfirmButton: false,
+						timer: 2000
+					}).then(() => {
+							window.location = '../../views/atributes/documentTypeView.php';
+					});
+				</script>
+			";
 		}
 	}
 ?>
+</body>
+
+</html>

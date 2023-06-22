@@ -1,15 +1,14 @@
 <?php
 	require_once "../../persistence/database/Database.php";
 	require_once "../../persistence/atributes/DocumentType.php";
-//	include "../indexs/cruds.php";
-	$db = database::conectar();
+	$db = database::connect();
 
 	if (isset($_REQUEST['action'])) {
 		$action = $_REQUEST['action'];
 
 		if ($action == 'update') {
 			$update = new DocumentType();
-			$update->updateDocumentType($_POST['doc'],$_POST['queryy'],$_POST['desc_doc']);
+			$update->updateDocumentType($_POST['doc'],$_POST['doc'],$_POST['desc_doc']);
 		} elseif ($action == 'register') {
 			$insert = new DocumentType();
 			$insert ->registerDocumentType($_POST['doc'],$_POST['desc_doc']);
@@ -30,6 +29,8 @@
   <title>Tipo de Documento</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
 </head>
 
 <body>
@@ -49,7 +50,7 @@
                           <h4>
                             <?php if (!empty($_GET['m']) && !empty($_GET['action'])) { ?>
                             <form action="#" method="post" enctype="multipart/form-data">
-                              <h4 class="mb-5 text-uppercase text-center text-success">Nuevo Registro</h4>
+                              <h4 class="mb-5 text-uppercase text-center text-success">Nuevo Tipo de Documento</h4>
 
                               <div class="row">
                                 <div class="col-md-4">
@@ -82,7 +83,7 @@
                   <div class="container-fluid">
                     <div class="row">
                       <div class="col-md-12">
-                        <?php if (!empty($_GET['id_doc']) && !empty($_GET['action']) ) { ?>
+                        <?php if (!empty($_GET['id_doc']) && !empty($_GET['action']) && !empty($id)) { ?>
                         <form action="#" method="post" enctype="multipart/form-data">
                           <?php $sql = "SELECT * FROM type_of_document WHERE cod_document = '$id'";
 														$query = $db->query($sql);
@@ -151,7 +152,7 @@
                                 Actualizar
                               </a>
                               <a class="btn btn-danger" href="?action=delete&id_doc=<?php echo $row['cod_document'];?>"
-                                onclick="return confirm('�Esta seguro de eliminar este usuario?')">
+                                onclick="confirmDelete(event)">
                                 Eliminar
                               </a>
                             </td>
@@ -174,6 +175,27 @@
       </div>
     </div>
   </section>
+
+  <script>
+  function confirmDelete(event) {
+    event.preventDefault();
+
+    Swal.fire({
+      title: '¿Estás seguro de eliminar este registro?',
+      text: "Esta acción no se puede deshacer.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = event.target.href;
+      }
+    });
+  }
+  </script>
 
   <footer class="bg-light text-center text-lg-start">
     <div class="text-center p-3" style="background-color: hsl(0, 0%, 96%)">

@@ -12,7 +12,7 @@
 		 *
 		 * @return PDO object representing the database connection.
 		 */
-		public static function conectar()
+		public static function connect()
 		{
 			try {
 				$dsn = "mysql:host=" . self::$dbhost . ";dbname=" . self::$dbname;
