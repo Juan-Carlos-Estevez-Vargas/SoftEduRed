@@ -16,10 +16,10 @@
       <option value='../views/relationship/relationshipView.php'>Relación</option>
       <option value='../views/atributes/questionView.php'>Pregunta se Seguridad</option>
       <option value='../views/relationship/roleView.php'>Rol</option>
-      <option value='../views/relationship/roleHasUser.php'>Rol de Usuario</option>
+      <option value='../views/relationship/roleHasUserView.php'>Rol de Usuario</option>
       <option value='../views/user/userStudentView.php'>Estudiante</option>
       <option value='../views/user/userTeacherView.php'>Profesor</option>
-      <option value='../views/use/uaserAttendantView.php'>Acudiente</option>
+      <option value='../views/user/userAttendantView.php'>Acudiente</option>
       <option value='../views/atributes/subjectView.php'>Asunto</option>
       <option value='../views/atributes/courseView.php'>Curso</option>
       <option value='../views/relationship/subjectHasCourseView.php'>Asunto del Curso</option>
