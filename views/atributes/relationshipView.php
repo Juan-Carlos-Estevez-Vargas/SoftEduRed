@@ -44,7 +44,7 @@
               <div class="col-xl-12">
                 <div class="card-body p-md-5 text-black" style="background-color: hsl(0, 0%, 96%)">
                   <h3 class="text-center d-flex justify-content-center justify-content-md-end">
-                    <a class="btn btn-success" href="?action=ver&m=1">Agregar Registro</a>
+                    <a class="btn btn-success" href="?action=ver&m=1">Agregar Parentesco</a>
                   </h3>
 
                   <div class="container-fluid">
@@ -52,14 +52,14 @@
                       <div class="col-md-12">
                         <?php if (!empty($_GET['m']) && !empty($_GET['action'])) { ?>
                         <form action="#" method="post" enctype="multipart/form-data">
-                          <h4 class="mb-5 text-uppercase text-center text-success">Nueva Relación</h4>
+                          <h4 class="mb-5 text-uppercase text-center text-success">Nuevo Parentesco</h4>
 
                           <div class="row">
                             <div class="col-md-6">
                               <div class="form-outline">
                                 <input id="space" type="text" name="relation" placeholder="Tipo de Relación" required
                                   style="text-transform:uppercase" class="form-control" />
-                                <label class="form-label">Tipo de Relación:</label>
+                                <label class="form-label">Tipo de Parentesco:</label>
                               </div>
                             </div>
 
@@ -101,7 +101,7 @@
 														$query = $db->query($sql);
 														while ($r = $query->fetch(PDO::FETCH_ASSOC)) {
 													?>
-                          <h4 class="mb-5 text-uppercase text-center text-success">Actualizar Relación</h4>
+                          <h4 class="mb-5 text-uppercase text-center text-success">Actualizar Parentesco</h4>
 
                           <div class="row">
                             <div class="col-md-6">
@@ -110,7 +110,7 @@
                                   value="<?php echo $r['desc_relationship']?>" style="display: none" />
                                 <input id="Space" type="text" class="form-control" name=" relation"
                                   value="<?php echo $r['desc_relationship']?>" required />
-                                <label class="form-label">Tipo de Relación:</label>
+                                <label class="form-label">Tipo de Parentesco:</label>
                               </div>
                             </div>
 
@@ -152,13 +152,13 @@
 										 
 											 if ($query->rowCount() > 0):
 										?>
-                    <h4 class="mb-5 text-uppercase text-primary">Registros</h4>
+                    <h4 class="mb-5 text-uppercase text-primary">Parentescos</h4>
                     <div class="table-responsive">
                       <table class="table table-bordered">
                         <caption class="text-center">Listado de Resultados</caption>
                         <thead>
                           <tr>
-                            <th>Relación</th>
+                            <th>Parentesco</th>
                             <th>Estado</th>
                             <th>Acciones</th>
                           </tr>

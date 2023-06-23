@@ -44,7 +44,7 @@
               <div class="col-xl-12">
                 <div class="card-body p-md-5 text-black" style="background-color: hsl(0, 0%, 96%)">
                   <h3 class="text-center d-flex justify-content-center justify-content-md-end">
-                    <a class="btn btn-success" href="?action=ver&m=1">Agregar Registro</a>
+                    <a class="btn btn-success" href="?action=ver&m=1">Agregar Género</a>
                   </h3>
 
                   <div class="container-fluid">
@@ -52,7 +52,7 @@
                       <div class="col-md-12">
                         <?php if (!empty($_GET['m']) && !empty($_GET['action'])) { ?>
                         <form action="#" method="post" enctype="multipart/form-data">
-                          <h4 class="mb-5 text-uppercase text-center text-success">Nuevo Registro</h4>
+                          <h4 class="mb-5 text-uppercase text-center text-success">Nuevo Género</h4>
 
                           <div class="row">
                             <div class="col-md-6">
@@ -147,7 +147,7 @@
 											$sql="SELECT * FROM gender" ; $query=$db ->query($sql);
     									if ($query->rowCount() > 0):
 										?>
-                    <h4 class="mb-5 text-uppercase text-primary">Registros</h4>
+                    <h4 class="mb-5 text-uppercase text-primary">Géneros</h4>
                     <div class="table-responsive">
                       <table class="table table-bordered">
                         <caption class="text-center">Listado de Registros</caption>

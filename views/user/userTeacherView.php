@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Profesor</title>
+  <title>Docente</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
@@ -22,36 +22,26 @@
 		$action = $_REQUEST['action'];
 
 		if ($action === 'update') {
-
-			$update = new UserTeacher();
-			$update->updateUserTeacherInformation(
-				$_POST['tdoc'], $_POST['id_user'], $_POST['f_name'], $_POST['s_name'], $_POST['f_lname'],
-				$_POST['s_lname'], $_POST['gender'], $_POST['adress'], $_POST['email'], $_POST['phone'],
-				$_POST['u_name'], $_POST['pass'], $_POST['s_ans'], $_POST['s_ques']
-			);
-
+        $update = new UserTeacher();
+        $update->updateUserTeacherInformation(
+            $_POST['tdoc'], $_POST['id_user'], $_POST['f_name'], $_POST['s_name'], $_POST['f_lname'],
+            $_POST['s_lname'], $_POST['gender'], $_POST['adress'], $_POST['email'], $_POST['phone'],
+            $_POST['u_name'], $_POST['pass'], $_POST['s_ans'], $_POST['s_ques']
+        );
 		} elseif ($action === 'register') {
-
-			$insert = new UserTeacher();
-			$insert->register(
-				$_POST['tdoc'], $_POST['id_user'], $_POST['f_name'], $_POST['s_name'], $_POST['f_lname'],
-				$_POST['s_lname'], $_POST['gender'], $_POST['adress'], $_POST['email'], $_POST['phone'],
-				$_POST['u_name'], $_POST['pass'], $_POST['s_ans'], $_POST['s_ques']
-			);
-
+        $insert = new UserTeacher();
+        $insert->register(
+            $_POST['tdoc'], $_POST['id_user'], $_POST['f_name'], $_POST['s_name'], $_POST['f_lname'],
+            $_POST['s_lname'], $_POST['gender'], $_POST['adress'], $_POST['email'], $_POST['phone'],
+            $_POST['u_name'], $_POST['pass'], $_POST['s_ans'], $_POST['s_ques']
+        );
 		} elseif ($action === 'delete') {
-			
-			$eliminar = new UserTeacher();
-			$eliminar->eliminar($_GET['id_user'], $_GET['t_doc']);
-
-		}
-
-		if ($action === 'edit') {
-			
-			$id = $_GET['id_user'];
-			$tdoc = $_GET['t_doc'];
-			
-		}
+			  $delete = new UserTeacher();
+			  $delete->deleteUserTeacher($_GET['id_user'], $_GET['t_doc']);
+		} elseif ($action === 'edit') {
+        $id = $_GET['id_user'];
+        $tdoc = $_GET['t_doc'];
+    }
 	}
 ?>
   <section class="h-100 bg-white">
@@ -63,7 +53,7 @@
               <div class="col-xl-12">
                 <div class="card-body p-md-5 text-black" style="background-color: hsl(0, 0%, 96%)">
                   <h3 class="text-center d-flex justify-content-center justify-content-md-end">
-                    <a class="btn btn-success" href="?action=ver&m=1">Agregar Registro</a>
+                    <a class="btn btn-success" href="?action=ver&m=1">Agregar Docente</a>
                   </h3>
 
                   <div class="container-fluid">
@@ -71,7 +61,7 @@
                       <div class="col-md-12">
                         <?php if (!empty($_GET['m']) && !empty($_GET['action'])) { ?>
                         <form action="#" method="post" enctype="multipart/form-data">
-                          <h4 class="mb-5 text-uppercase text-center text-success">Nuevo Profesor</h4>
+                          <h4 class="mb-5 text-uppercase text-center text-success">Nuevo Docente</h4>
 
                           <div class="row mb-4">
                             <div class="col-md-3">
@@ -230,7 +220,7 @@
 													 	$query = $db->query($sql);
 													 	while ($r = $query->fetch(PDO::FETCH_ASSOC)) {
                             ?>
-                          <h4 class="mb-5 text-uppercase text-center text-success">Actualizar Profesor</h4>
+                          <h4 class="mb-5 text-uppercase text-center text-success">Actualizar Docente</h4>
 
                           <div class="row mb-4">
                             <div class="col-md-3">
@@ -391,21 +381,16 @@
 										
 											if ($query->rowCount() > 0):
 										?>
-                    <h4 class="mb-5 text-uppercase text-primary">Registros</h4>
+                    <h4 class="mb-5 text-uppercase text-primary">Docentes</h4>
                     <div class="table-responsive">
                       <table class="table table-bordered">
                         <caption class="text-center">Listado de Resultados</caption>
                         <thead>
                           <tr>
-                            <th>Número de Documento</th>
+                            <th>Tipo de Documento</th>
                             <th>Número de Identificación</th>
                             <th>Primer Nombre</th>
-                            <th>Segundo Nombre</th>
                             <th>Primer Apellido</th>
-                            <th>Segundo Apellido</th>
-                            <th>Género</th>
-                            <th>Dirección</th>
-                            <th>Correo Electrónico</th>
                             <th>Teléfono</th>
                             <th>Acciones</th>
                           </tr>
@@ -416,12 +401,7 @@
                             <?php echo "<td>".$row['pk_fk_cod_doc']."</td>";?>
                             <?php echo "<td>".$row['id_user'] . "</td>";?>
                             <?php echo "<td>".$row['first_name'] . "</td>";?>
-                            <?php echo "<td>".$row['second_name'] . "</td>";?>
                             <?php echo "<td>".$row['surname'] . "</td>";?>
-                            <?php echo "<td>".$row['second_surname'] . "</td>";?>
-                            <?php echo "<td>".$row['fk_gender'] . "</td>";?>
-                            <?php echo "<td>".$row['adress'] . "</td>";?>
-                            <?php echo "<td>".$row['email'] . "</td>";?>
                             <?php echo "<td>".$row['phone'] . "</td>";?>
                             <td>
                               <a class="btn btn-primary btn-block"

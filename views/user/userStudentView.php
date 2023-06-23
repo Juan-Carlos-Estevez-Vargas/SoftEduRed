@@ -8,7 +8,6 @@
         $action = $_REQUEST['action'];
 
         if ($action === 'update') {
-
             $update = new UserStudentDAO();
             $update->updateUserStudent(
                 $_POST['tdoc'], $_POST['id_user'], $_POST['f_name'], $_POST['s_name'],
@@ -16,26 +15,19 @@
                 $_POST['email'], $_POST['phone'], $_POST['u_name'], $_POST['pass'], $_POST['s_ans'],
                 $_POST['s_ques'], $_POST['att_doc'], $_POST['att_id'], $_POST['course']
             );
-
         } elseif ($action === 'register') {
-
             $insert = new UserStudentDAO();
             $insert->registerUserAndStudent(
                 $_POST['tdoc'], $_POST['id_user'], $_POST['f_name'], $_POST['s_name'], $_POST['f_lname'],
                 $_POST['s_lname'], $_POST['gender'], $_POST['adress'], $_POST['email'], $_POST['phone'],
                 $_POST['u_name'], $_POST['pass'], $_POST['s_ans'], $_POST['s_ques'], $_POST['att_doc'],
                 $_POST['att_id'], $_POST['course']);
-        
         } elseif ($action === 'delete') {
-
-            $eliminar = new UserStudentDAO();
-            $eliminar->deleteStudentUser($_GET['id_user'], $_GET['t_doc']);
-
+            $delete = new UserStudentDAO();
+            $delete->deleteStudentUser($_GET['id_user'], $_GET['t_doc']);
         } elseif ($action === 'edit') {
-
             $id = $_GET['id_user'];
             $tdoc = $_GET['t_doc'];
-
         }
     }
 ?>
@@ -62,7 +54,7 @@
               <div class="col-xl-12">
                 <div class="card-body p-md-5 text-black" style="background-color: hsl(0, 0%, 96%)">
                   <h3 class="text-center d-flex justify-content-center justify-content-md-end">
-                    <a class="btn btn-success" href="?action=ver&m=1">Agregar Registro</a>
+                    <a class="btn btn-success" href="?action=ver&m=1">Agregar Estudiante</a>
                   </h3>
 
                   <div class="container-fluid">
@@ -465,22 +457,17 @@
                     
                         $query = $db ->query($sql);
                         if ($query->rowCount() > 0):
-					?>
-                    <h4 class="mb-5 text-uppercase text-primary">Registros</h4>
+					          ?>
+                    <h4 class="mb-5 text-uppercase text-primary">Estudiantes</h4>
                     <div class="table-responsive">
                       <table class="table table-bordered">
                         <caption class="text-center">Listado de Resultados</caption>
                         <thead>
                           <tr>
-                            <th>Número de Documento</th>
+                            <th>Tipo de Documento</th>
                             <th>Número de Identificación</th>
                             <th>Primer Nombre</th>
-                            <th>Segundo Nombre</th>
                             <th>Primer Apellido</th>
-                            <th>Segundo Apellido</th>
-                            <th>Género</th>
-                            <th>Dirección</th>
-                            <th>Correo Electrónico</th>
                             <th>Teléfono</th>
                             <th>Acciones</th>
                           </tr>
@@ -491,12 +478,7 @@
                             <?php echo "<td>".$row['pk_fk_cod_doc']."</td>";?>
                             <?php echo "<td>".$row['id_user'] . "</td>";?>
                             <?php echo "<td>".$row['first_name'] . "</td>";?>
-                            <?php echo "<td>".$row['second_name'] . "</td>";?>
                             <?php echo "<td>".$row['surname'] . "</td>";?>
-                            <?php echo "<td>".$row['second_surname'] . "</td>";?>
-                            <?php echo "<td>".$row['fk_gender'] . "</td>";?>
-                            <?php echo "<td>".$row['adress'] . "</td>";?>
-                            <?php echo "<td>".$row['email'] . "</td>";?>
                             <?php echo "<td>".$row['phone'] . "</td>";?>
                             <td>
                               <a class="btn btn-primary btn-block" id="boton"
