@@ -1,4 +1,16 @@
-<?php
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rol de Usuario</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+</head>
+
+<body>
+  <?php
 	class RoleUser
 	{
 		private $pdo;
@@ -49,14 +61,20 @@
 						$this->pdo->query($sql);
 					}
 				}
-						
-				print "
+					
+				echo "
 					<script>
-						alert('Registro Agregado Exitosamente.');
-						window.location='../views/relationship/roleHasUserView.php';
+						Swal.fire({
+							position: 'top-end',
+							icon: 'success',
+							title: 'Registro Agregado Exitosamente.',
+							showConfirmButton: false,
+							timer: 2000
+						}).then(() => {
+								window.location = '../../views/relationship/roleHasUserView.php';
+						});
 					</script>
 				";
-					
 			} catch (Exception $e) {
 				print "
 					<script>
@@ -103,11 +121,17 @@
 				$oldTDocRole, $oldPkFkIdUser, $oldPkFkRole
 			]);
 			
-			$message = "Registro Actualizado Exitosamente.";
 			echo "
 				<script>
-					alert('$message');
-					window.location='../views/relationship/roleHasUserView.php';
+					Swal.fire({
+						position: 'top-end',
+						icon: 'success',
+						title: 'Registro Actualizado Exitosamente.',
+						showConfirmButton: false,
+						timer: 2000
+					}).then(() => {
+							window.location = '../../views/relationship/roleHasUserView.php';
+					});
 				</script>
 			";
 		}
@@ -129,12 +153,22 @@
 
 			$this->pdo->query($sql);
 
-			print "
+			echo "
 				<script>
-					alert('Registro Eliminado Exitosamente.');
-					window.location='../views/relationship/roleHasUserView.php';
+					Swal.fire({
+						position: 'top-end',
+						icon: 'success',
+						title: 'Registro Eliminado Exitosamente.',
+						showConfirmButton: false,
+						timer: 2000
+					}).then(() => {
+							window.location = '../../views/relationship/roleHasUserView.php';
+					});
 				</script>
 			";
 		}
 	}
 ?>
+</body>
+
+</html>
