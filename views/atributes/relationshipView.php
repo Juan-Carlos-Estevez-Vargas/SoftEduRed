@@ -1,6 +1,6 @@
 <?php
 	require_once "../../persistence/database/Database.php";
-	require_once "../../persistence/relationship/Relationship.php";
+	require_once "../../persistence/atributes/RelationshipDAO.php";
 
   $db = database::connect();
 
@@ -8,13 +8,13 @@
 		$action = $_REQUEST['action'];
 
 		if ($action == 'register') {
-			$registrar = new Relationship();
+			$registrar = new RelationshipDAO();
 			$registrar->registerRelationship($_POST['relation'], $_POST['state']);
 		} elseif ($action == 'update') {
-			$update = new Relationship();
+			$update = new RelationshipDAO();
 			$update->updateRecord($_POST['relation'], $_POST['queryy'], $_POST['state']);
 		} elseif ($action == 'delete') {
-			$eliminar = new Relationship();
+			$eliminar = new RelationshipDAO();
 				$eliminar->deleteRelationship($_GET['desc_relat']);
 		} elseif ($action == 'edit') {
 			$id = $_GET['desc_relat'];
