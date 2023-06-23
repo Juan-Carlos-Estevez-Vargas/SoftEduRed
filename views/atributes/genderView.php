@@ -1,6 +1,6 @@
 <?php
 	require_once "../../persistence/database/Database.php";
-	require_once "../../persistence/atributes/Gender.php";
+	require_once "../../persistence/atributes/GenderDAO.php";
   
 	$db = database::connect();
 
@@ -8,14 +8,14 @@
 		$action = $_REQUEST['action'];
 
 		if ($action == 'update') {
-			$update = new gender();
-			$update->updateGender($_POST['gender'],$_POST['old_gender'],$_POST['state']);
+			$update = new GenderDAO();
+			$update->updateGender($_POST['gender'], $_POST['old_gender'], $_POST['state']);
 		} elseif ($action == 'register') {
-			$insert = new gender();
-			$insert ->registerGender($_POST['gender'],$_POST['state']);
+			$insert = new GenderDAO();
+			$insert ->registerGender($_POST['gender'], $_POST['state']);
 		} elseif ($action == 'delete') {
-			$eliminar = new gender();
-			$eliminar->deleteGender($_GET['id_gender']);
+			$delete = new GenderDAO();
+			$delete->deleteGender($_GET['id_gender']);
 		} elseif ($action == 'edit') {
 			$id = $_GET['id_gender'];
 		}
