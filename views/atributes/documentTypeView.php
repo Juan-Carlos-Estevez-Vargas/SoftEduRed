@@ -1,19 +1,20 @@
 <?php
 	require_once "../../persistence/database/Database.php";
-	require_once "../../persistence/atributes/DocumentType.php";
-	$db = database::connect();
+	require_once "../../persistence/atributes/DocumentTypeDAO.php";
+	
+  $db = database::connect();
 
 	if (isset($_REQUEST['action'])) {
 		$action = $_REQUEST['action'];
 
 		if ($action == 'update') {
-			$update = new DocumentType();
+			$update = new DocumentTypeDAO();
 			$update->updateDocumentType($_POST['doc'],$_POST['doc'],$_POST['desc_doc']);
 		} elseif ($action == 'register') {
-			$insert = new DocumentType();
+			$insert = new DocumentTypeDAO();
 			$insert ->registerDocumentType($_POST['doc'],$_POST['desc_doc']);
 		} elseif ($action == 'delete') {
-			$delete = new DocumentType();
+			$delete = new DocumentTypeDAO();
 			$delete->deleteDocumentType($_GET['id_doc']);
 		} elseif ($action == 'edit') {
 			$id = $_GET['id_doc'];
@@ -42,40 +43,43 @@
             <div class="row g-0">
               <div class="col-xl-12">
                 <div class="card-body p-md-5 text-black" style="background-color: hsl(0, 0%, 96%)">
+                  <h3 class="text-center d-flex justify-content-center justify-content-md-end">
+                    <a class="btn btn-success" href="?action=ver&m=1">Agregar Registro</a>
+                  </h3>
+
                   <div class="container-fluid">
                     <div class="row">
                       <div class="col-md-12">
-                        <h4 class="text-center d-flex justify-content-center justify-content-md-end">
-                          <a class="btn btn-success" href="?action=ver&m=1">Agregar Registro</a>
-                          <h4>
-                            <?php if (!empty($_GET['m']) && !empty($_GET['action'])) { ?>
-                            <form action="#" method="post" enctype="multipart/form-data">
-                              <h4 class="mb-5 text-uppercase text-center text-success">Nuevo Tipo de Documento</h4>
+                        <?php if (!empty($_GET['m']) && !empty($_GET['action'])) { ?>
+                        <form action="#" method="post" enctype="multipart/form-data">
+                          <h4 class="mb-5 text-uppercase text-center text-success">Nuevo Tipo de Documento</h4>
 
-                              <div class="row">
-                                <div class="col-md-4">
-                                  <div class="form-outline">
-                                    <input id="space" type="text" name="doc" placeholder="Ej: C.C" required
-                                      style="text-transform:uppercase" class="form-control" />
-                                    <label class="form-label">Tipo de Documento:</label>
-                                  </div>
-                                </div>
-                                <div class="col-md-6">
-                                  <div class="form-outline">
-                                    <input id="spacen" type="text" name="desc_doc" placeholder="Ej:Cedula de Ciudadania"
-                                      style="text-transform:uppercase" class="form-control " required />
-                                    <label class="form-label">Descripción</label>
-                                  </div>
-                                </div>
-                                <div class="col-md-2">
-                                  <div class="form-outline">
-                                    <input id="boton" type="submit" class="btn btn-primary btn-block" value="Guardar"
-                                      onclick="this.form.action ='?action=register'" />
-                                  </div>
-                                </div>
+                          <div class="row">
+                            <div class="col-md-6">
+                              <div class="form-outline">
+                                <input id="space" type="text" name="doc" placeholder="Ej: C.C" required
+                                  style="text-transform:uppercase" class="form-control" />
+                                <label class="form-label">Tipo de Documento:</label>
                               </div>
-                            </form>
-                            <?php } ?>
+                            </div>
+
+                            <div class="col-md-4">
+                              <div class="form-outline">
+                                <input id="spacen" type="text" name="desc_doc" placeholder="Ej: Cedula de Ciudadania"
+                                  style="text-transform:uppercase" class="form-control " required />
+                                <label class="form-label">Descripción</label>
+                              </div>
+                            </div>
+
+                            <div class="col-md-2">
+                              <div class="form-outline">
+                                <input id="boton" type="submit" class="btn btn-primary btn-block" value="Guardar"
+                                  onclick="this.form.action ='?action=register'" />
+                              </div>
+                            </div>
+                          </div>
+                        </form>
+                        <?php } ?>
                       </div>
                     </div>
                   </div>
@@ -85,14 +89,15 @@
                       <div class="col-md-12">
                         <?php if (!empty($_GET['id_doc']) && !empty($_GET['action']) && !empty($id)) { ?>
                         <form action="#" method="post" enctype="multipart/form-data">
-                          <?php $sql = "SELECT * FROM type_of_document WHERE cod_document = '$id'";
+                          <?php
+														$sql = "SELECT * FROM type_of_document WHERE cod_document = '$id'";
 														$query = $db->query($sql);
 														while ($r = $query->fetch(PDO::FETCH_ASSOC)) {
 													?>
-                          <h4 class="mb-5 text-uppercase text-center text-success">Actualizar Registro</h4>
+                          <h4 class="mb-5 text-uppercase text-center text-success">Actualizar Tipo de Documento</h4>
 
                           <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                               <div class="form-outline">
                                 <input id="space" type="text" name="doc" placeholder="Ej: C.C" required
                                   style="text-transform:uppercase" class="form-control"
@@ -100,17 +105,19 @@
                                 <label class="form-label">Tipo de Documento:</label>
                               </div>
                             </div>
-                            <div class="col-md-6">
+
+                            <div class="col-md-4">
                               <div class="form-outline">
-                                <input id="spacen" type="text" name="desc_doc" placeholder="Ej:Cedula de Ciudadania"
+                                <input id="spacen" type="text" name="desc_doc" placeholder="Ej: Cedula de Ciudadania"
                                   style="text-transform:uppercase" class="form-control"
                                   value="<?php echo $r['Des_doc']?>" required />
                                 <label class="form-label">Descripción</label>
                               </div>
                             </div>
-                            <div class="col-auto">
+
+                            <div class="col-md-2">
                               <div class="form-outline">
-                                <input id="boton" type="submit" class="btn btn-primary" value="Actualizar"
+                                <input id="boton" type="submit" class="btn btn-primary btn-block" value="Actualizar"
                                   onclick="this.form.action = '?action=update';" />
                               </div>
                             </div>
@@ -134,11 +141,11 @@
                     <h4 class="mb-5 text-uppercase text-primary">Registros</h4>
                     <div class="table-responsive">
                       <table class="table table-bordered">
-                        <caption class="text-center">Listado de Registros</caption>
+                        <caption class="text-center">Listado de Resultados</caption>
                         <thead>
                           <tr>
-                            <th>Código</th>
                             <th>Tipo de Documento</th>
+                            <th>Descripción</th>
                             <th>Acciones</th>
                           </tr>
                         </thead>
@@ -176,6 +183,13 @@
     </div>
   </section>
 
+  <footer class="bg-light text-center text-lg-start">
+    <div class="text-center p-3" style="background-color: hsl(0, 0%, 96%)">
+      © 2023 Copyright:
+      <a class="text-blue" href="https://github.com/Juan-Carlos-Estevez-Vargas/SoftEduRed">SoftEduRed.com</a>
+    </div>
+  </footer>
+
   <script>
   function confirmDelete(event) {
     event.preventDefault();
@@ -196,13 +210,6 @@
     });
   }
   </script>
-
-  <footer class="bg-light text-center text-lg-start">
-    <div class="text-center p-3" style="background-color: hsl(0, 0%, 96%)">
-      © 2023 Copyright:
-      <a class="text-blue" href="https://github.com/Juan-Carlos-Estevez-Vargas/SoftEduRed">SoftEduRed.com</a>
-    </div>
-  </footer>
 </body>
 
 </html>

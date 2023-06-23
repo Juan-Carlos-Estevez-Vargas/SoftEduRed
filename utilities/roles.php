@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="../assets/css/rol.css">
-    <title>Bienvenidos</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="../assets/css/rol.css">
+  <title>Bienvenidos</title>
 </head>
+
 <body>
-    <?php
+  <?php
         require_once "../persistence/Database/Database.php";
-        $db = database::conectar();
+        $db = database::connect();
         session_start();
     ?>
-    <div class="select">
-        <label>Seleccione:</label>
-        <select name="slct" onchange="window.open(this.value, '_parent', '')">
-            <option class="rol" selected disabled>Rol:</option>
-            <?php
+  <div class="select">
+    <label>Seleccione:</label>
+    <select name="slct" onchange="window.open(this.value, '_parent', '')">
+      <option class="rol" selected disabled>Rol:</option>
+      <?php
                 $sql = "
                     SELECT * FROM user_has_role
                     WHERE pk_fk_id_user ='".$_SESSION["ID_PERSONA"]."'
@@ -55,7 +57,8 @@
                     }
                 }
             ?>
-        </select>
-    </div>
+    </select>
+  </div>
 </body>
+
 </html>

@@ -1,8 +1,8 @@
 <?php
     require_once "../../persistence/user/UserAttendantDAO.php";
     require_once "../../persistence/database/Database.php";
-    // include "../indexs/cruds.php";
-    $db = database::conectar();
+
+    $db = database::connect();
 
     if (isset($_REQUEST['action'])) {
         $action = $_REQUEST['action'];
@@ -49,6 +49,8 @@
   <title>Acudiente</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
 </head>
 
 <body>
@@ -234,7 +236,7 @@
                   <div class="container-fluid">
                     <div class="row">
                       <div class="col-md-12">
-                        <?php if (!empty($_GET['t_doc']) && !empty($_GET['id_user']) && !empty($_GET['action'])) { ?>
+                        <?php if (!empty($_GET['t_doc']) && !empty($_GET['id_user']) && !empty($_GET['action']) && !empty($id)) { ?>
                         <form action="#" method="post" enctype="multipart/form-data">
                           <?php $sql = "SELECT * FROM user WHERE pk_fk_cod_doc = '$tdoc' and id_user = '$id'";
                             $query = $db->query($sql);
@@ -450,7 +452,7 @@
                               </a>
                               <a class="btn btn-danger btn-block"
                                 href="?action=delete&id_user=<?php echo $row['id_user'];?>&t_doc=<?php echo $row['pk_fk_cod_doc'] ?>"
-                                onclick="return confirm('¿Esta seguro de eliminar este usuario?')">
+                                onclick="confirmDelete(event)">
                                 Delete
                               </a>
                             </td>
@@ -478,6 +480,27 @@
       <a class="text-blue" href="https://github.com/Juan-Carlos-Estevez-Vargas/SoftEduRed">SoftEduRed.com</a>
     </div>
   </footer>
+
+  <script>
+  function confirmDelete(event) {
+    event.preventDefault();
+
+    Swal.fire({
+      title: '¿Estás seguro de eliminar este registro?',
+      text: "Esta acción no se puede deshacer.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = event.target.href;
+      }
+    });
+  }
+  </script>
 </body>
 
 </html>

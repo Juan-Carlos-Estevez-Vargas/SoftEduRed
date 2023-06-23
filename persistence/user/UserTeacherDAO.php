@@ -1,5 +1,17 @@
-<?php
-	class UserTeaCruds
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profesor</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+</head>
+
+<body>
+  <?php
+	class UserTeacher
 	{
 		/**
 		 * Constructor for creating a database connection.
@@ -9,7 +21,7 @@
 		public function __construct()
 		{
 			try {
-				$this->databaseConnection = Database::conectar();
+				$this->databaseConnection = Database::connect();
 			} catch (Exception $e) {
 				throw new Exception("Failed to connect to database: " . $e->getMessage());
 			} finally {
@@ -55,10 +67,19 @@
 			$this->registerTeacher($documentType, $userId);
 			$this->registerUserAsTeacherRole($documentType, $userId);
 
-			echo "<script>
-				alert('Registro Agregado Exitosamente.');
-				window.location='../views/user/userTeacherView.php';
-			</script>";
+			echo "
+				<script>
+					Swal.fire({
+						position: 'top-end',
+						icon: 'success',
+						title: 'Registro Agregado Exitosamente.',
+						showConfirmButton: false,
+						timer: 2000
+					}).then(() => {
+							window.location = '../../views/user/userTeacherView.php';
+					});
+				</script>
+			";
 		}
 
 		/**
@@ -135,7 +156,19 @@
 				$securityQuestion, $documentType,	$userId,
 			]);
 
-			return 'Record updated successfully.';
+			echo "
+				<script>
+					Swal.fire({
+						position: 'top-end',
+						icon: 'success',
+						title: 'Registro Actualizado Exitosamente.',
+						showConfirmButton: false,
+						timer: 2000
+					}).then(() => {
+							window.location = '../../views/user/userTeacherView.php';
+					});
+				</script>
+			";
 		}
 
 		/**
@@ -152,10 +185,22 @@
 			$stmt = $this->pdo->prepare($sql);
 			$stmt->execute([$userId, $docType]);
 		
-			error_log("User with id $userId and document type $docType was deleted from the database.");
-			echo "<script>
-				alert('Registro Eliminado Exitosamente.');
-				window.location='../views/user/userTeacherView.php';
-			</script>";
+			echo "
+				<script>
+					Swal.fire({
+						position: 'top-end',
+						icon: 'success',
+						title: 'Registro Eliminado Exitosamente.',
+						showConfirmButton: false,
+						timer: 2000
+					}).then(() => {
+							window.location = '../../views/user/userTeacherView.php';
+					});
+				</script>
+			";
 		}
 	}
+?>
+</body>
+
+</html>
