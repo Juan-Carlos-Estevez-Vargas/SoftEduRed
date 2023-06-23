@@ -42,16 +42,23 @@
 				public function registerDocumentType(string $doc, string $descDoc): void
 				{
 						try {
-								$sql = "INSERT INTO type_of_document (cod_document, Des_doc) VALUES (UPPER(:doc), UPPER(:descDoc))";
-								$stmt = $this->pdo->prepare($sql);
-								$stmt->bindParam(':doc', $doc);
-								$stmt->bindParam(':descDoc', $descDoc);
-								$stmt->execute();
-
-								$this->showSuccessMessage(
-										"Registro Agregado Exitosamente.",
-										'../../views/atributes/documentTypeView.php'
-								);
+								if (!empty($doc) && !empty($descDoc)) {
+										$sql = "INSERT INTO type_of_document (cod_document, Des_doc) VALUES (UPPER(:doc), UPPER(:descDoc))";
+										$stmt = $this->pdo->prepare($sql);
+										$stmt->bindParam(':doc', $doc);
+										$stmt->bindParam(':descDoc', $descDoc);
+										$stmt->execute();
+		
+										$this->showSuccessMessage(
+												"Registro Agregado Exitosamente.",
+												'../../views/atributes/documentTypeView.php'
+										);
+								} else {
+										$this->showWarningMessage(
+												"Debes llenar todos los campos.",
+												'../../views/atributes/documentTypeView.php'
+										);
+								}
 						} catch (Exception $e) {
 								$this->showErrorMessage(
 										"Ocurrió un error interno. Consulta al Administrador.",
@@ -70,24 +77,31 @@
 				public function updateDocumentType(string $code, string $oldCode, string $description): void
 				{
 						try {
-								$query = "
-										UPDATE type_of_document
-										SET cod_document = UPPER(:code),
-												Des_doc = UPPER(:description)
-										WHERE cod_document = :oldCode
-								";
-								
-								$statement = $this->pdo->prepare($query);
-								$statement->execute([
-										':code' => $code,
-										':description' => $description,
-										':oldCode' => $oldCode
-								]);
+								if (!empty($code) && !empty($oldCode) && !empty($description)) {
+										$query = "
+												UPDATE type_of_document
+												SET cod_document = UPPER(:code),
+														Des_doc = UPPER(:description)
+												WHERE cod_document = :oldCode
+										";
+										
+										$statement = $this->pdo->prepare($query);
+										$statement->execute([
+												':code' => $code,
+												':description' => $description,
+												':oldCode' => $oldCode
+										]);
 
-								$this->showSuccessMessage(
-										"Registro Actualizado Exitosamente.",
-										'../../views/atributes/documentTypeView.php'
-								);
+										$this->showSuccessMessage(
+												"Registro Actualizado Exitosamente.",
+												'../../views/atributes/documentTypeView.php'
+										);
+								} else {
+									$this->showWarningMessage(
+											"Debes llenar todos los campos.",
+											'../../views/atributes/documentTypeView.php'
+									);
+								}
 						} catch (Exception $e) {
 								$this->showErrorMessage(
 										"Ocurrió un error interno. Consulta al Administrador.",
@@ -105,14 +119,21 @@
 				public function deleteDocumentType(string $doc): void
 				{
 						try {
-								$query = "DELETE FROM type_of_document WHERE cod_document = :doc";
-								$statement = $this->pdo->prepare($query);
-								$statement->execute([':doc' => $doc]);
-
-								$this->showSuccessMessage(
-										"Registro Eliminado Exitosamente.",
-										'../../views/atributes/documentTypeView.php'
-								);
+								if (!empty($doc)) {
+										$query = "DELETE FROM type_of_document WHERE cod_document = :doc";
+										$statement = $this->pdo->prepare($query);
+										$statement->execute([':doc' => $doc]);
+		
+										$this->showSuccessMessage(
+												"Registro Eliminado Exitosamente.",
+												'../../views/atributes/documentTypeView.php'
+										);
+								} else {
+									$this->showWarningMessage(
+											"Debes llenar todos los campos.",
+											'../../views/atributes/documentTypeView.php'
+									);
+								}
 						} catch (Exception $e) {
 								$this->showErrorMessage(
 										"Ocurrió un error interno. Consulta al Administrador.",
@@ -157,6 +178,29 @@
 										Swal.fire({
 												position: 'top-center',
 												icon: 'error',
+												title: '$message',
+												showConfirmButton: false,
+												timer: 2000
+										}).then(() => {
+												window.location = '$redirectURL';
+										});
+								</script>
+						";
+				}
+
+				/**
+				 * Displays an warning message using SweetAlert and redirects the user to a specified location.
+				 *
+				 * @param string $message The error message to display
+				 * @param string $redirectURL The URL to redirect to after displaying the message
+				 */
+				private function showWarningMessage(string $message, string $redirectURL): void
+				{
+						echo "
+								<script>
+										Swal.fire({
+												position: 'top-center',
+												icon: 'warning',
 												title: '$message',
 												showConfirmButton: false,
 												timer: 2000
