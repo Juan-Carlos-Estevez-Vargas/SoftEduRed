@@ -1,21 +1,21 @@
 <?php
 	require_once "../../persistence/database/Database.php";
 	require_once "../../persistence/atributes/Gender.php";
-	//include "../indexs/cruds.php";
-	$db = database::conectar();
+  
+	$db = database::connect();
 
 	if (isset($_REQUEST['action'])) {
 		$action = $_REQUEST['action'];
 
 		if ($action == 'update') {
 			$update = new gender();
-			$update->actualizar($_POST['gender'],$_POST['queryy'],$_POST['state']);
+			$update->updateGender($_POST['gender'],$_POST['old_gender'],$_POST['state']);
 		} elseif ($action == 'register') {
 			$insert = new gender();
-			$insert ->registrar($_POST['gender'],$_POST['state']);
+			$insert ->registerGender($_POST['gender'],$_POST['state']);
 		} elseif ($action == 'delete') {
 			$eliminar = new gender();
-			$eliminar->eliminar($_GET['id_gender']);
+			$eliminar->deleteGender($_GET['id_gender']);
 		} elseif ($action == 'edit') {
 			$id = $_GET['id_gender'];
 		}
@@ -30,6 +30,8 @@
   <title>Género</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
 </head>
 
 <body>
@@ -55,8 +57,8 @@
                           <div class="row">
                             <div class="col-md-6">
                               <div class="form-outline">
-                                <input id="space" type="text" name="doc" placeholder="Ej: Masculino, Femenino" required
-                                  style="text-transform:uppercase" class="form-control" />
+                                <input id="space" type="text" name="gender" placeholder="Ej: Masculino, Femenino"
+                                  required style="text-transform:uppercase" class="form-control" />
                                 <label class="form-label">Género:</label>
                               </div>
                             </div>
@@ -92,7 +94,7 @@
                   <div class="container-fluid">
                     <div class="row">
                       <div class="col-md-12">
-                        <?php if (!empty($_GET['id_gender']) && !empty($_GET['action'])) { ?>
+                        <?php if (!empty($_GET['id_gender']) && !empty($_GET['action']) && !empty($id)) { ?>
                         <form action="#" method="post" enctype="multipart/form-data">
                           <?php
 														$sql = "SELECT * FROM gender WHERE desc_gender = '$id'";
@@ -104,7 +106,7 @@
                           <div class="row">
                             <div class="col-md-6">
                               <div class="form-outline">
-                                <input type="text" name="queryy" class="form-control"
+                                <input type="text" name="old_gender" class="form-control"
                                   value=" <?php echo $r['desc_gender']?>" style="display: none" />
                                 <input type="text" name="gender" class="form-control"
                                   value="<?php echo $r['desc_gender']?>" required />
@@ -176,7 +178,7 @@
                               </a>
                               <a class="btn btn-danger"
                                 href="?action=delete&id_gender=<?php echo $row['desc_gender'];?>"
-                                onclick="return confirm('¿Esta seguro de eliminar este usuario?')">
+                                onclick="confirmDelete(event)">
                                 Eliminar
                               </a>
                             </td>
@@ -206,6 +208,27 @@
       <a class="text-blue" href="https://github.com/Juan-Carlos-Estevez-Vargas/SoftEduRed">SoftEduRed.com</a>
     </div>
   </footer>
+
+  <script>
+  function confirmDelete(event) {
+    event.preventDefault();
+
+    Swal.fire({
+      title: '¿Estás seguro de eliminar este registro?',
+      text: "Esta acción no se puede deshacer.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = event.target.href;
+      }
+    });
+  }
+  </script>
 </body>
 
 </html>

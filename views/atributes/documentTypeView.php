@@ -13,8 +13,8 @@
 			$insert = new DocumentType();
 			$insert ->registerDocumentType($_POST['doc'],$_POST['desc_doc']);
 		} elseif ($action == 'delete') {
-			$eliminar = new DocumentType();
-			$eliminar->deleteDocumentType($_GET['id_doc']);
+			$delete = new DocumentType();
+			$delete->deleteDocumentType($_GET['id_doc']);
 		} elseif ($action == 'edit') {
 			$id = $_GET['id_doc'];
 		}

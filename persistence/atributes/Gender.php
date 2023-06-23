@@ -1,4 +1,15 @@
-<?php
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tipo de Documento</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+</head>
+
+<body><?php
 	class Gender
 	{
 		private $pdo;
@@ -31,8 +42,15 @@
 
 			echo "
 				<script>
-					alert('Registro Agregado Exitosamente.');
-					window.location='../views/atributes/genderView.php';
+					Swal.fire({
+						position: 'top-end',
+						icon: 'success',
+						title: 'Registro Agregado Exitosamente.',
+						showConfirmButton: false,
+						timer: 2000
+					}).then(() => {
+							window.location = '../../views/atributes/genderView.php';
+					});
 				</script>
 			";
 		}
@@ -58,8 +76,15 @@
 
 			echo "
 				<script>
-					alert('Registro Actualizado Exitosamente.');
-					window.location='../views/atributes/genderView.php';
+					Swal.fire({
+						position: 'top-end',
+						icon: 'success',
+						title: 'Registro Actualizado Exitosamente.',
+						showConfirmButton: false,
+						timer: 2000
+					}).then(() => {
+							window.location = '../../views/atributes/genderView.php';
+					});
 				</script>
 			";
 		}
@@ -78,10 +103,22 @@
 			$stmt->bindParam(1, $gender);
 			$stmt->execute();
 
-			echo "<script>
-				alert('Registro Eliminado Exitosamente.');
-				window.location='../views/atributes/genderView.php';
-			</script>";
+			echo "
+				<script>
+					Swal.fire({
+						position: 'top-end',
+						icon: 'success',
+						title: 'Registro Eliminado Exitosamente.',
+						showConfirmButton: false,
+						timer: 2000
+					}).then(() => {
+							window.location = '../../views/atributes/genderView.php';
+					});
+				</script>
+			";
 		}
 	}
 ?>
+</body>
+
+</html>
