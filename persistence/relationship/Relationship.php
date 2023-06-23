@@ -1,4 +1,16 @@
-<?php
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tipo de Documento</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+</head>
+
+<body>
+  <?php
 	class Relationship
 	{
 		private $pdo;
@@ -30,17 +42,23 @@
 				INSERT INTO relationship (desc_relationship, state)
 				VALUES (UPPER(:description), :state)
 			";
+			
 			$statement = $this->pdo->prepare($query);
 			$statement->bindParam(':description', $description);
 			$statement->bindParam(':state', $state);
 			$statement->execute();
 			
-			$successMessage = 'Registro Agregado Exitosamente.';
-			$redirectUrl = 'formu_view.php';
 			echo "
 				<script>
-					alert('$successMessage');
-					window.location='$redirectUrl';
+					Swal.fire({
+						position: 'top-end',
+						icon: 'success',
+						title: 'Registro Agregado Exitosamente.',
+						showConfirmButton: false,
+						timer: 2000
+					}).then(() => {
+							window.location = '../../views/relationship/relationshipView.php';
+					});
 				</script>
 			";
 		}
@@ -68,10 +86,18 @@
 					'newState' => $newState,
 					'queryRelationship' => $queryRelationship
 			]);
+			
 			echo "
 				<script>
-					alert('Record Successfully Updated.');
-					window.location='formu_view.php';
+					Swal.fire({
+						position: 'top-end',
+						icon: 'success',
+						title: 'Registro Actualizado Exitosamente.',
+						showConfirmButton: false,
+						timer: 2000
+					}).then(() => {
+							window.location = '../../views/relationship/relationshipView.php';
+					});
 				</script>
 			";
 		}
@@ -88,12 +114,23 @@
 			$stmt = $this->pdo->prepare($sql);
 			$stmt->bindParam(':relation', $relation, PDO::PARAM_STR);
 			$stmt->execute();
-			print "
+			
+			echo "
 				<script>
-					alert('Registro Eliminado Exitosamente.');
-					window.location='formu_view.php';
+					Swal.fire({
+						position: 'top-end',
+						icon: 'success',
+						title: 'Registro Eliminado Exitosamente.',
+						showConfirmButton: false,
+						timer: 2000
+					}).then(() => {
+							window.location = '../../views/relationship/relationshipView.php';
+					});
 				</script>
 			";
 		}
 	}
 ?>
+</body>
+
+</html>
