@@ -14,7 +14,7 @@
       <option value='../views/atributes/documentTypeView.php'>Tipo de Documento</option>
       <option value='../views/atributes/genderView.php'>Género</option>
       <option value='../views/atributes/relationshipView.php'>Parentesco</option>
-      <option value='../views/atributes/questionView.php'>Pregunta se Seguridad</option>
+      <option value='../views/atributes/questionView.php'>Pregunta de Seguridad</option>
       <option value='../views/relationship/roleView.php'>Rol</option>
       <option value='../views/relationship/roleHasUserView.php'>Rol de Usuario</option>
       <option value='../views/user/userStudentView.php'>Estudiante</option>

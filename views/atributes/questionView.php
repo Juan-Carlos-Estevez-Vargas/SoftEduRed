@@ -1,6 +1,6 @@
 <?php
 	require_once "../../persistence/database/Database.php";
-	require_once "../../persistence/atributes/SecurityQuestion.php";
+	require_once "../../persistence/atributes/SecurityQuestionDAO.php";
   
 	$db = database::connect();
 
@@ -8,13 +8,13 @@
 		$action = $_REQUEST['action'];
 
 		if ($action == 'update') {
-			$update = new SecurityQuestion();
+			$update = new SecurityQuestionDAO();
 			$update->updateQuestionState($_POST['question'],$_POST['state']);
 		} elseif ($action == 'register') {
-			$insert = new SecurityQuestion();
+			$insert = new SecurityQuestionDAO();
 			$insert ->addSecurityQuestion($_POST['question'],$_POST['state']);
 		} elseif ($action == 'delete') {
-			$delete = new SecurityQuestion();
+			$delete = new SecurityQuestionDAO();
 			$delete->deleteQuestion($_GET['question']);
 		} elseif ($action == 'edit') {
 			$id = $_GET['question'];
