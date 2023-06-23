@@ -1,8 +1,8 @@
 <?php
 	require_once "../../persistence/database/Database.php";
 	require_once "../../persistence/atributes/SecurityQuestion.php";
-	// include "../indexs/cruds.php";
-	$db = database::conectar();
+  
+	$db = database::connect();
 
 	if (isset($_REQUEST['action'])) {
 		$action = $_REQUEST['action'];
@@ -14,8 +14,8 @@
 			$insert = new SecurityQuestion();
 			$insert ->addSecurityQuestion($_POST['question'],$_POST['state']);
 		} elseif ($action == 'delete') {
-			$eliminar = new SecurityQuestion();
-			$eliminar->deleteQuestion($_GET['question']);
+			$delete = new SecurityQuestion();
+			$delete->deleteQuestion($_GET['question']);
 		} elseif ($action == 'edit') {
 			$id = $_GET['question'];
 		}
@@ -30,6 +30,8 @@
   <title>Pregunta de Seguridad</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
 </head>
 
 <body>
@@ -92,7 +94,7 @@
                   <div class="container-fluid">
                     <div class="row">
                       <div class="col-md-12">
-                        <?php if (!empty($_GET['question']) && !empty($_GET['action'])) { ?>
+                        <?php if (!empty($_GET['question']) && !empty($_GET['action']) && !empty($id)) { ?>
                         <form action="#" method="post" enctype="multipart/form-data">
                           <?php
 														$sql = "SELECT * FROM security_question WHERE question = '$id'";
@@ -149,7 +151,7 @@
                     <h4 class="mb-5 text-uppercase text-primary">Registros</h4>
                     <div class="table-responsive">
                       <table class="table table-bordered">
-                        <caption class="text-center">Attendant Role Information Results</caption>
+                        <caption class="text-center">Listado de Resultados</caption>
                         <thead>
                           <tr>
                             <th>Pregunta de Seguridad</th>
@@ -175,7 +177,7 @@
                                 Actualizar
                               </a>
                               <a class="btn btn-danger" href="?action=delete&question=<?php echo $row['question'];?>"
-                                onclick="return confirm('¿Esta seguro de eliminar este usuario?')">
+                                onclick="confirmDelete(event)">
                                 Eliminar
                               </a>
                             </td>
@@ -205,6 +207,27 @@
       <a class="text-blue" href="https://github.com/Juan-Carlos-Estevez-Vargas/SoftEduRed">SoftEduRed.com</a>
     </div>
   </footer>
+
+  <script>
+  function confirmDelete(event) {
+    event.preventDefault();
+
+    Swal.fire({
+      title: '¿Estás seguro de eliminar este registro?',
+      text: "Esta acción no se puede deshacer.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = event.target.href;
+      }
+    });
+  }
+  </script>
 </body>
 
 </html>

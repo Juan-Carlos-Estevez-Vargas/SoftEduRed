@@ -1,4 +1,16 @@
-<?php
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tipo de Documento</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+</head>
+
+<body>
+  <?php
 	class SecurityQuestion
 	{
 		private $pdo;
@@ -36,10 +48,19 @@
 					':state' => $state,
 			]);
 				
-			$successMessage = 'Security question added successfully.';
-			$redirectTo = '../views/atributes/questionView.php';
-				
-			echo "<script>alert('$successMessage'); window.location='$redirectTo';</script>";
+			echo "
+				<script>
+					Swal.fire({
+						position: 'top-end',
+						icon: 'success',
+						title: 'Registro Agregado Exitosamente.',
+						showConfirmButton: false,
+						timer: 2000
+					}).then(() => {
+							window.location = '../../views/atributes/questionView.php';
+					});
+				</script>
+			";
 		}
 
 		/**
@@ -57,8 +78,15 @@
 			
 			echo "
 				<script>
-					alert('Record successfully deleted.');
-					window.location='../views/atributes/questionView.php';
+					Swal.fire({
+						position: 'top-end',
+						icon: 'success',
+						title: 'Registro Actualizado Exitosamente.',
+						showConfirmButton: false,
+						timer: 2000
+					}).then(() => {
+							window.location = '../../views/atributes/questionView.php';
+					});
 				</script>
 			";
 		}
@@ -76,10 +104,20 @@
 			
 			echo "
 				<script>
-					alert('Record successfully deleted.');
-					window.location='../views/atributes/questionView.php';
+					Swal.fire({
+						position: 'top-end',
+						icon: 'success',
+						title: 'Registro Eliminado Exitosamente.',
+						showConfirmButton: false,
+						timer: 2000
+					}).then(() => {
+							window.location = '../../views/atributes/questionView.php';
+					});
 				</script>
 			";
 		}
 	}
 ?>
+</body>
+
+</html>
