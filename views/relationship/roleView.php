@@ -1,8 +1,8 @@
 <?php
-	// require_once "cruds.php";
 	require_once "../../persistence/database/Database.php";
-	// include "../indexs/cruds.php";
-	$db = database::conectar();
+  require_once "../../persistence/relationship/Role.php";
+
+  $db = database::connect();
 
 	if (isset($_REQUEST['action'])) {
 		$action = $_REQUEST['action'];
@@ -12,10 +12,10 @@
 			$update->updateRole($_POST['relation'], $_POST['queryy'], $_POST['state']);
 		} elseif ($action == 'register') {
 			$insert = new Role();
-			$insert ->registrar($_POST['relation'], $_POST['state']);
+			$insert ->addRole($_POST['relation'], $_POST['state']);
 		} elseif ($action == 'delete') {
-			$eliminar = new Role();
-			$eliminar->addRole($_GET['desc_relat']);
+			$delete = new Role();
+			$delete->deleteRole($_GET['desc_relat']);
 		} elseif ($action == 'edit') {
 			$id = $_GET['desc_relat'];
 		}
@@ -30,6 +30,8 @@
   <title>Rol</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
 </head>
 
 <body>
@@ -92,7 +94,7 @@
                   <div class="container-fluid">
                     <div class="row">
                       <div class="col-md-12">
-                        <?php if (!empty($_GET['desc_relat']) && !empty($_GET['action'])) { ?>
+                        <?php if (!empty($_GET['desc_relat']) && !empty($_GET['action']) && !empty($id)) { ?>
                         <form action="#" method="post" enctype="multipart/form-data">
                           <?php
 														$sql = "
@@ -182,7 +184,7 @@
                                 Actualizar
                               </a>
                               <a class="btn btn-danger" href="?action=delete&desc_relat=<?php echo $row['desc_role'];?>"
-                                onclick="return confirm('¿Esta seguro de eliminar este usuario?')">
+                                onclick="confirmDelete(event)">
                                 Eliminar
                               </a>
                             </td>
@@ -212,6 +214,27 @@
       <a class="text-blue" href="https://github.com/Juan-Carlos-Estevez-Vargas/SoftEduRed">SoftEduRed.com</a>
     </div>
   </footer>
+
+  <script>
+  function confirmDelete(event) {
+    event.preventDefault();
+
+    Swal.fire({
+      title: '¿Estás seguro de eliminar este registro?',
+      text: "Esta acción no se puede deshacer.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = event.target.href;
+      }
+    });
+  }
+  </script>
 </body>
 
 </html>

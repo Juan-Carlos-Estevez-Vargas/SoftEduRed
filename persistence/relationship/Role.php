@@ -1,4 +1,16 @@
-<?php
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tipo de Documento</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+</head>
+
+<body>
+  <?php
 	class Role
 	{
 		private $pdo;
@@ -12,7 +24,7 @@
 		public function __construct()
 		{
 			try {
-				$this->pdo = database::conectar();
+				$this->pdo = database::connect();
 			} catch (PDOException $e) {
 				throw new PDOException($e->getMessage());
 			}
@@ -33,10 +45,18 @@
 			";
 			$statement = $this->pdo->prepare($sql);
 			$statement->execute(['description' => $description, 'state' => $state]);
+
 			echo "
 				<script>
-					alert('Role added successfully.');
-					window.location='../views/relationship/roleView.php';
+					Swal.fire({
+						position: 'top-end',
+						icon: 'success',
+						title: 'Registro Agregado Exitosamente.',
+						showConfirmButton: false,
+						timer: 2000
+					}).then(() => {
+							window.location = '../../views/relationship/roleView.php';
+					});
 				</script>
 			";
 		}
@@ -58,12 +78,20 @@
 				WHERE desc_role = '$oldDesc'
 			";
 			$this->pdo->query($sql);
-			print "
-				<script>
-					alert('Record Successfully Updated.');
-					window.location='../views/relationship/roleView.php';
-				</script>
-			";
+			
+			echo "
+			<script>
+				Swal.fire({
+					position: 'top-end',
+					icon: 'success',
+					title: 'Registro Actualizado Exitosamente.',
+					showConfirmButton: false,
+					timer: 2000
+				}).then(() => {
+						window.location = '../../views/relationship/roleView.php';
+				});
+			</script>
+		";
 		}
 
 		/**
@@ -78,12 +106,23 @@
 			$stmt = $this->pdo->prepare($sql);
 			$stmt->bindParam(':description', $description);
 			$stmt->execute();
+			
 			echo "
 				<script>
-					alert('Registro Eliminado Exitosamente.');
-					window.location='../views/relationship/roleView.php';
+					Swal.fire({
+						position: 'top-end',
+						icon: 'success',
+						title: 'Registro Eliminado Exitosamente.',
+						showConfirmButton: false,
+						timer: 2000
+					}).then(() => {
+							window.location = '../../views/relationship/roleView.php';
+					});
 				</script>
 			";
 		}
 	}
 ?>
+</body>
+
+</html>
