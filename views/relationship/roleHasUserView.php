@@ -1,6 +1,6 @@
 <?php
 	require_once "../../persistence/database/Database.php";
-	require_once "../../persistence/relationship/RoleHasUser.php";
+	require_once "../../persistence/relationship/RoleHasUserDAO.php";
 
   $db = database::connect();
 
@@ -8,17 +8,17 @@
 		$action = $_REQUEST['action'];
 
 		if ($action == 'update') {
-			$update = new RoleUser();
+			$update = new RoleUserDAO();
 			$update->updateUserRoles(
 				$_POST['tdoc_r'], $_POST['tdoc_r2'], $_POST['id_user_r'], $_POST['id_user_r2'],
 				$_POST['role'], $_POST['role2'], $_POST['state']
 			);
 		} elseif ($action == 'register') {
-			$insert = new RoleUser();
+			$insert = new RoleUserDAO();
 			$insert ->registerUserWithRolesAndStates($_POST['tdoc_r'], $_POST['id_user_r']);
 		} elseif ($action == 'delete') {
-			$eliminar = new RoleUser();
-			$eliminar->deleteUserRole($_GET['tdoc_r'], $_GET['id_user_r'], $_GET['role']);
+			$delete = new RoleUserDAO();
+			$delete->deleteUserRole($_GET['tdoc_r'], $_GET['id_user_r'], $_GET['role']);
 		} elseif ($action == 'edit') {
 			$id_r = $_GET['id_user_r'];
 			$tdoc_r = $_GET['tdoc_r'];
@@ -130,7 +130,7 @@
                   <div class="container-fluid">
                     <div class="row">
                       <div class="col-md-12">
-                        <?php if (!empty($_GET['tdoc_r']) && !empty($_GET['id_user_r']) && !empty($_GET['role']) && !empty($_GET['action']) && !empty($id)) {?>
+                        <?php if (!empty($_GET['tdoc_r']) && !empty($_GET['id_user_r']) && !empty($_GET['role']) && !empty($_GET['action']) && !empty($id_r)) {?>
                         <form action="#" method="post" enctype="multipart/form-data">
                           <?php
 														$sql = "
