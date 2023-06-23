@@ -1,6 +1,6 @@
 <?php
 	require_once "../../persistence/database/Database.php";
-  require_once "../../persistence/relationship/Role.php";
+  require_once "../../persistence/relationship/RoleDAO.php";
 
   $db = database::connect();
 
@@ -8,13 +8,13 @@
 		$action = $_REQUEST['action'];
 
 		if ($action == 'update') {
-			$update = new Role();
+			$update = new RoleDAO();
 			$update->updateRole($_POST['relation'], $_POST['queryy'], $_POST['state']);
 		} elseif ($action == 'register') {
-			$insert = new Role();
+			$insert = new RoleDAO();
 			$insert ->addRole($_POST['relation'], $_POST['state']);
 		} elseif ($action == 'delete') {
-			$delete = new Role();
+			$delete = new RoleDAO();
 			$delete->deleteRole($_GET['desc_relat']);
 		} elseif ($action == 'edit') {
 			$id = $_GET['desc_relat'];
@@ -110,9 +110,10 @@
                             <div class="col-md-6">
                               <div class="form-outline">
                                 <input id="Space" type="text" class="form-control" name="queryy"
-                                  value="<?php echo $r['desc_role']?>" style="display: none" />
-                                <input id="Space" type="text" class="form-control" name="relation"
-                                  value="<?php echo $r['desc_role']?>" required />
+                                  value="<?php echo $r['desc_role']?>"
+                                  style="text-transform:uppercase; display: none" />
+                                <input id="Space" type="text" class="form-control" style="text-transform:uppercase;"
+                                  name=" relation" value="<?php echo $r['desc_role']?>" required />
                                 <label class="form-label">Tipo de Rol:</label>
                               </div>
                             </div>
