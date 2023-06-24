@@ -138,7 +138,7 @@
                   <div class="col-md-12 text-center mt-4">
                     <?php
 											$sql = "SELECT * FROM type_of_document";
-											$query = $db ->query($sql);
+											$query = $db->query($sql);
 
 											if ($query->rowCount()>0):
 										?>

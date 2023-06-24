@@ -1,21 +1,24 @@
 <?php
-	require_once "../../persistence/relationship/SubjectHasCourse.php";
+	require_once "../../persistence/relationship/SubjectHasCourseDAO.php";
 	require_once "../../persistence/database/Database.php";
-	// include "../indexs/cruds.php";
-	$db = database::conectar();
+
+  $db = database::connect();
 
 	if (isset($_REQUEST['action'])) {
 		$action = $_REQUEST['action'];
 
 		if ($action == 'update') {
-			$update = new SubjectCourse();
-			$update->actualizar($_POST['subj'],$_POST['subj2'],$_POST['course'],$_POST['course2'],$_POST['state']);
+			$update = new SubjectCourseDAO();
+			$update->updateSubjectHasCourse(
+        $_POST['subj'], $_POST['subj2'], $_POST['course'],
+        $_POST['course2'],$_POST['state']
+      );
 		} elseif ($action == 'register') {
-			$insert = new SubjectCourse();
-			$insert ->registrar($_POST['course']);
+			$insert = new SubjectCourseDAO();
+			$insert->addSubjectHasCourse($_POST['course']);
 		} elseif ($action == 'delete') {
-			$eliminar = new SubjectCourse();
-			$eliminar->eliminar($_GET['subj'], $_GET['course']);
+			$delete = new SubjectCourseDAO();
+			$delete->deleteSubjectHasCourse($_GET['subj'], $_GET['course']);
 		} elseif ($action == 'edit') {
 			$subj = $_GET['subj'];
       $course = $_GET['course'];
@@ -31,6 +34,8 @@
   <title>Materia por Curso</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
 </head>
 
 <body>
@@ -121,7 +126,7 @@
 																		}
 																	?>
                                 </select>
-                                <label class="form-label">Asunto:</label>
+                                <label class="form-label">Materia:</label>
                               </div>
                             </div>
 
@@ -143,12 +148,12 @@
                                 <label class="mr-5">Estado: </label>
                                 <div class=" form-check form-check-inline">
                                   <input type="radio" name="state" value="1"
-                                    <?php echo $r['state'] === '1' ? 'checked' : '' ?> />
+                                    <?php echo $r['state_sub_course'] === '1' ? 'checked' : '' ?> />
                                   <label class="form-check-label">Activo</label>
                                 </div>
                                 <div class="form-check form-check-inline">
                                   <input type="radio" name="state" value="0"
-                                    <?php echo $r['state'] === '0' ? 'checked' : '' ?> />
+                                    <?php echo $r['state_sub_course'] === '0' ? 'checked' : '' ?> />
                                   <label class="form-check-label">Inactivo</label>
                                 </div>
                               </div>
@@ -173,11 +178,11 @@
                   <div class="col-md-12 text-center mt-4">
                     <?php
 											$sql = "SELECT * FROM subject_has_course ORDER BY pk_fk_te_sub ASC";
-											$query = $db ->query($sql);
+											$query = $db->query($sql);
 										
 											if ($query->rowCount() > 0):
 										?>
-                    <h4 class="mb-5 text-uppercase text-primary">Registros</h4>
+                    <h4 class="mb-5 text-uppercase text-primary">Materias por Curso</h4>
                     <div class="table-responsive">
                       <table class="table table-bordered">
                         <caption class="text-center">Listado de Resultados</caption>
@@ -192,11 +197,11 @@
                         <tbody>
                           <?php while ($row = $query->fetch(PDO::FETCH_ASSOC)): ?>
                           <tr>
-                            <td><?php $row['pk_fk_course_stu']; ?></td>
-                            <td><?php $row['pk_fk_te_sub']; ?></td>
+                            <td><?php echo $row['pk_fk_course_stu']; ?></td>
+                            <td><?php echo $row['pk_fk_te_sub']; ?></td>
                             <td>
                               <?php
-																if ($row['state'] == 1) {
+																if ($row['state_sub_course'] == 1) {
 																	echo "Activo";
 																} else {
 																	echo "Inactivo";
@@ -210,7 +215,7 @@
                               </a>
                               <a class="btn btn-danger"
                                 href="?action=delete&subj=<?php echo $row['pk_fk_te_sub'];?>&course=<?php echo $row['pk_fk_course_stu'];?>"
-                                onclick="return confirm('¿Esta seguro de eliminar este usuario?')">
+                                onclick="confirmDelete(event)">
                                 Eliminar
                               </a>
                             </td>
@@ -240,6 +245,27 @@
       <a class="text-blue" href="https://github.com/Juan-Carlos-Estevez-Vargas/SoftEduRed">SoftEduRed.com</a>
     </div>
   </footer>
+
+  <script>
+  function confirmDelete(event) {
+    event.preventDefault();
+
+    Swal.fire({
+      title: '¿Estás seguro de eliminar este registro?',
+      text: "Esta acción no se puede deshacer.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = event.target.href;
+      }
+    });
+  }
+  </script>
 </body>
 
 </html>
