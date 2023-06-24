@@ -1,11 +1,11 @@
 <?php 
-	class UserCrud {
+	class UserCrudDAO {
 		private $pdo;
 
 		// Creando la conexion a la base de datos
 		public function __CONSTRUCT() {
 			try {
-				$this->pdo = database::conectar();
+				$this->pdo = database::connect();
 			} catch (Exception $e) {
 				die($e->getMessage());
 			}
