@@ -135,73 +135,73 @@
 			}
 		
 			/**
-				 * Displays a success message using SweetAlert and redirects the user to a specified location.
-				 *
-				 * @param string $message The success message to display
-				 * @param string $redirectURL The URL to redirect to after displaying the message
-				 */
-				private function showSuccessMessage(string $message, string $redirectURL): void
-				{
-						echo "
-								<script>
-										Swal.fire({
-												position: 'top-end',
-												icon: 'success',
-												title: '$message',
-												showConfirmButton: false,
-												timer: 2000
-										}).then(() => {
-												window.location = '$redirectURL';
-										});
-								</script>
-						";
-				}
+			 * Displays a success message using SweetAlert and redirects the user to a specified location.
+			 *
+			 * @param string $message The success message to display
+			 * @param string $redirectURL The URL to redirect to after displaying the message
+			 */
+			private function showSuccessMessage(string $message, string $redirectURL): void
+			{
+					echo "
+							<script>
+									Swal.fire({
+											position: 'top-end',
+											icon: 'success',
+											title: '$message',
+											showConfirmButton: false,
+											timer: 2000
+									}).then(() => {
+											window.location = '$redirectURL';
+									});
+							</script>
+					";
+			}
 
-				/**
-				 * Displays an error message using SweetAlert and redirects the user to a specified location.
-				 *
-				 * @param string $message The error message to display
-				 * @param string $redirectURL The URL to redirect to after displaying the message
-				 */
-				private function showErrorMessage(string $message, string $redirectURL): void
-				{
-						echo "
-								<script>
-										Swal.fire({
-												position: 'top-center',
-												icon: 'error',
-												title: '$message',
-												showConfirmButton: false,
-												timer: 2000
-										}).then(() => {
-												window.location = '$redirectURL';
-										});
-								</script>
-						";
-				}
+			/**
+			 * Displays an error message using SweetAlert and redirects the user to a specified location.
+			 *
+			 * @param string $message The error message to display
+			 * @param string $redirectURL The URL to redirect to after displaying the message
+			 */
+			private function showErrorMessage(string $message, string $redirectURL): void
+			{
+					echo "
+							<script>
+									Swal.fire({
+											position: 'top-center',
+											icon: 'error',
+											title: '$message',
+											showConfirmButton: false,
+											timer: 2000
+									}).then(() => {
+											window.location = '$redirectURL';
+									});
+							</script>
+					";
+			}
 
-				/**
-				 * Displays an warning message using SweetAlert and redirects the user to a specified location.
-				 *
-				 * @param string $message The error message to display
-				 * @param string $redirectURL The URL to redirect to after displaying the message
-				 */
-				private function showWarningMessage(string $message, string $redirectURL): void
-				{
-						echo "
-								<script>
-										Swal.fire({
-												position: 'top-center',
-												icon: 'warning',
-												title: '$message',
-												showConfirmButton: false,
-												timer: 2000
-										}).then(() => {
-												window.location = '$redirectURL';
-										});
-								</script>
-						";
-				}
+			/**
+			 * Displays an warning message using SweetAlert and redirects the user to a specified location.
+			 *
+			 * @param string $message The error message to display
+			 * @param string $redirectURL The URL to redirect to after displaying the message
+			 */
+			private function showWarningMessage(string $message, string $redirectURL): void
+			{
+					echo "
+							<script>
+									Swal.fire({
+											position: 'top-center',
+											icon: 'warning',
+											title: '$message',
+											showConfirmButton: false,
+											timer: 2000
+									}).then(() => {
+											window.location = '$redirectURL';
+									});
+							</script>
+					";
+			}
 	}
 ?>
 </body>

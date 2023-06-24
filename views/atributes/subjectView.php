@@ -1,21 +1,21 @@
 <?php
-	require_once "../../persistence/atributes/Subject.php";
+	require_once "../../persistence/atributes/SubjectDAO.php";
 	require_once "../../persistence/database/Database.php";
-	// include "../indexs/cruds.php";
-	$db = database::conectar();
+
+  $db = database::connect();
 
 	if (isset($_REQUEST['action'])) {
 		$action = $_REQUEST['action'];
 
 		if ($action == 'update') {
-			$update = new Subject();
-			$update->actualizar($_POST['subject'], $_POST['state'], $_POST['tdoc_t'], $_POST['id_user_t'], $_POST['queryy']);
+			$update = new SubjectDAO();
+			$update->updateSubject($_POST['subject'], $_POST['state'], $_POST['tdoc_t'], $_POST['id_user_t'], $_POST['queryy']);
 		} elseif ($action == 'register') {
-			$insert = new Subject();
-			$insert ->registrar($_POST['subject'], $_POST['state'], $_POST['tdoc_t'], $_POST['id_user_t']);
+			$insert = new SubjectDAO();
+			$insert ->registerSubject($_POST['subject'], $_POST['state'], $_POST['tdoc_t'], $_POST['id_user_t']);
 		} elseif ($action == 'delete') {
-			$eliminar = new Subject();
-			$eliminar->eliminar($_GET['id_subject']);
+			$delete = new SubjectDAO();
+			$delete->deleteSubject($_GET['id_subject']);
 		} elseif ($action == 'edit') {
 			$id = $_GET['id_subject'];
 		}
@@ -27,9 +27,11 @@
 
 <head>
   <meta charset="utf-8">
-  <title>Asunto</title>
+  <title>Materia</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
 </head>
 
 <body>
@@ -42,7 +44,7 @@
               <div class="col-xl-12">
                 <div class="card-body p-md-5 text-black" style="background-color: hsl(0, 0%, 96%)">
                   <h3 class="text-center d-flex justify-content-center justify-content-md-end">
-                    <a class="btn btn-success" href="?action=ver&m=1">Agregar Registro</a>
+                    <a class="btn btn-success" href="?action=ver&m=1">Agregar Materia</a>
                   </h3>
 
                   <div class="container-fluid">
@@ -50,14 +52,15 @@
                       <div class="col-md-12">
                         <?php if (!empty($_GET['m']) && !empty($_GET['action'])) { ?>
                         <form action="#" method="post" enctype="multipart/form-data">
-                          <h4 class="mb-5 text-uppercase text-center text-success">Nuevo Asunto</h4>
+                          <h4 class="mb-5 text-uppercase text-center text-success">Nueva Materia</h4>
 
                           <div class="row">
                             <div class="col-md-6">
                               <div class="form-outline">
                                 <input id="space" class="form-control" type="text" name="subject"
-                                  placeholder="Materia/Asunto" required style="text-transform:uppercase" />
-                                <label class="form-label">Materia / Asunto:</label>
+                                  placeholder="Materia/Asunto" maxlength="30" required
+                                  style="text-transform:uppercase" />
+                                <label class="form-label">Materia:</label>
                               </div>
                             </div>
 
@@ -129,14 +132,14 @@
                   <div class="container-fluid">
                     <div class="row">
                       <div class="col-md-12">
-                        <?php if (!empty($_GET['id_subject']) && !empty($_GET['action'])) { ?>
+                        <?php if (!empty($_GET['id_subject']) && !empty($_GET['action']) && !empty($id)) { ?>
                         <form action="#" method="post" enctype="multipart/form-data">
                           <?php
 														$sql = "SELECT * FROM subject WHERE n_subject = '$id'";
 														$query = $db->query($sql);
 														while ($r = $query->fetch(PDO::FETCH_ASSOC)) {
 													?>
-                          <h4 class="mb-5 text-uppercase text-center text-success">Actualizar Pregunta de Seguridad</h4>
+                          <h4 class="mb-5 text-uppercase text-center text-success">Actualizar Materia</h4>
 
                           <div class="row">
                             <div class="col-md-6">
@@ -144,7 +147,7 @@
                                 <input id="space" class="form-control" type="text" name="queryy"
                                   value="<?php echo $r['n_subject']?>" style="display: none" />
                                 <input id="space" class="form-control" type="text" name="subject"
-                                  value="<?php echo $r['n_subject']?>" required />
+                                  value="<?php echo $r['n_subject']?>" maxlength="30" required />
                                 <label class="form-label">Asunto:</label>
                               </div>
                             </div>
@@ -176,7 +179,7 @@
                           <div class="row">
                             <div class="col-md-6">
                               <div class="form-outline">
-                                <select class="form-control" name="id_user_t">
+                                <select class="form-control" name="tdoc_t">
                                   <?php
 																		foreach ($db->query("
 																			SELECT id_user FROM user
@@ -221,7 +224,7 @@
 										
 											if ($query->rowCount() > 0):
 										?>
-                    <h4 class="mb-5 text-uppercase text-primary">Registros</h4>
+                    <h4 class="mb-5 text-uppercase text-primary">Materias</h4>
                     <div class="table-responsive">
                       <table class="table table-bordered">
                         <caption class="text-center">Listado de Resultados</caption>

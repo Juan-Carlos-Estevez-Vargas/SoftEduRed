@@ -16,13 +16,13 @@
       <option value='../views/atributes/relationshipView.php'>Parentesco</option>
       <option value='../views/atributes/questionView.php'>Pregunta de Seguridad</option>
       <option value='../views/relationship/roleView.php'>Rol</option>
-      <option value='../views/relationship/roleHasUserView.php'>Rol de Usuario</option>
+      <option value='../views/relationship/roleHasUserView.php'>Rol por Usuario</option>
       <option value='../views/user/userStudentView.php'>Estudiante</option>
       <option value='../views/user/userTeacherView.php'>Profesor</option>
       <option value='../views/user/userAttendantView.php'>Acudiente</option>
-      <option value='../views/atributes/subjectView.php'>Asunto</option>
+      <option value='../views/atributes/subjectView.php'>Materia</option>
       <option value='../views/atributes/courseView.php'>Curso</option>
-      <option value='../views/relationship/subjectHasCourseView.php'>Asunto del Curso</option>
+      <option value='../views/relationship/subjectHasCourseView.php'>Materia por Curso</option>
       <option value='../views/atributes/noAttendanceView.php'>Asistencia</option>
     </select>
   </div>
