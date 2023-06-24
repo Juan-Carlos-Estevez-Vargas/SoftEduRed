@@ -1,21 +1,21 @@
 <?php
-	require_once "../../persistence/atributes/Course.php";
+	require_once "../../persistence/atributes/CourseDAO.php";
 	require_once "../../persistence/database/Database.php";
-	// include "../indexs/cruds.php";
-	$db = database::conectar();
+
+  $db = database::connect();
 
 	if (isset($_REQUEST['action'])) {
 		$action = $_REQUEST['action'];
 
 		if ($action == 'update') {
-			$update = new Course();
+			$update = new CourseDAO();
 			$update->updateCourseRecord($_POST['course'], $_POST['queryy'], $_POST['state']);
 		} elseif ($action == 'register') {
-			$insert = new Course();
+			$insert = new CourseDAO();
 			$insert ->registerCourse($_POST['course'], $_POST['state']);
 		} elseif ($action == 'delete') {
-			$eliminar = new Course();
-			$eliminar->deleteCourse($_GET['id_course']);
+			$delete = new CourseDAO();
+			$delete->deleteCourse($_GET['id_course']);
 		} elseif ($action == 'edit') {
 			$id = $_GET['id_course'];
 		}
@@ -42,7 +42,7 @@
               <div class="col-xl-12">
                 <div class="card-body p-md-5 text-black" style="background-color: hsl(0, 0%, 96%)">
                   <h3 class="text-center d-flex justify-content-center justify-content-md-end">
-                    <a class="btn btn-success" href="?action=ver&m=1">Agregar Registro</a>
+                    <a class="btn btn-success" href="?action=ver&m=1">Agregar Curso</a>
                   </h3>
 
                   <div class="container-fluid">
@@ -56,8 +56,8 @@
                             <div class="col-md-6">
                               <div class="form-outline">
                                 <input id="space" class="form-control" type="text" name="course" placeholder="Curso"
-                                  required />
-                                <label class="form-label">Curso:</label>
+                                  required maxlength="5" />
+                                <label class=" form-label">Curso:</label>
                               </div>
                             </div>
 
@@ -92,7 +92,7 @@
                   <div class="container-fluid">
                     <div class="row">
                       <div class="col-md-12">
-                        <?php if (!empty($_GET['id_course']) && !empty($_GET['action']) ) { ?>
+                        <?php if (!empty($_GET['id_course']) && !empty($_GET['action']) && !empty($id)) { ?>
                         <form action="#" method="post" enctype="multipart/form-data">
                           <?php
 														$sql = "SELECT * FROM course WHERE cod_course = '$id'";
@@ -107,7 +107,7 @@
                                 <input id="Space" class="form-control" type="text" name="queryy"
                                   value="<?php echo $r['cod_course']?>" style="display: none" />
                                 <input id="Space" class="form-control" type=" text" name="course"
-                                  value="<?php echo $r['cod_course']?>" required />
+                                  value="<?php echo $r['cod_course']?>" required maxlength="5" />
                                 <label class="form-label">Asunto:</label>
                               </div>
                             </div>
@@ -150,7 +150,7 @@
 											$query = $db ->query($sql);
 											if ($query->rowCount() > 0):
 										?>
-                    <h4 class="mb-5 text-uppercase text-primary">Registros</h4>
+                    <h4 class="mb-5 text-uppercase text-primary">Cursos</h4>
                     <div class="table-responsive">
                       <table class="table table-bordered">
                         <caption class="text-center">Listado de Resultados</caption>
@@ -179,7 +179,7 @@
                                 Actualizar
                               </a>
                               <a class="btn btn-danger" href="?action=delete&id_course=<?php echo $row['cod_course'];?>"
-                                onclick="return confirm('¿Esta seguro de eliminar este usuario?')">
+                                onclick="confirmDelete(event)">
                                 Eliminar
                               </a>
                             </td>
@@ -202,6 +202,27 @@
       </div>
     </div>
   </section>
+
+  <script>
+  function confirmDelete(event) {
+    event.preventDefault();
+
+    Swal.fire({
+      title: '¿Estás seguro de eliminar este registro?',
+      text: "Esta acción no se puede deshacer.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = event.target.href;
+      }
+    });
+  }
+  </script>
 
   <footer class="bg-light text-center text-lg-start">
     <div class="text-center p-3" style="background-color: hsl(0, 0%, 96%)">

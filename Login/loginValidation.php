@@ -17,7 +17,7 @@
             
             // Connect to database
             require_once "../persistence/database/Database.php";
-            $db = Database::conectar();
+            $db = Database::connect();
 
             // Initialize counter
             $cont = 0;

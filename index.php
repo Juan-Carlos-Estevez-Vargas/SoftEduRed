@@ -1,19 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="shortcut icon" href="images/login.ico" />
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
-    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-    crossorigin="anonymous"
-  >
-  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <meta charset="utf-8" />
   <title>Bienvenidos</title>
 </head>
+
 <body>
   <section class="">
     <!-- Jumbotron -->
@@ -21,7 +19,7 @@
       <div class="container">
         <?php
           require_once "persistence/database/Database.php";
-          $db = Database::conectar();
+          $db = Database::connect();
           session_start();
 
           if (isset($_SESSION['active'])) {
@@ -75,28 +73,16 @@
 
                     <div class="col-md-6 mb-4">
                       <div class="form-outline">
-                        <input
-                          class="form-control"
-                          type="text"
-                          name="id"
-                          id="user"
-                          placeholder="Número De Documento"
-                          required
-                        />
+                        <input class="form-control" type="text" name="id" id="user" placeholder="Número De Documento"
+                          required />
                         <label id="NO" class="form-label" for="id">N° Documento</label>
                       </div>
                     </div>
 
                     <div class="col-md-6 mb-4">
                       <div class="form-outline">
-                        <input
-                          class="form-control"
-                          type="password"
-                          name="pass"
-                          id="pass"
-                          placeholder="Contraseña"
-                          required
-                        />
+                        <input class="form-control" type="password" name="pass" id="pass" placeholder="Contraseña"
+                          required />
                         <label class="form-label" for="pass">Contraseña</label>
                       </div>
                     </div>
@@ -128,4 +114,5 @@
     <!-- Jumbotron -->
   </section>
 </body>
+
 </html>
