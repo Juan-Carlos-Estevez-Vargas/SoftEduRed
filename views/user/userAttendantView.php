@@ -82,7 +82,7 @@
                             <div class="col-md-3">
                               <div class="form-outline">
                                 <input id="space" type="number" class="form-control" name="id_user"
-                                  placeholder="Número de Identificación" required />
+                                  placeholder="Número de Identificación" maxlength="15" required />
                                 <label class="form-label">Número de Identificación:</label>
                               </div>
                             </div>
@@ -90,7 +90,7 @@
                             <div class="col-md-3">
                               <div class="form-outline">
                                 <input id="space" type="text" class="form-control" name="f_name"
-                                  placeholder="Primer Nombre" required />
+                                  placeholder="Primer Nombre" maxlength="15" required />
                                 <label class="form-label">Primer Nombre:</label>
                               </div>
                             </div>
@@ -98,7 +98,7 @@
                             <div class="col-md-3">
                               <div class="form-outline">
                                 <input id="space" type="text" class="form-control" name="s_name"
-                                  placeholder="Segundo Nombre" />
+                                  placeholder="Segundo Nombre" maxlength="15" />
                                 <label class="form-label">Segundo Nombre:</label>
                               </div>
                             </div>
@@ -108,7 +108,7 @@
                             <div class="col-md-3">
                               <div class="form-outline">
                                 <input id="space" type="text" class="form-control" name="f_lname"
-                                  placeholder="Primer Apellido" required />
+                                  placeholder="Primer Apellido" maxlength="15" required />
                                 <label class="form-label">Primer Apellido:</label>
                               </div>
                             </div>
@@ -116,7 +116,7 @@
                             <div class="col-md-3">
                               <div class="form-outline">
                                 <input id="space" class="form-control" type="text" name="s_lname"
-                                  placeholder="Segundo Apellido" />
+                                  placeholder="Segundo Apellido" maxlength="15" />
                                 <label class="form-label">Segundo Apellido:</label>
                               </div>
                             </div>
@@ -136,8 +136,8 @@
 
                             <div class="col-md-3">
                               <div class="form-outline">
-                                <input id="space" type="text" class="form-control" name="adress"
-                                  placeholder="Dirección" />
+                                <input id="space" type="text" class="form-control" name="adress" placeholder="Dirección"
+                                  maxlength="40" />
                                 <label class="form-label">Dirección:</label>
                               </div>
                             </div>
@@ -147,7 +147,7 @@
                             <div class="col-md-3">
                               <div class="form-outline">
                                 <input id="space" type="text" class="form-control" name="email"
-                                  placeholder="Correo Electrónico" required />
+                                  placeholder="Correo Electrónico" maxlength="35" required />
                                 <label class="form-label">Correo electrónico:</label>
                               </div>
                             </div>
@@ -155,7 +155,7 @@
                             <div class="col-md-3">
                               <div class="form-outline">
                                 <input id="space" type="text" class="form-control" name="phone" placeholder="Teléfono"
-                                  required />
+                                  maxlength="15" />
                                 <label class="form-label">Teléfono:</label>
                               </div>
                             </div>
@@ -163,7 +163,7 @@
                             <div class="col-md-3">
                               <div class="form-outline">
                                 <input id="space" type="text" class="form-control" name="u_name" placeholder="Usuario"
-                                  required />
+                                  required maxlength="40" />
                                 <label class="form-label">Usuario:</label>
                               </div>
                             </div>
@@ -171,7 +171,7 @@
                             <div class="col-md-3">
                               <div class="form-outline">
                                 <input id="space" type="password" class="form-control" name="pass"
-                                  placeholder="Contraseña" required />
+                                  placeholder="Contraseña" maxlength="20" required />
                                 <label class="form-label">Contraseña:</label>
                               </div>
                             </div>
@@ -208,7 +208,7 @@
                                     }
                                 ?>
                                 </select>
-                                <label class="form-label">Relación:</label>
+                                <label class="form-label">Parentesco:</label>
                               </div>
                             </div>
 
@@ -256,7 +256,8 @@
                             <div class="col-md-3">
                               <div class="form-outline">
                                 <input id="space" type="text" class="form-control" name="f_name"
-                                  value="<?php echo $r['first_name'];?>" placeholder="Primer Nombre" required />
+                                  value="<?php echo $r['first_name'];?>" maxlength="15" placeholder="Primer Nombre"
+                                  required />
                                 <label class="form-label">Primer Nombre:</label>
                               </div>
                             </div>
@@ -264,7 +265,7 @@
                             <div class="col-md-3">
                               <div class="form-outline">
                                 <input id="space" type="text" class="form-control" name="s_name"
-                                  value="<?php echo $r['second_name'];?>" placeholder="Segundo Nombre" />
+                                  value="<?php echo $r['second_name'];?>" maxlength="15" placeholder="Segundo Nombre" />
                                 <label class="form-label">Segundo Nombre:</label>
                               </div>
                             </div>
@@ -274,7 +275,8 @@
                             <div class="col-md-3">
                               <div class="form-outline">
                                 <input id="space" type="text" class="form-control" name="f_lname"
-                                  value="<?php echo $r['surname'];?>" placeholder="Primer Apellido" required />
+                                  value="<?php echo $r['surname'];?>" maxlength="15" placeholder="Primer Apellido"
+                                  required />
                                 <label class="form-label">Primer Apellido:</label>
                               </div>
                             </div>
@@ -282,7 +284,8 @@
                             <div class="col-md-3">
                               <div class="form-outline">
                                 <input id="space" type="text" class="form-control" name="s_lname"
-                                  value="<?php echo $r['second_surname'];?>" placeholder="Segundo Apellido" />
+                                  value="<?php echo $r['second_surname'];?>" maxlength="15"
+                                  placeholder="Segundo Apellido" />
                                 <label class="form-label">Segundo Apellido:</label>
                               </div>
                             </div>
@@ -304,7 +307,7 @@
                             <div class="col-md-3">
                               <div class="form-outline">
                                 <input id="space" type="text" class="form-control" name="adress"
-                                  value="<?php echo $r['adress'];?>" placeholder="Dirección" />
+                                  value="<?php echo $r['adress'];?>" maxlength="40" placeholder=" Dirección" />
                                 <label class="form-label">Dirección:</label>
                               </div>
                             </div>
@@ -314,7 +317,8 @@
                             <div class="col-md-3">
                               <div class="form-outline">
                                 <input id="space" type="text" class="form-control" name="email"
-                                  value="<?php echo $r['email'];?>" placeholder="Correo Electrónico" required />
+                                  value="<?php echo $r['email'];?>" maxlength="40" placeholder="Correo Electrónico"
+                                  required />
                                 <label class="form-label">Correo:</label>
                               </div>
                             </div>
@@ -322,7 +326,7 @@
                             <div class="col-md-3">
                               <div class="form-outline">
                                 <input id="space" type="text" class="form-control" name="phone"
-                                  value="<?php echo $r['phone'];?>" placeholder="Teléfono" required />
+                                  value="<?php echo $r['phone'] ;?>" placeholder="Teléfono" maxlength="15" />
                                 <label class="form-label">Teléfono:</label>
                               </div>
                             </div>
@@ -330,7 +334,7 @@
                             <div class="col-md-3">
                               <div class="form-outline">
                                 <input id="space" type="text" class="form-control" name="u_name"
-                                  value="<?php echo $r['user_name'];?>" placeholder="Usuario" required />
+                                  value="<?php echo $r['user_name'];?>" placeholder="Usuario" maxlength="40" required />
                                 <label class="form-label">Usuario:</label>
                               </div>
                             </div>
@@ -338,7 +342,7 @@
                             <div class="col-md-3">
                               <div class="form-outline">
                                 <input id="space" type="password" class="form-control" name="pass"
-                                  placeholder="Contraseña" required />
+                                  placeholder="Contraseña" required maxlength="20" />
                                 <label class="form-label">Contraseña:</label>
                               </div>
                             </div>
@@ -349,11 +353,11 @@
                               <div class="form-outline">
                                 <select class="form-control" name="s_ques">
                                   <?php
-                                    foreach ($db->query('SELECT * FROM security_question') as $row2) {
-                                        $selected = $r['fk_s_question'] == $row2['question'] ? 'selected' : '';
-                                        echo '<option value="'.$row2['question'].'" '.$selected.'>'.$row2["question"].'</option>';
-                                    }
-                                ?>
+                                      foreach ($db->query('SELECT * FROM security_question') as $row2) {
+                                          $selected = $r['fk_s_question'] == $row2['question'] ? 'selected' : '';
+                                          echo '<option value="'.$row2['question'].'" '.$selected.'>'.$row2["question"].'</option>';
+                                      }
+                                  ?>
                                 </select>
                                 <label class="form-label">Pregunta de Seguridad:</label>
                               </div>
@@ -371,13 +375,13 @@
                               <div class="form-outline">
                                 <select class="form-control" name="relation">
                                   <?php
-                                    foreach ($db->query('SELECT * FROM relationship WHERE state=1') as $relationship)
-                                    {
-                                        echo '<option value="'.$relationship['desc_relationship'].'">'.$relationship["desc_relationship"].'</option>';
-                                    }
-                                ?>
+                                      foreach ($db->query('SELECT * FROM relationship WHERE state=1') as $relationship)
+                                      {
+                                          echo '<option value="'.$relationship['desc_relationship'].'">'.$relationship["desc_relationship"].'</option>';
+                                      }
+                                  ?>
                                 </select>
-                                <label class="form-label">Relación:</label>
+                                <label class="form-label">Parentesco:</label>
                               </div>
                             </div>
 

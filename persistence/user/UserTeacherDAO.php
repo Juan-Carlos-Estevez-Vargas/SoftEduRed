@@ -52,10 +52,10 @@
 			$address, $email, $phone, $username, $pass, $securityAnswer, $securityQuestion
 		) {
 				try {
-						if (!empty($docType) && !empty($userId) && !empty($firstName) && !empty($secondName)
-								&& !empty($firstLastName) && !empty($secondLastName) && !empty($gender)
-								&& !empty($address)	&& !empty($email) && !empty($phone) && !empty($username)
-								&& !empty($pass)	&& !empty($securityAnswer)	&& !empty($securityQuestion))
+						if (!empty($documentType) && !empty($userId) && !empty($firstName)
+								&& !empty($firstLastName) && !empty($gender) && !empty($email)
+								&& !empty($username) && !empty($pass)	&& !empty($securityAnswer)
+								&& !empty($securityQuestion))
 								{
 										$sql = "
 												INSERT INTO user (
@@ -78,8 +78,9 @@
 										
 										$stmt = $this->pdo->prepare($sql);
 										$stmt->execute([
-											$documentType, $userId, $firstName,	$secondName, $firstLastName, $secondLastName, $gender,
-											$address,	$email,	$phone, $username, $pass,	$securityAnswer, $securityQuestion
+												$documentType, $userId, $firstName,	$secondName, $firstLastName,
+												$secondLastName, $gender,	$address,	$email,	$phone, $username,
+												$pass,	$securityAnswer, $securityQuestion
 										]);
 							
 										$this->registerTeacher($documentType, $userId);
@@ -121,9 +122,9 @@
 								$stmt->execute([$documentNumber, $userId]);
 								
 								$this->showSuccessMessage(
-									"Registro Actualizado Exitosamente.",
-									'../../views/user/userTeacherView.php'
-							);
+										"Registro Actualizado Exitosamente.",
+										'../../views/user/userTeacherView.php'
+								);
 						} else {
 								$this->showWarningMessage(
 										"Debes llenar todos los campos.",
@@ -148,8 +149,10 @@
 		 */
 		private function registerUserAsTeacherRole(string $documentType, int $userId): void
 		{
-				$sql = "INSERT INTO user_has_role (tdoc_role, pk_fk_id_user, pk_fk_role, state)
-								VALUES (:documentType, :userId, 'TEACHER', 1)";
+				$sql = "
+						INSERT INTO user_has_role (tdoc_role, pk_fk_id_user, pk_fk_role, state)
+						VALUES (:documentType, :userId, 'TEACHER', 1)
+				";
 				
 				$stmt = $this->pdo->prepare($sql);
 				$stmt->bindValue(':documentType', $documentType);
@@ -182,17 +185,27 @@
 			$gender, $address, $email, $phone, $username,	$password, $securityAnswer,	$securityQuestion
 		) {
 				try {
-						if (!empty($documentType) && !empty($userId) && !empty($firstName) && !empty($secondName)
-							&& !empty($firstLastName) && !empty($secondLastName) && !empty($gender) &&
-							!empty($address) && !empty($email) && !empty($phone) && !empty($username) &&
-							!empty($password) && !empty($securityAnswer) && !empty($securityQuestion))
+						if (!empty($documentType) && !empty($userId) && !empty($firstName)
+							&& !empty($firstLastName) && !empty($gender) && !empty($email)
+							&& !empty($username) && !empty($password) && !empty($securityAnswer)
+							&& !empty($securityQuestion))
 							{
 									$updateUserQuery = "
 											UPDATE user SET
-													first_name = ?,	second_name = ?, surname = ?,	second_surname = ?,
-													fk_gender = ?, adress = ?,	email = ?, phone = ?,	user_name = ?,
-													pass = ?,	security_answer = ?, fk_s_question = ?
-											WHERE pk_fk_cod_doc = ? AND id_user = ?
+													first_name = ?,
+													second_name = ?,
+													surname = ?,
+													second_surname = ?,
+													fk_gender = ?,
+													adress = ?,
+													email = ?,
+													phone = ?,
+													user_name = ?,
+													pass = ?,
+													security_answer = ?,
+													fk_s_question = ?
+											WHERE pk_fk_cod_doc = ?
+													AND id_user = ?
 									";
 
 									$statement = $this->pdo->prepare($updateUserQuery);
@@ -232,7 +245,11 @@
 		{
 				try {
 						if (!empty($userId) && !empty($docType)) {
-								$sql = "DELETE FROM user WHERE id_user = ? AND pk_fk_cod_doc = ?";
+								$sql = "
+										DELETE FROM user
+										WHERE id_user = ?
+												AND pk_fk_cod_doc = ?
+								";
 								$stmt = $this->pdo->prepare($sql);
 								$stmt->execute([$userId, $docType]);
 								
