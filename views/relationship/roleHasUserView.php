@@ -236,7 +236,7 @@
 									
 										if ($query->rowCount()>0):
 									?>
-                  <h4 class="mb-5 text-uppercase text-primary">Registros</h4>
+                  <h4 class="mb-5 text-uppercase text-primary">Roles por Usuario</h4>
                   <div class="table-responsive">
                     <table class="table table-bordered">
                       <caption class="text-center">Listado de Resultados</caption>

@@ -57,7 +57,7 @@
 			string $securityAnswer, string $securityQuestion,	string $relation
 		): void {
 			$insertUserSql = "INSERT INTO user (pk_fk_cod_doc, id_user, first_name, second_name,
-					surname, second_surname, fk_gender, address, email, phone, user_name, pass,
+					surname, second_surname, fk_gender, adress, email, phone, user_name, pass,
 					security_answer, fk_s_question)
 					VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 

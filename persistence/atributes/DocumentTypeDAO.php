@@ -43,7 +43,11 @@
 				{
 						try {
 								if (!empty($doc) && !empty($descDoc)) {
-										$sql = "INSERT INTO type_of_document (cod_document, Des_doc) VALUES (UPPER(:doc), UPPER(:descDoc))";
+										$sql = "
+												INSERT INTO type_of_document (cod_document, Des_doc)
+												VALUES (UPPER(:doc), UPPER(:descDoc))
+										";
+										
 										$stmt = $this->pdo->prepare($sql);
 										$stmt->bindParam(':doc', $doc);
 										$stmt->bindParam(':descDoc', $descDoc);

@@ -8,35 +8,27 @@
         $action = $_REQUEST['action'];
 
         if ($action === 'update') {
-
             $update = new UserAttendantDAO();
             $update->updateAttendantUser(
                 $_POST['tdoc'], $_POST['id_user'], $_POST['f_name'], $_POST['s_name'],
                 $_POST['f_lname'], $_POST['s_lname'], $_POST['gender'], $_POST['adress'],
                 $_POST['email'], $_POST['phone'], $_POST['u_name'], $_POST['pass'],
                 $_POST['s_ans'], $_POST['s_ques'], $_POST['relation']
-            );
-        
+            ); 
         } elseif ($action === 'register') {
-
             $insert = new UserAttendantDAO();
             $insert ->registerAttendantUser(
                 $_POST['tdoc'], $_POST['id_user'], $_POST['f_name'], $_POST['s_name'],
                 $_POST['f_lname'], $_POST['s_lname'], $_POST['gender'], $_POST['adress'],
                 $_POST['email'], $_POST['phone'], $_POST['u_name'], $_POST['pass'],
                 $_POST['s_ans'], $_POST['s_ques'], $_POST['relation']
-            );
-        
+            );    
         } elseif ($action === 'delete') {
-
             $delete = new UserAttendantDAO();
             $delete->deleteAttendantUser($_GET['id_user'],$_GET['t_doc']);
-
         } elseif ($action === 'edit') {
-
             $id = $_GET['id_user'];
             $tdoc = $_GET['t_doc'];
-
         }
     }
 ?>
@@ -63,7 +55,7 @@
               <div class="col-xl-12">
                 <div class="card-body p-md-5 text-black" style="background-color: hsl(0, 0%, 96%)">
                   <h3 class="text-center d-flex justify-content-center justify-content-md-end">
-                    <a class="btn btn-success" href="?action=ver&m=1">Agregar Registro</a>
+                    <a class="btn btn-success" href="?action=ver&m=1">Agregar Acudiente</a>
                   </h3>
 
                   <div class="container-fluid">
@@ -71,7 +63,7 @@
                       <div class="col-md-12">
                         <?php if (!empty($_GET['m']) && !empty($_GET['action'])) { ?>
                         <form action="#" method="post" enctype="multipart/form-data">
-                          <h4 class="mb-5 text-uppercase text-center text-success">Nuevo Asistente</h4>
+                          <h4 class="mb-5 text-uppercase text-center text-success">Nuevo Acudiente</h4>
 
                           <div class="row mb-4">
                             <div class="col-md-3">
@@ -413,7 +405,7 @@
                         
                         if ($query->rowCount()>0):
                     ?>
-                    <h4 class="mb-5 text-uppercase text-primary">Registros</h4>
+                    <h4 class="mb-5 text-uppercase text-primary">Acuendientes</h4>
                     <div class="table-responsive">
                       <table class="table table-bordered">
                         <caption class="text-center">Listado de Resultados</caption>
@@ -422,12 +414,7 @@
                             <th>Número de Documento</th>
                             <th>Número de Identificación</th>
                             <th>Primer Nombre</th>
-                            <th>Segundo Nombre</th>
                             <th>Primer Apellido</th>
-                            <th>Segundo Apellido</th>
-                            <th>Género</th>
-                            <th>Dirección</th>
-                            <th>Correo Electrónico</th>
                             <th>Teléfono</th>
                             <th>Acciones</th>
                           </tr>
@@ -438,12 +425,7 @@
                             <?php echo "<td>".$row['pk_fk_cod_doc']."</td>";?>
                             <?php echo "<td>".$row['id_user'] . "</td>";?>
                             <?php echo "<td>".$row['first_name'] . "</td>";?>
-                            <?php echo "<td>".$row['second_name'] . "</td>";?>
                             <?php echo "<td>".$row['surname'] . "</td>";?>
-                            <?php echo "<td>".$row['second_surname'] . "</td>";?>
-                            <?php echo "<td>".$row['fk_gender'] . "</td>";?>
-                            <?php echo "<td>".$row['adress'] . "</td>";?>
-                            <?php echo "<td>".$row['email'] . "</td>";?>
                             <?php echo "<td>".$row['phone'] . "</td>";?>
                             <td>
                               <a class="btn btn-primary btn-block"

@@ -18,16 +18,14 @@
 		 * Constructor method for the class.
 		 * It initializes a database connection using the Database class.
 		 *
-		 * @throws Exception if connection fails
+		 * @throws PDOException if connection fails
 		 */
 		public function __construct() {
-			try {
-				// Create a new database connection using the conectar method from the Database class.
-				$this->pdo = Database::connect();
-			} catch (Exception $e) {
-				// If connection fails, throw an exception with error message.
-				throw new Exception($e->getMessage());
-			}
+				try {
+						$this->pdo = Database::connect();
+				} catch (PDOException $e) {
+						throw new PDOException($e->getMessage());
+				}
 		}
 
 		/**
@@ -58,45 +56,70 @@
 			string $username, string $password, string $securityAnswer, string $securityQuestion,
 			string $attendantIdType, int $attendantId, string $courseCode
 		): void {
-			// Insert user record into database
-			$stmt = $this->pdo->prepare(
-				"INSERT INTO user (pk_fk_cod_doc, id_user, first_name, second_name, surname, second_surname,
-					`fk_gender`, adress, email, phone, user_name, pass, security_answer, `fk_s_question`)
-				VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+				try {
+				    if (!empty($idType) && !empty($userId) && !empty($firstName) && !empty($firstLastName)
+						&& !empty($gender) && !empty($email) && !empty($phone) && !empty($username) && !empty($password)
+				    && !empty($securityAnswer) && !empty($securityQuestion) && !empty($attendantIdType)
+				    && !empty($attendantId) && !empty($courseCode))
+						{
+								$stmt = $this->pdo->prepare("
+										INSERT INTO user(
+												pk_fk_cod_doc,
+												id_user,
+												first_name,
+												second_name,
+												surname,
+												second_surname,
+												`fk_gender`,
+												adress,
+												email,
+												phone,
+												user_name,
+												pass,
+												security_answer,
+												`fk_s_question`)
+										VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+								");
+					
+								$stmt->execute(
+										[$idType, $userId, $firstName, $secondName, $firstLastName,
+												$secondLastName, $gender, $address, $email, $phone, $username,
+												$password, $securityAnswer, $securityQuestion
+										]);
 
-			$stmt->execute(
-				[$idType, $userId, $firstName, $secondName, $firstLastName,
-					$secondLastName, $gender, $address, $email, $phone, $username,
-					$password, $securityAnswer, $securityQuestion
-				]);
+								$stmt = $this->pdo->prepare("
+										INSERT INTO student (
+												pk_fk_tdoc_user,
+												pk_fk_user_id,
+												fk_attendat_cod_doc,
+												fk_attendant_id,
+												fk_cod_course)
+										VALUES (?, ?, ?, ?, ?)
+								");
+								$stmt->execute([$idType, $userId, $attendantIdType, $attendantId, $courseCode]);
 
-			// Insert student record into database
-			$stmt = $this->pdo->prepare(
-				"INSERT INTO student (pk_fk_tdoc_user, pk_fk_user_id, fk_attendat_cod_doc, fk_attendant_id, fk_cod_course)
-				VALUES (?, ?, ?, ?, ?)");
-
-			$stmt->execute([$idType, $userId, $attendantIdType, $attendantId, $courseCode]);
-
-			// Assign student role to user
-			$stmt = $this->pdo->prepare(
-				"INSERT INTO user_has_role (tdoc_role, pk_fk_id_user, pk_fk_role, state)
-				VALUES (?, ?, 'STUDENT', 1)");
-
-			$stmt->execute([$idType, $userId]);
-
-			echo "
-				<script>
-					Swal.fire({
-						position: 'top-end',
-						icon: 'success',
-						title: 'Registro Agregado Exitosamente.',
-						showConfirmButton: false,
-						timer: 2000
-					}).then(() => {
-							window.location = '../../views/user/userStudentView.php';
-					});
-				</script>
-			";
+								$stmt = $this->pdo->prepare("
+										INSERT INTO user_has_role (tdoc_role, pk_fk_id_user, pk_fk_role, state)
+										VALUES (?, ?, 'STUDENT', 1)
+								");
+								$stmt->execute([$idType, $userId]);
+								
+								$this->showSuccessMessage(
+										"Registro Agregado Exitosamente.",
+										'../../views/user/userStudentView.php'
+								);
+						} else {
+								$this->showWarningMessage(
+										"Debes llenar todos los campos.",
+										'../../views/user/userStudentView.php'
+								);
+						}
+				} catch (Exception $e) {
+						$this->showErrorMessage(
+								"Ocurrió un error interno. Consulta al Administrador.",
+								'../../views/user/userStudentView.php'
+						);
+				}
 		}
 
 		/**
@@ -126,41 +149,67 @@
 			$gender, $address, $email, $phone, $username, $pass, $securityAnswer,
 			$securityQuestion, $attendantDocument, $attendantId, $course
 		) {
-			// Update user information query
-			$sqlUpdateUser = "UPDATE user
-				SET first_name = ?, second_name = ?, surname = ?, second_surname = ?, fk_gender = ?,
-					adress = ?, email = ?, phone = ?, user_name = ?, pass = ?, security_answer = ?, fk_s_question = ?
-				WHERE pk_fk_cod_doc = ? AND id_user = ?";
-			
-			// Update student information query
-			$sqlUpdateStudent = "UPDATE student
-				SET fk_attendat_cod_doc = ?, fk_attendant_id = ?, fk_cod_course = ?
-				WHERE pk_fk_tdoc_user = ? AND pk_fk_user_id = ?";
-			
-			// Execute queries
-			$this->pdo->prepare($sqlUpdateUser)->execute([
-				$firstName, $secondName, $firstLastName, $secondLastName, $gender, $address,
-				$email, $phone, $username, $pass, $securityAnswer, $securityQuestion,
-				$documentType, $userId
-			]);
-
-			$this->pdo->prepare($sqlUpdateStudent)->execute([
-				$attendantDocument, $attendantId, $course, $documentType, $userId
-			]);
-			
-			echo "
-				<script>
-					Swal.fire({
-						position: 'top-end',
-						icon: 'success',
-						title: 'Registro Actualizado Exitosamente.',
-						showConfirmButton: false,
-						timer: 2000
-					}).then(() => {
-							window.location = '../../views/user/userStudentView.php';
-					});
-				</script>
-			";
+				try {
+						if (!empty($documentType) && !empty($userId) && !empty($firstName) && !empty($firstLastName)
+						&& !empty($gender) && !empty($email) && !empty($phone) && !empty($username) && !empty($pass)
+						&& !empty($securityAnswer) && !empty($securityQuestion) && !empty($attendantDocument)
+						&& !empty($attendantId) && !empty($course))
+						{
+								$sqlUpdateUser = "
+										UPDATE user
+										SET first_name = ?,
+												second_name = ?,
+												surname = ?,
+												second_surname = ?,
+												fk_gender = ?,
+												adress = ?,
+												email = ?,
+												phone = ?,
+												user_name = ?,
+												pass = ?,
+												security_answer = ?,
+												fk_s_question = ?
+										WHERE pk_fk_cod_doc = ?
+												AND id_user = ?
+								";
+							
+								// Update student information query
+								$sqlUpdateStudent = "
+										UPDATE student
+										SET fk_attendat_cod_doc = ?,
+												fk_attendant_id = ?,
+												fk_cod_course = ?
+										WHERE pk_fk_tdoc_user = ?
+												AND pk_fk_user_id = ?
+								";
+								
+								// Execute queries
+								$this->pdo->prepare($sqlUpdateUser)->execute([
+										$firstName, $secondName, $firstLastName, $secondLastName, $gender, $address,
+										$email, $phone, $username, $pass, $securityAnswer, $securityQuestion,
+										$documentType, $userId
+								]);
+							
+								$this->pdo->prepare($sqlUpdateStudent)->execute([
+										$attendantDocument, $attendantId, $course, $documentType, $userId
+								]);
+								
+								$this->showSuccessMessage(
+										"Registro Actualizado Exitosamente.",
+										'../../views/user/userStudentView.php'
+								);
+						} else {
+								$this->showWarningMessage(
+										"Debes llenar todos los campos.",
+										'../../views/user/userStudentView.php'
+								);
+						}
+				} catch (Exception $e) {
+						$this->showErrorMessage(
+								"Ocurrió un error interno. Consulta al Administrador.",
+								'../../views/user/userStudentView.php'
+						);
+				}
 		}
 
 		/**
@@ -172,30 +221,102 @@
 		 */
 		public function deleteStudentUser($userId, $documentCode)
 		{
-			// Prepare the SQL statement to delete the user record.
-			$stmt = $this->pdo->prepare(
-				"DELETE FROM user	WHERE id_user = :id_user AND pk_fk_cod_doc = :doc_code"
-			);
-			
-			// Execute the SQL statement with the given parameters.
-			$stmt->execute([
-				'id_user' => $userId,
-				'doc_code' => $documentCode
-			]);
-			
-			echo "
-				<script>
-					Swal.fire({
-						position: 'top-end',
-						icon: 'success',
-						title: 'Registro Eliminado Exitosamente.',
-						showConfirmButton: false,
-						timer: 2000
-					}).then(() => {
-							window.location = '../../views/user/userStudentView.php';
-					});
-				</script>
-			";
+				try {
+					  if (!empty($userId) && !empty($documentCode)) {
+								$stmt = $this->pdo->prepare("DELETE FROM user	WHERE id_user = :id_user AND pk_fk_cod_doc = :doc_code"
+								);
+								
+								// Execute the SQL statement with the given parameters.
+								$stmt->execute([
+										'id_user' => $userId,
+										'doc_code' => $documentCode
+								]);
+								
+								$this->showSuccessMessage(
+										"Registro Eliminado Exitosamente.",
+										'../../views/user/userStudentView.php'
+								);
+						} else {
+								$this->showWarningMessage(
+										"Debes llenar todos los campos.",
+										'../../views/user/userStudentView.php'
+								);
+						}
+				} catch (Exception $e) {
+						$this->showErrorMessage(
+								"Ocurrió un error interno. Consulta al Administrador.",
+								'../../views/user/userStudentView.php'
+						);
+				}
+		}
+
+		/**
+		 * Displays a success message using SweetAlert and redirects the user to a specified location.
+		 *
+		 * @param string $message The success message to display
+		 * @param string $redirectURL The URL to redirect to after displaying the message
+		 */
+		private function showSuccessMessage(string $message, string $redirectURL): void
+		{
+				echo "
+						<script>
+								Swal.fire({
+										position: 'top-end',
+										icon: 'success',
+										title: '$message',
+										showConfirmButton: false,
+										timer: 2000
+								}).then(() => {
+										window.location = '$redirectURL';
+								});
+						</script>
+				";
+		}
+
+		/**
+		 * Displays an error message using SweetAlert and redirects the user to a specified location.
+		 *
+		 * @param string $message The error message to display
+		 * @param string $redirectURL The URL to redirect to after displaying the message
+		 */
+		private function showErrorMessage(string $message, string $redirectURL): void
+		{
+				echo "
+						<script>
+								Swal.fire({
+										position: 'top-center',
+										icon: 'error',
+										title: '$message',
+										showConfirmButton: false,
+										timer: 2000
+								}).then(() => {
+										window.location = '$redirectURL';
+								});
+						</script>
+				";
+		}
+
+		/**
+		 * Displays an warning message using SweetAlert and redirects the user to a specified location.
+		 *
+		 * @param string $message The error message to display
+		 * @param string $redirectURL The URL to redirect to after displaying the message
+		 */
+		private function showWarningMessage(string $message, string $redirectURL): void
+		{
+				echo "
+						<script>
+								Swal.fire({
+										position: 'top-center',
+										icon: 'warning',
+										title: '$message',
+										showConfirmButton: false,
+										timer: 2000
+								}).then(() => {
+										window.location = '$redirectURL';
+								});
+						</script>
+				";
 		}
 	}
 ?>

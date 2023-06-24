@@ -58,8 +58,8 @@
                             <div class="col-md-6">
                               <div class="form-outline">
                                 <input id="space" type="text" name="relation" placeholder="Tipo de Relación" required
-                                  style="text-transform:uppercase" class="form-control" />
-                                <label class="form-label">Tipo de Parentesco:</label>
+                                  style="text-transform:uppercase" class="form-control" maxlength="30" />
+                                <label class=" form-label">Tipo de Parentesco:</label>
                               </div>
                             </div>
 
@@ -97,7 +97,10 @@
                         <?php if (!empty($_GET['desc_relat']) && !empty($_GET['action']) && !empty($id)) { ?>
                         <form action="#" method="post" enctype="multipart/form-data">
                           <?php
-														$sql = "SELECT * FROM relationship WHERE desc_relationship = '$id'";
+														$sql = "
+                              SELECT * FROM relationship
+                              WHERE desc_relationship = '$id'
+                            ";
 														$query = $db->query($sql);
 														while ($r = $query->fetch(PDO::FETCH_ASSOC)) {
 													?>
@@ -109,7 +112,7 @@
                                 <input id="Space" type="text" class="form-control" name="queryy"
                                   value="<?php echo $r['desc_relationship']?>" style="display: none" />
                                 <input id="Space" type="text" class="form-control" name=" relation"
-                                  value="<?php echo $r['desc_relationship']?>" required />
+                                  value="<?php echo $r['desc_relationship']?>" maxlength="30" required />
                                 <label class="form-label">Tipo de Parentesco:</label>
                               </div>
                             </div>

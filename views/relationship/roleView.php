@@ -58,7 +58,7 @@
                             <div class="col-md-6">
                               <div class="form-outline">
                                 <input id="space" type="text" name="relation" placeholder="Rol" required
-                                  style="text-transform:uppercase" class="form-control" />
+                                  style="text-transform:uppercase" maxlength="15" class="form-control" />
                                 <label class="form-label">Tipo de Rol:</label>
                               </div>
                             </div>
@@ -113,7 +113,7 @@
                                   value="<?php echo $r['desc_role']?>"
                                   style="text-transform:uppercase; display: none" />
                                 <input id="Space" type="text" class="form-control" style="text-transform:uppercase;"
-                                  name=" relation" value="<?php echo $r['desc_role']?>" required />
+                                  name=" relation" value="<?php echo $r['desc_role']?>" maxlength="15" required />
                                 <label class="form-label">Tipo de Rol:</label>
                               </div>
                             </div>

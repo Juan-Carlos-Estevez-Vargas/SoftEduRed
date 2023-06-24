@@ -58,7 +58,7 @@
                             <div class="col-md-6">
                               <div class="form-outline">
                                 <input id="space" type="text" name="question" placeholder="Ingresa la pregunta" required
-                                  style="text-transform:uppercase" class="form-control" />
+                                  style="text-transform:uppercase" size="40" maxlength="40" class=" form-control" />
                                 <label class="form-label">Pregunta de Seguridad:</label>
                               </div>
                             </div>
@@ -108,7 +108,7 @@
                               <div class="form-outline">
                                 <input id="space" type="text" name="question" class="form-control"
                                   value="<?php echo $r['question']?>" required style="text-transform:uppercase"
-                                  size="40" readonly />
+                                  size="40" maxlenght="40" readonly />
                                 <label class="form-label">Pregunta de Seguridad:</label>
                               </div>
                             </div>

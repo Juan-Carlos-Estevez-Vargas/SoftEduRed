@@ -58,15 +58,16 @@
                             <div class="col-md-6">
                               <div class="form-outline">
                                 <input id="space" type="text" name="doc" placeholder="Ej: C.C" required
-                                  style="text-transform:uppercase" class="form-control" />
-                                <label class="form-label">Tipo de Documento:</label>
+                                  style="text-transform:uppercase" class="form-control" maxlength="3" />
+                                <label class=" form-label">Tipo de Documento:</label>
                               </div>
                             </div>
 
                             <div class="col-md-4">
                               <div class="form-outline">
                                 <input id="spacen" type="text" name="desc_doc" placeholder="Ej: Cedula de Ciudadania"
-                                  style="text-transform:uppercase" class="form-control " required />
+                                  style="text-transform:uppercase" class="form-control " required maxlength="35"
+                                  minlength="2" />
                                 <label class="form-label">Descripción</label>
                               </div>
                             </div>
@@ -90,7 +91,10 @@
                         <?php if (!empty($_GET['id_doc']) && !empty($_GET['action']) && !empty($id)) { ?>
                         <form action="#" method="post" enctype="multipart/form-data">
                           <?php
-														$sql = "SELECT * FROM type_of_document WHERE cod_document = '$id'";
+														$sql = "
+                              SELECT * FROM type_of_document
+                              WHERE cod_document = '$id'
+                            ";
 														$query = $db->query($sql);
 														while ($r = $query->fetch(PDO::FETCH_ASSOC)) {
 													?>
@@ -100,7 +104,7 @@
                             <div class="col-md-6">
                               <div class="form-outline">
                                 <input id="space" type="text" name="doc" placeholder="Ej: C.C" required
-                                  style="text-transform:uppercase" class="form-control"
+                                  style="text-transform:uppercase" class="form-control" maxlength="3"
                                   value="<?php echo $r['cod_document']?>" />
                                 <label class="form-label">Tipo de Documento:</label>
                               </div>
@@ -110,7 +114,7 @@
                               <div class="form-outline">
                                 <input id="spacen" type="text" name="desc_doc" placeholder="Ej: Cedula de Ciudadania"
                                   style="text-transform:uppercase" class="form-control"
-                                  value="<?php echo $r['Des_doc']?>" required />
+                                  value="<?php echo $r['Des_doc']?>" required maxlength="35" minlength="2" />
                                 <label class="form-label">Descripción</label>
                               </div>
                             </div>
