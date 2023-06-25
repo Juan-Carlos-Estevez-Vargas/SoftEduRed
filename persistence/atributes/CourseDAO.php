@@ -128,6 +128,7 @@
 										WHERE cod_course = '$courseCode'
 								";
 								$this->pdo->query($sql);
+								
 								$this->showSuccessMessage(
 										"Registro Eliminado Exitosamente.",
 										'../../views/atributes/courseView.php'
