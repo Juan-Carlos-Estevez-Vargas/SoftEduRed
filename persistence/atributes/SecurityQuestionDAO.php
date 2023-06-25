@@ -42,13 +42,13 @@
 				try {
 						if (!empty($question)) {
 								$sql = "
-										INSERT INTO security_question (question, state)
-										VALUES (UPPER(:question), :state)
+										INSERT INTO security_question (description, state)
+										VALUES (UPPER(:description), :state)
 								";
 
 								$stmt = $this->pdo->prepare($sql);
 								$stmt->execute([
-										':question' => $question,
+										':description' => $question,
 										':state' => $state,
 								]);
 			
@@ -73,18 +73,22 @@
 		/**
 		 * Updates the state of a security question in the database.
 		 *
-		 * @param string $question The question to update.
+		 * @param string $idSecurityQuestion The id of the security question to update.
 		 * @param string $state The new state to set.
 		 * @return string A success message.
 		 */
-		public function updateQuestionState(string $question, string $state)
+		public function updateQuestionState(string $idSecurityQuestion, string $state)
 		{
 				try {
-						if (!empty($question)) {
-								$query = 'UPDATE security_question SET state = ? WHERE question = ?';
+						if (!empty($idSecurityQuestion)) {
+								$query = '
+										UPDATE security_question
+										SET state = ?
+										WHERE id_security_question = ?
+								';
 								$stmt = $this->pdo->prepare($query);
-								$stmt->execute([$state, $question]);
-								
+								$stmt->execute([$state, $idSecurityQuestion]);
+
 								$this->showSuccessMessage(
 										"Registro Actualizado Exitosamente.",
 										'../../views/atributes/questionView.php'
@@ -104,18 +108,22 @@
 		}
 
 		/**
-		 * Deletes a record from the security_question table based on the provided question.
+		 * Deletes a record from the security_question table based on the provided ID.
 		 *
-		 * @param string $question The question to match against the question column in the table.
+		 * @param string $idSecurityQuestion The ID of the question to delete from the table.
+		 * @throws Exception If an error occurs while executing the SQL statement.
 		 */
-		public function deleteQuestion(string $question): void
+		public function deleteQuestion(string $idSecurityQuestion): void
 		{
 				try {
-						if (!empty($question)) {
-								$sql = "DELETE FROM security_question WHERE question = ?";
+						if (!empty($idSecurityQuestion)) {
+								$sql = "
+										DELETE FROM security_question
+										WHERE id_security_question = ?
+								";
 								$stmt = $this->pdo->prepare($sql);
-								$stmt->execute([$question]);
-								
+								$stmt->execute([$idSecurityQuestion]);
+
 								$this->showSuccessMessage(
 										"Registro Eliminado Exitosamente.",
 										'../../views/atributes/questionView.php'

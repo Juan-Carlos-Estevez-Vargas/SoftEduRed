@@ -9,15 +9,15 @@
 
 		if ($action == 'update') {
 			$update = new SecurityQuestionDAO();
-			$update->updateQuestionState($_POST['question'],$_POST['state']);
+			$update->updateQuestionState($_POST['id_security_question'], $_POST['state']);
 		} elseif ($action == 'register') {
 			$insert = new SecurityQuestionDAO();
 			$insert ->addSecurityQuestion($_POST['question'],$_POST['state']);
 		} elseif ($action == 'delete') {
 			$delete = new SecurityQuestionDAO();
-			$delete->deleteQuestion($_GET['question']);
+			$delete->deleteQuestion($_GET['id_security_question']);
 		} elseif ($action == 'edit') {
-			$id = $_GET['question'];
+			$id = $_GET['id_security_question'];
 		}
 	}
 ?>
@@ -57,22 +57,21 @@
                           <div class="row">
                             <div class="col-md-6">
                               <div class="form-outline">
-                                <input id="space" type="text" name="question" placeholder="Ingresa la pregunta" required
-                                  style="text-transform:uppercase" size="40" maxlength="40" class=" form-control" />
-                                <label class="form-label">Pregunta de Seguridad:</label>
+                                <input type="text" name="question" placeholder="Ingresa la pregunta" required
+                                  style="text-transform:uppercase" size="100" maxlength="100" class="form-control" />
+                                <label class="form-label" for="question">Pregunta de Seguridad:</label>
                               </div>
                             </div>
 
                             <div class="col-md-4">
                               <div class="form-outline">
                                 <label class="mr-5">Estado: </label>
-                                <div class=" form-check form-check-inline">
-                                  <input id="space" type="radio" class="form-check-input" name="state" value="1"
-                                    checked />
+                                <div class="form-check form-check-inline">
+                                  <input type="radio" class="form-check-input" name="state" value="1" checked />
                                   <label class="form-check-label">Activo</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                  <input id="space" type="radio" class="form-check-input" name="state" value="0" />
+                                  <input type="radio" class="form-check-input" name="state" value="0" />
                                   <label class="form-check-label">Inactivo</label>
                                 </div>
                               </div>
@@ -94,10 +93,10 @@
                   <div class="container-fluid">
                     <div class="row">
                       <div class="col-md-12">
-                        <?php if (!empty($_GET['question']) && !empty($_GET['action']) && !empty($id)) { ?>
+                        <?php if (!empty($_GET['id_security_question']) && !empty($_GET['action']) && !empty($id)) { ?>
                         <form action="#" method="post" enctype="multipart/form-data">
                           <?php
-														$sql = "SELECT * FROM security_question WHERE question = '$id'";
+														$sql = "SELECT * FROM security_question WHERE id_security_question = '$id'";
 														$query = $db->query($sql);
 														while ($r = $query->fetch(PDO::FETCH_ASSOC)) {
 													?>
@@ -106,23 +105,24 @@
                           <div class="row">
                             <div class="col-md-6">
                               <div class="form-outline">
-                                <input id="space" type="text" name="question" class="form-control"
-                                  value="<?php echo $r['question']?>" required style="text-transform:uppercase"
-                                  size="40" maxlenght="40" readonly />
-                                <label class="form-label">Pregunta de Seguridad:</label>
+                                <input type="text" name="id_security_question"
+                                  value="<?php echo $r['id_security_question']?>" required style="display: none;" />
+                                <input type="text" name="question" class="form-control"
+                                  value="<?php echo $r['description']?>" required style="text-transform:uppercase"
+                                  size="100" maxlenght="100" readonly />
+                                <label class="form-label" for="question">Pregunta de Seguridad:</label>
                               </div>
                             </div>
 
                             <div class="col-md-4">
                               <div class="form-outline">
                                 <label class="mr-5">Estado: </label>
-                                <div class=" form-check form-check-inline">
-                                  <input id="space" type="radio" class="form-check-input" name="state" value="1"
-                                    checked />
+                                <div class="form-check form-check-inline">
+                                  <input type="radio" class="form-check-input" name="state" value="1" checked />
                                   <label class="form-check-label">Activo</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                  <input id="space" type="radio" class="form-check-input" name="state" value="0" />
+                                  <input type="radio" class="form-check-input" name="state" value="0" />
                                   <label class="form-check-label">Inactivo</label>
                                 </div>
                               </div>
@@ -162,7 +162,7 @@
                         <tbody>
                           <?php while ($row = $query->fetch(PDO::FETCH_ASSOC)): ?>
                           <tr>
-                            <td><?php echo $row['question']; ?></td>
+                            <td><?php echo $row['description']; ?></td>
                             <td>
                               <?php
 																if ($row['state'] == 1) {
@@ -173,10 +173,12 @@
 															?>
                             </td>
                             <td>
-                              <a class="btn btn-primary" href="?action=edit&question=<?php echo $row['question'];?>">
+                              <a class="btn btn-primary"
+                                href="?action=edit&id_security_question=<?php echo $row['id_security_question'];?>">
                                 Actualizar
                               </a>
-                              <a class="btn btn-danger" href="?action=delete&question=<?php echo $row['question'];?>"
+                              <a class="btn btn-danger"
+                                href="?action=delete&id_security_question=<?php echo $row['id_security_question'];?>"
                                 onclick="confirmDelete(event)">
                                 Eliminar
                               </a>
