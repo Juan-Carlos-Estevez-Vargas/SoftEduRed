@@ -35,22 +35,22 @@
 				/**
 				 * Registers a new document type in the database
 				 *
-				 * @param string $doc The code of the document type
-				 * @param string $descDoc The description of the document type
+				 * @param string $documentType The code of the document type
+				 * @param string $description The description of the document type
 				 * @return void
 				 */
-				public function registerDocumentType(string $doc, string $descDoc): void
+				public function registerDocumentType(string $documentType, string $description): void
 				{
 						try {
-								if (!empty($doc) && !empty($descDoc)) {
+								if (!empty($documentType) && !empty($description)) {
 										$sql = "
-												INSERT INTO type_of_document (cod_document, Des_doc)
-												VALUES (UPPER(:doc), UPPER(:descDoc))
+												INSERT INTO document_type (type, description)
+												VALUES (UPPER(:documentType), UPPER(:description))
 										";
 										
 										$stmt = $this->pdo->prepare($sql);
-										$stmt->bindParam(':doc', $doc);
-										$stmt->bindParam(':descDoc', $descDoc);
+										$stmt->bindParam(':documentType', $documentType);
+										$stmt->bindParam(':description', $description);
 										$stmt->execute();
 		
 										$this->showSuccessMessage(
@@ -74,39 +74,44 @@
 				/**
 				 * Updates a document type record in the database.
 				 *
-				 * @param string $code The new code of the document type.
-				 * @param string $oldCode The current code of the document type to be updated.
+				 * @param string $idDocumentType The id of the document type to be updated.
+				 * @param string $type The new code of the document type.
 				 * @param string $description The new description of the document type.
+				 * @return void
 				 */
-				public function updateDocumentType(string $code, string $oldCode, string $description): void
+				public function updateDocumentType(string $idDocumentType, string $type, string $description): void
 				{
 						try {
-								if (!empty($code) && !empty($oldCode) && !empty($description)) {
+								// Check if all parameters are not empty.
+								if (!empty($idDocumentType) && !empty($type) && !empty($description)) {
 										$query = "
-												UPDATE type_of_document
-												SET cod_document = UPPER(:code),
-														Des_doc = UPPER(:description)
-												WHERE cod_document = :oldCode
+												UPDATE document_type
+												SET type = UPPER(:type),
+														description = UPPER(:description)
+												WHERE id_document_type = :id
 										";
 										
 										$statement = $this->pdo->prepare($query);
 										$statement->execute([
-												':code' => $code,
+												':type' => $type,
 												':description' => $description,
-												':oldCode' => $oldCode
+												':id' => $idDocumentType
 										]);
 
+										// If the update is successful, show a success message.
 										$this->showSuccessMessage(
 												"Registro Actualizado Exitosamente.",
 												'../../views/atributes/documentTypeView.php'
 										);
 								} else {
-									$this->showWarningMessage(
-											"Debes llenar todos los campos.",
-											'../../views/atributes/documentTypeView.php'
-									);
+										// If any parameter is empty, show a warning message.
+										$this->showWarningMessage(
+												"Debes llenar todos los campos.",
+												'../../views/atributes/documentTypeView.php'
+										);
 								}
 						} catch (Exception $e) {
+								// If an error occurs, show an error message.
 								$this->showErrorMessage(
 										"Ocurrió un error interno. Consulta al Administrador.",
 										'../../views/atributes/documentTypeView.php'
@@ -115,34 +120,38 @@
 				}
 
 				/**
-				 * Deletes a record from the "type_of_document" table with the given document code
+				 * Deletes a record from the "document_type" table with the given document code.
 				 *
-				 * @param string $doc The document code to be deleted
+				 * @param string $idDocumentType The document code to be deleted.
+				 * @throws Exception If an error occurs during the deletion process.
 				 * @return void
 				 */
-				public function deleteDocumentType(string $doc): void
+				public function deleteDocumentType(string $idDocumentType): void
 				{
 						try {
-								if (!empty($doc)) {
-										$query = "DELETE FROM type_of_document WHERE cod_document = :doc";
+								if (!empty($idDocumentType)) {
+										$query = "
+												DELETE FROM document_type
+												WHERE id_document_type = :id
+										";
 										$statement = $this->pdo->prepare($query);
-										$statement->execute([':doc' => $doc]);
-		
+										$statement->execute([':id' => $idDocumentType]);
+
 										$this->showSuccessMessage(
 												"Registro Eliminado Exitosamente.",
 												'../../views/atributes/documentTypeView.php'
 										);
 								} else {
-									$this->showWarningMessage(
-											"Debes llenar todos los campos.",
-											'../../views/atributes/documentTypeView.php'
-									);
+										$this->showWarningMessage(
+												"Debes llenar todos los campos.",
+												'../../views/atributes/documentTypeView.php'
+										);
 								}
 						} catch (Exception $e) {
 								$this->showErrorMessage(
 										"Ocurrió un error interno. Consulta al Administrador.",
-										'../../views/atributes/documentTypeView.php
-								');
+										'../../views/atributes/documentTypeView.php'
+								);
 						}
 				}
 

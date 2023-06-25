@@ -9,15 +9,15 @@
 
 		if ($action == 'update') {
 			$update = new DocumentTypeDAO();
-			$update->updateDocumentType($_POST['doc'],$_POST['doc'],$_POST['desc_doc']);
+			$update->updateDocumentType($_POST['id_document_type'], $_POST['document_type'],$_POST['description']);
 		} elseif ($action == 'register') {
 			$insert = new DocumentTypeDAO();
-			$insert ->registerDocumentType($_POST['doc'],$_POST['desc_doc']);
+			$insert ->registerDocumentType($_POST['document_type'],$_POST['description']);
 		} elseif ($action == 'delete') {
 			$delete = new DocumentTypeDAO();
-			$delete->deleteDocumentType($_GET['id_doc']);
+			$delete->deleteDocumentType($_GET['id_document_type']);
 		} elseif ($action == 'edit') {
-			$id = $_GET['id_doc'];
+			$id = $_GET['id_document_type'];
 		}
 	}
 ?>
@@ -55,24 +55,24 @@
                           <h4 class="mb-5 text-uppercase text-center text-success">Nuevo Tipo de Documento</h4>
 
                           <div class="row">
+                            <div class="col-md-3">
+                              <div class="form-outline">
+                                <input type="text" name="document_type" placeholder="Ej: C.C" required
+                                  style="text-transform:uppercase" class="form-control" maxlength="3" />
+                                <label class="form-label" for="document_type">Tipo de Documento:</label>
+                              </div>
+                            </div>
+
                             <div class="col-md-6">
                               <div class="form-outline">
-                                <input id="space" type="text" name="doc" placeholder="Ej: C.C" required
-                                  style="text-transform:uppercase" class="form-control" maxlength="3" />
-                                <label class=" form-label">Tipo de Documento:</label>
-                              </div>
-                            </div>
-
-                            <div class="col-md-4">
-                              <div class="form-outline">
-                                <input id="spacen" type="text" name="desc_doc" placeholder="Ej: Cedula de Ciudadania"
-                                  style="text-transform:uppercase" class="form-control " required maxlength="35"
+                                <input type="text" name="description" placeholder="Ej: Cedula de Ciudadania"
+                                  style="text-transform:uppercase" class="form-control" required maxlength="35"
                                   minlength="2" />
-                                <label class="form-label">Descripción</label>
+                                <label class="form-label" for="description">Descripción</label>
                               </div>
                             </div>
 
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                               <div class="form-outline">
                                 <input id="boton" type="submit" class="btn btn-primary btn-block" value="Guardar"
                                   onclick="this.form.action ='?action=register'" />
@@ -88,12 +88,12 @@
                   <div class="container-fluid">
                     <div class="row">
                       <div class="col-md-12">
-                        <?php if (!empty($_GET['id_doc']) && !empty($_GET['action']) && !empty($id)) { ?>
+                        <?php if (!empty($_GET['id_document_type']) && !empty($_GET['action']) && !empty($id)) { ?>
                         <form action="#" method="post" enctype="multipart/form-data">
                           <?php
 														$sql = "
-                              SELECT * FROM type_of_document
-                              WHERE cod_document = '$id'
+                              SELECT * FROM document_type
+                              WHERE id_document_type = '$id'
                             ";
 														$query = $db->query($sql);
 														while ($r = $query->fetch(PDO::FETCH_ASSOC)) {
@@ -101,25 +101,28 @@
                           <h4 class="mb-5 text-uppercase text-center text-success">Actualizar Tipo de Documento</h4>
 
                           <div class="row">
+                            <input type="text" name="id_document_type" value="<?php echo $r['id_document_type']?>"
+                              style="display: none;" />
+
+                            <div class="col-md-3">
+                              <div class="form-outline">
+                                <input type="text" name="document_type" placeholder="Ej: C.C" required
+                                  style="text-transform:uppercase" class="form-control" maxlength="3"
+                                  value="<?php echo $r['type']?>" />
+                                <label class="form-label" for="document_type">Tipo de Documento:</label>
+                              </div>
+                            </div>
+
                             <div class="col-md-6">
                               <div class="form-outline">
-                                <input id="space" type="text" name="doc" placeholder="Ej: C.C" required
-                                  style="text-transform:uppercase" class="form-control" maxlength="3"
-                                  value="<?php echo $r['cod_document']?>" />
-                                <label class="form-label">Tipo de Documento:</label>
-                              </div>
-                            </div>
-
-                            <div class="col-md-4">
-                              <div class="form-outline">
-                                <input id="spacen" type="text" name="desc_doc" placeholder="Ej: Cedula de Ciudadania"
+                                <input type="text" name="description" placeholder="Ej: Cedula de Ciudadania"
                                   style="text-transform:uppercase" class="form-control"
-                                  value="<?php echo $r['Des_doc']?>" required maxlength="35" minlength="2" />
-                                <label class="form-label">Descripción</label>
+                                  value="<?php echo $r['description']?>" required maxlength="35" minlength="2" />
+                                <label class="form-label" for="description">Descripción</label>
                               </div>
                             </div>
 
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                               <div class="form-outline">
                                 <input id="boton" type="submit" class="btn btn-primary btn-block" value="Actualizar"
                                   onclick="this.form.action = '?action=update';" />
@@ -137,7 +140,7 @@
 
                   <div class="col-md-12 text-center mt-4">
                     <?php
-											$sql = "SELECT * FROM type_of_document";
+											$sql = "SELECT * FROM document_type";
 											$query = $db->query($sql);
 
 											if ($query->rowCount()>0):
@@ -156,13 +159,15 @@
                         <tbody>
                           <?php while ($row = $query->fetch(PDO::FETCH_ASSOC)): ?>
                           <tr>
-                            <td><?php echo $row['cod_document']; ?></td>
-                            <td><?php echo $row['Des_doc']; ?></td>
+                            <td><?php echo $row['type']; ?></td>
+                            <td><?php echo $row['description']; ?></td>
                             <td>
-                              <a class="btn btn-primary" href="?action=edit&id_doc=<?php echo $row['cod_document'];?>">
+                              <a class="btn btn-primary"
+                                href="?action=edit&id_document_type=<?php echo $row['id_document_type'];?>">
                                 Actualizar
                               </a>
-                              <a class="btn btn-danger" href="?action=delete&id_doc=<?php echo $row['cod_document'];?>"
+                              <a class="btn btn-danger"
+                                href="?action=delete&id_document_type=<?php echo $row['id_document_type'];?>"
                                 onclick="confirmDelete(event)">
                                 Eliminar
                               </a>
