@@ -12,12 +12,12 @@
 			$registrar->registerRelationship($_POST['relation'], $_POST['state']);
 		} elseif ($action == 'update') {
 			$update = new RelationshipDAO();
-			$update->updateRecord($_POST['relation'], $_POST['queryy'], $_POST['state']);
+			$update->updateRecord($_POST['id_relationship'], $_POST['relation'], $_POST['state']);
 		} elseif ($action == 'delete') {
-			$eliminar = new RelationshipDAO();
-				$eliminar->deleteRelationship($_GET['desc_relat']);
+			$delete = new RelationshipDAO();
+			$delete->deleteRelationship($_GET['id_relationship']);
 		} elseif ($action == 'edit') {
-			$id = $_GET['desc_relat'];
+			$id = $_GET['id_relationship'];
 		}
 	}
 ?>
@@ -57,9 +57,9 @@
                           <div class="row">
                             <div class="col-md-6">
                               <div class="form-outline">
-                                <input id="space" type="text" name="relation" placeholder="Tipo de Relación" required
+                                <input type="text" name="relation" placeholder="Tipo de Relación" required
                                   style="text-transform:uppercase" class="form-control" maxlength="30" />
-                                <label class=" form-label">Tipo de Parentesco:</label>
+                                <label class="form-label" for="relation">Tipo de Parentesco:</label>
                               </div>
                             </div>
 
@@ -67,12 +67,11 @@
                               <div class="form-outline">
                                 <label class="mr-5">Estado: </label>
                                 <div class=" form-check form-check-inline">
-                                  <input id="space" type="radio" class="form-check-input" name="state" value="1"
-                                    checked />
+                                  <input type="radio" class="form-check-input" name="state" value="1" checked />
                                   <label class="form-check-label">Activo</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                  <input id="space" type="radio" class="form-check-input" name="state" value="0" />
+                                  <input type="radio" class="form-check-input" name="state" value="0" />
                                   <label class="form-check-label">Inactivo</label>
                                 </div>
                               </div>
@@ -94,12 +93,12 @@
                   <div class="container-fluid">
                     <div class="row">
                       <div class="col-md-12">
-                        <?php if (!empty($_GET['desc_relat']) && !empty($_GET['action']) && !empty($id)) { ?>
+                        <?php if (!empty($_GET['id_relationship']) && !empty($_GET['action']) && !empty($id)) { ?>
                         <form action="#" method="post" enctype="multipart/form-data">
                           <?php
 														$sql = "
                               SELECT * FROM relationship
-                              WHERE desc_relationship = '$id'
+                              WHERE id_relationship = '$id'
                             ";
 														$query = $db->query($sql);
 														while ($r = $query->fetch(PDO::FETCH_ASSOC)) {
@@ -109,24 +108,24 @@
                           <div class="row">
                             <div class="col-md-6">
                               <div class="form-outline">
-                                <input id="Space" type="text" class="form-control" name="queryy"
-                                  value="<?php echo $r['desc_relationship']?>" style="display: none" />
-                                <input id="Space" type="text" class="form-control" name=" relation"
-                                  value="<?php echo $r['desc_relationship']?>" maxlength="30" required />
-                                <label class="form-label">Tipo de Parentesco:</label>
+                                <input type="text" class="form-control" name="id_relationship"
+                                  value="<?php echo $r['id_relationship']?>" style="display: none" />
+                                <input type="text" class="form-control" name=" relation"
+                                  style="text-transform:uppercase" value="<?php echo $r['description']?>" maxlength="30"
+                                  required />
+                                <label class="form-label" for="relation">Tipo de Parentesco:</label>
                               </div>
                             </div>
 
                             <div class="col-md-4">
                               <div class="form-outline">
                                 <label class="mr-5">Estado: </label>
-                                <div class=" form-check form-check-inline">
-                                  <input id="space" type="radio" class="form-check-input" name="state" value="1"
-                                    checked />
+                                <div class="form-check form-check-inline">
+                                  <input type="radio" class="form-check-input" name="state" value="1" checked />
                                   <label class="form-check-label">Activo</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                  <input id="space" type="radio" class="form-check-input" name="state" value="0" />
+                                  <input type="radio" class="form-check-input" name="state" value="0" />
                                   <label class="form-check-label">Inactivo</label>
                                 </div>
                               </div>
@@ -169,7 +168,7 @@
                         <tbody>
                           <?php while ($row = $query->fetch(PDO::FETCH_ASSOC)): ?>
                           <tr>
-                            <td><?php echo $row['desc_relationship']; ?></td>
+                            <td><?php echo $row['description']; ?></td>
                             <td>
                               <?php
 																if ($row['state'] == 1) {
@@ -181,11 +180,11 @@
                             </td>
                             <td>
                               <a class="btn btn-primary"
-                                href="?action=edit&desc_relat=<?php echo $row['desc_relationship'];?>" />
+                                href="?action=edit&id_relationship=<?php echo $row['id_relationship'];?>" />
                               Actualizar
                               </a>
                               <a class="btn btn-danger"
-                                href="?action=delete&desc_relat=<?php echo $row['desc_relationship'];?>"
+                                href="?action=delete&id_relationship=<?php echo $row['id_relationship'];?>"
                                 onclick="confirmDelete(event)">
                                 Eliminar
                               </a>

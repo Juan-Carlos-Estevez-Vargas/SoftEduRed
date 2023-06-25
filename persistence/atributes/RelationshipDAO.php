@@ -41,7 +41,7 @@
 				try {
 						if (!empty($description)) {
 								$query = "
-										INSERT INTO relationship (desc_relationship, state)
+										INSERT INTO relationship (description, state)
 										VALUES (UPPER(:description), :state)
 								";
 			
@@ -71,78 +71,89 @@
 		/**
 		 * Update a record in the 'relationship' table.
 		 *
-		 * @param string $newRelationship The new value for 'desc_relationship'.
-		 * @param string $queryRelationship The value to match in 'desc_relationship'.
-		 * @param string $newState The new value for 'state'.
+		 * @param string $idRelationship The id of the record to update.
+		 * @param string $relationship The new value for 'description'.
+		 * @param string $state The new value for 'state'.
+		 *
+		 * @throws Exception If there is an error updating the record.
 		 *
 		 * @return void
 		 */
-		public function updateRecord(string $newRelationship, string $queryRelationship, string $newState)
+		public function updateRecord(string $idRelationship, string $relationship, string $state)
 		{
 				try {
-						if (!empty($newRelationship) && !empty($queryRelationship)) {
+						// Check that required fields are not empty
+						if (!empty($idRelationship) && !empty($relationship)) {
+								// Update the record in the database
 								$sql = "
 										UPDATE relationship
-										SET desc_relationship = UPPER(:newRelationship),
-												state = :newState
-										WHERE desc_relationship = :queryRelationship
+										SET description = UPPER(:description),
+												state = :state
+										WHERE id_relationship = :id
 								";
-								
 								$stmt = $this->pdo->prepare($sql);
 								$stmt->execute([
-										'newRelationship' => $newRelationship,
-										'newState' => $newState,
-										'queryRelationship' => $queryRelationship
+										'description' => $relationship,
+										'state' => $state,
+										'id' => $idRelationship
 								]);
-			
+
+								// Show success message
 								$this->showSuccessMessage(
 										"Registro Actualizado Exitosamente.",
 										'../../views/atributes/relationshipView.php'
 								);
 						} else {
+								// Show warning message if required fields are empty
 								$this->showWarningMessage(
 										"Debes llenar todos los campos.",
 										'../../views/atributes/relationshipView.php'
 								);
 						}
 				} catch (Exception $e) {
+						// Show error message if there is an error updating the record
 						$this->showErrorMessage(
 								"Ocurrió un error interno. Consulta al Administrador.",
 								'../../views/atributes/relationshipView.php'
 						);
+						throw $e;
 				}
 		}
 
 		/**
 		 * Deletes a record from the relationship table based on the description of the relationship.
 		 *
-		 * @param string $relation The description of the relationship to delete.
+		 * @param string $idRelationship The ID of the relationship to delete.
 		 * @return void
 		 */
-		public function deleteRelationship(string $relation): void
+		public function deleteRelationship(string $idRelationship): void
 		{
 				try {
-						if (!empty($relation)) {
-								$sql = "DELETE FROM relationship WHERE desc_relationship = :relation";
+						if (!empty($idRelationship)) { // Check if ID is not empty
+								$sql = "DELETE FROM relationship WHERE id_relationship = :id";
 								$stmt = $this->pdo->prepare($sql);
-								$stmt->bindParam(':relation', $relation, PDO::PARAM_STR);
+								$stmt->bindParam(':id', $idRelationship, PDO::PARAM_STR);
 								$stmt->execute();
-								
+
+								// Show success message and redirect to relationship view
 								$this->showSuccessMessage(
 										"Registro Eliminado Exitosamente.",
 										'../../views/atributes/relationshipView.php'
 								);
 						} else {
+								// Show warning message and redirect to relationship view
 								$this->showWarningMessage(
 										"Debes llenar todos los campos.",
 										'../../views/atributes/relationshipView.php'
 								);
 						}
 				} catch (Exception $e) {
-				$this->showErrorMessage(
-						"Ocurrió un error interno. Consulta al Administrador.",
-						'../../views/atributes/relationshipView.php'
-				);
+					echo $e->getMessage();
+						// Show error message and redirect to relationship view
+						$this->showErrorMessage(
+								"Ocurrió un error interno. Consulta al Administrador.",
+								'../../views/atributes/relationshipView.php'
+						);
 				}
 		}
 
