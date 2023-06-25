@@ -14,7 +14,6 @@
 
 <body>
   <section class="">
-    <!-- Jumbotron -->
     <div class="px-4 py-5 px-md-5 text-center text-lg-start" style="background-color: hsl(0, 0%, 96%)">
       <div class="container">
         <?php
@@ -22,10 +21,10 @@
           $db = Database::connect();
           session_start();
 
-          if (isset($_SESSION['active'])) {
-            $sesion = $_SESSION['FK_ROL'];
+          if (isset($_SESSION['active']) && isset($_SESSION['ROL_ID'])) {
+            $sesion = $_SESSION['ROL_ID'];
 
-            if ($sesion === 'ADMIN') {
+            if ($sesion === 'ADMINISTRADOR') {
               header("location:utilities/index.php?role=e");
               exit;
             } elseif ($sesion === 'ATTENDANT') {
@@ -55,54 +54,42 @@
 
           <div class="col-lg-6 mb-5 mb-lg-0">
             <div class="card">
-              <div class="card-body py-5 px-md-5">
+              <div class="card-body py-5 px-md-5 text-left">
                 <form method="POST" action="login/loginValidation.php">
                   <h1 class="text-primary mb-4">Iniciar Sesión</h1>
                   <div class="row">
-                    <div class="col-md-12 mb-4">
-                      <select id="form-control" class="form-control" name="tipo_doc">
-                        <?php
-                          $result = $db->query("SELECT * FROM type_of_document");
-                          foreach ($result as $row):
-                        ?>
-                        <option value="<?php echo $row['cod_document']; ?>"><?php echo $row['Des_doc'];?></option>
-                        <?php endforeach; ?>
-                      </select>
-                      <label id="tipo_doc" class="form-label" for="tipo_doc">Tipo de Documento de Identidad</label>
-                    </div>
-
                     <div class="col-md-6 mb-4">
                       <div class="form-outline">
-                        <input class="form-control" type="text" name="id" id="user" placeholder="Número De Documento"
+                        <input class="form-control" type="text" name="username" id="username" placeholder="Usuario"
                           required />
-                        <label id="NO" class="form-label" for="id">N° Documento</label>
+                        <label class="form-label" for="username">Usuario</label>
                       </div>
                     </div>
 
                     <div class="col-md-6 mb-4">
                       <div class="form-outline">
-                        <input class="form-control" type="password" name="pass" id="pass" placeholder="Contraseña"
-                          required />
-                        <label class="form-label" for="pass">Contraseña</label>
+                        <input class="form-control" type="password" name="password" id="password"
+                          placeholder="Contraseña" required />
+                        <label class="form-label" for="password">Contraseña</label>
                       </div>
                     </div>
                   </div>
 
                   <div class="row mb-4">
                     <div class="col">
-                      <button id="ing" type="submit" class="btn btn-primary btn-block col" name="a_registro">
+                      <button type="submit" class="btn btn-primary btn-block col">
                         Iniciar Sesión
                       </button>
                     </div>
                     <div class="col">
-                      <a id="reg" href="login/registerView.php" class="btn btn-success btn-block col">
+                      <a href="login/registerView.php" class="btn btn-success btn-block col">
                         Registrarse
                       </a>
                     </div>
                   </div>
 
-                  <div class="col">
-                    <a id="olv" href="login/formRecPassword.php">Olvidé mi contraseña</a>
+                  <div class="col text-center">
+                    <a href="login/formRecPassword.php">Olvidé mi contraseña</a>
                   </div>
                 </form>
               </div>
@@ -111,8 +98,14 @@
         </div>
       </div>
     </div>
-    <!-- Jumbotron -->
   </section>
+
+  <footer class="bg-light text-center text-lg-start">
+    <div class="text-center p-3" style="background-color: hsl(0, 0%, 96%)">
+      © <?php echo date('Y'); ?> Copyright:
+      <a class="text-blue" href="https://github.com/Juan-Carlos-Estevez-Vargas/SoftEduRed">SoftEduRed.com</a>
+    </div>
+  </footer>
 </body>
 
 </html>

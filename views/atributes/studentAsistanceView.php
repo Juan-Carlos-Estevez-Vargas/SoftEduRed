@@ -1,7 +1,7 @@
 <?php
      require_once "../../persistence/atributes/NoAttendance.php";
      require_once "../../persistence/Database/Database.php";
-     $db = database::conectar();
+     $db = database::connect();
 ?>
 <!DOCTYPE html>
 <html lang="es">

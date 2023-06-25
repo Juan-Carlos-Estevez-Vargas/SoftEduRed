@@ -1,116 +1,177 @@
-<?php
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+</head>
+
+<body>
+  <?php
     class Login
     {
         /**
          * Logs in a user
          *
-         * @param string $docType The type of document of the user
-         * @param string $id The id of the user
-         * @param string $pass The password of the user
+         * @param string $username The username of the user
+         * @param string $password The password of the user
          *
          * @return void
          */
-        public function loginUser(string $docType, string $id, string $pass)
+        public function loginUser(string $username, string $password): void
         {
             // Start session
             session_start();
-            
+
             // Connect to database
             require_once "../persistence/database/Database.php";
             $db = Database::connect();
 
-            // Initialize counter
-            $cont = 0;
-
-            // Query database for user
-            $sql2 = "
-                SELECT * FROM user
-                JOIN user_has_role
-                    ON pk_fk_cod_doc = tdoc_role &&
-                        pk_fk_id_user = id_user
-                WHERE pk_fk_cod_doc = '$docType'
-                    AND id_user='$id'
-                    AND pass='$pass'
-            ";
-            $result = $db->query($sql2);
-
-            // Loop through query result and assign values to variables
-            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                $ttDoc = stripslashes($row["pk_fk_cod_doc"]);
-                $idPerson = stripslashes($row["id_user"]);
-                $firstName = stripslashes($row["first_name"]);
-                $secondName = stripslashes($row["second_name"]);
-                $firstLastName = stripslashes($row["surname"]);
-                $secondLastName = stripslashes($row["second_surname"]);
-                $username = stripslashes($row["user_name"]);
-                $photo = stripslashes($row["photo"]);
-                $rol = stripslashes($row["pk_fk_role"]);
-                $cont ++;
-            }
+            // Get user from database
+            $user = $this->getUser($db, $username, $password);
 
             // If user is not found, display error message and redirect to login page
-            if ($cont == 0) {
-                print "
-                    <script>
-                        alert(\"Usuario y/o Password Incorrectas.\");
-                        window.location='../index.php';
-                    </script>
-                ";
+            if (!$user) {
+                $this->displayErrorMessage("Usuario y/o Contraseña Incorrectos.");
+                return;
             }
 
-            // If user is found, set session variables and query database for user role
-            if ($cont != 0) {
+            // Get user role from database
+            $role = $this->getUserRole($db, $user["id_user"]);
 
-                $_SESSION["TIPO_DOC"] = $ttDoc;
-                $_SESSION["ID_PERSONA"] = $idPerson;
-                $_SESSION["USERNAME"] = $username;
-                $_SESSION["PHOTO"] = $photo;
-                $_SESSION["NAME"] = $firstName;
-                $_SESSION["SNAME"] = $secondName;
-                $_SESSION["LASTNAME"] = $firstLastName;
-                $_SESSION["SLASTNAME"] = $secondLastName;
-                $_SESSION["FK_ROL"] = $rol;
+            // Set session variables with user information
+            $this->setSessionVariables($user, $role);
+             
+            // If user does not have a role, display error message and redirect to login page
+            if (!$role) {
+                $this->displayErrorMessage("El usuario NO se encuentra con un rol asignado.");
+                return;
+            }
 
-                $sql = "
-                    SELECT pk_fk_role
-                    FROM user
-                    JOIN user_has_role
-                        ON id_user = pk_fk_id_user
-                    WHERE pk_fk_cod_doc ='$ttDoc' &&
-                        id_user='$idPerson'
-                ";
-                $result = $db->query($sql);
+            // Redirect to appropriate page based on user role
+            $this->redirectToRolePage($role["description"]);
+        }
 
-                // Loop through query result and assign role to variable
-                while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                    $role = stripslashes($row["pk_fk_role"]);
-                }
+        /**
+         * Retrieves a user from the database based on the username and password
+         *
+         * @param PDO $db The database connection
+         * @param string $username The username of the user
+         * @param string $password The password of the user
+         *
+         * @return array|false Returns the user as an associative array if found, false otherwise
+         */
+        private function getUser(PDO $db, string $username, string $password)
+        {
+            $sql = "
+                SELECT * FROM user
+                WHERE username = :username
+                    AND password = :password
+            ";
+            $stmt = $db->prepare($sql);
+            $stmt->execute(['username' => $username, 'password' => $password]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        }
 
-                // If user does not have a role, display error message and redirect to login page
-                if ($role === null) {
-                    print "
-                        <script>
-                            alert(\"El usuario NO se encuentra con un rol asignado\");
-                            window.location='../index.php';
-                        </script>
-                    ";
-                }
+        /**
+         * Sets session variables with user information
+         *
+         * @param array $user The user information
+         *
+         * @return void
+         */
+        private function setSessionVariables(array $user, array $role): void
+        {
+            $_SESSION["ID_USER"] = $user["id_user"];
+            $_SESSION["USERNAME"] = $user["username"];
+            $_SESSION["PHOTO"] = $user["photo"];
+            $_SESSION["NAME"] = $user["first_name"];
+            $_SESSION["SNAME"] = $user["second_name"];
+            $_SESSION["LASTNAME"] = $user["surname"];
+            $_SESSION["SLASTNAME"] = $user["second_surname"];
+            $_SESSION["ROLE"] = $role["description"];
+        }
 
-                // Redirect to appropriate page based on user role
-                if ($role === 'TEACHER') {
-                    $_SESSION['active'] = 1;
+        /**
+         * Retrieves the role of a user from the database
+         *
+         * @param PDO $db The database connection
+         * @param int $userId The ID of the user
+         *
+         * @return array|false Returns the role as an associative array if found, false otherwise
+         */
+        private function getUserRole(PDO $db, int $userId)
+        {
+            $sql = "
+                SELECT description FROM role
+                JOIN user_has_role
+                    ON id_role = role_id
+                WHERE user_id = :user_id
+            ";
+            $stmt = $db->prepare($sql);
+            $stmt->execute(['user_id' => $userId]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        }
+
+        /**
+         * Redirects the user to the appropriate page based on their role
+         *
+         * @param string $roleId The role ID of the user
+         *
+         * @return void
+         */
+        private function redirectToRolePage(string $role): void
+        {
+            $_SESSION['active'] = 1;
+            switch ($role) {
+                case 'TEACHER':
                     header('location: ../utilities/index.php?role=t');
-                } elseif ($role === 'ADMIN') {
-                    $_SESSION['active'] = 1;
+                    break;
+                case 'ADMINISTRADOR':
                     header('location: ../utilities/index.php?role=e');
-                } elseif ($role === 'ATTENDANT') {
-                    $_SESSION['active'] = 1;
-                    header('location: ../utilities/index.php?role=att');
-                }
+                    break;
+                case 'ATTENDANT':
+                    header('location: ../utilities/index.php?role=a');
+                    break;
+                default:
+                    $this->displayErrorMessage("Rol de usuario no válido.");
+                    break;
             }
         }
+
+        /**
+         * Displays an error message using SweetAlert and redirects the user to a specified location
+         *
+         * @param string $message The error message to display
+         * @param string $location The location to redirect the user after displaying the error message
+         *
+         * @return void
+         */
+        private function displayErrorMessage(string $message, string $location = '../index.php'): void
+        {
+            echo "
+                <script>
+                    Swal.fire({
+                            position: 'top-center',
+                            icon: 'error',
+                            title: '$message',
+                            showConfirmButton: false,
+                            timer: 2000
+                    }).then(() => {
+                            window.location = '$location';
+                    });
+                </script>
+            ";
+        }
+
     }
     
     $new = new Login();
-    $new->loginUser($_POST["tipo_doc"], $_POST["id"], $_POST["pass"]);
+    $new->loginUser($_POST["username"], $_POST["password"]);
 ?>
+</body>
+
+</html>

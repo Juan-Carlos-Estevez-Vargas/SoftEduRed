@@ -109,7 +109,8 @@
                                 <input type="text" name="old_gender" class="form-control"
                                   value=" <?php echo $r['desc_gender']?>" style="display: none" />
                                 <input type="text" name="gender" class="form-control"
-                                  value="<?php echo $r['desc_gender']?>" maxlength="20" required />
+                                  value="<?php echo $r['desc_gender']?>" style="text-transform:uppercase" maxlength="20"
+                                  required />
                                 <label class="form-label">Género:</label>
                               </div>
                             </div>

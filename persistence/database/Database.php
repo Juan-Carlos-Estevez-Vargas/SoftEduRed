@@ -3,7 +3,7 @@
 	{
 		// Variables encapsuladas
 		private static $dbhost = "localhost";
-		private static $dbname = "proyecto";
+		private static $dbname = "soft_edu_red";
 		private static $dbuser = "root";
 		private static $dbpass = "";
 

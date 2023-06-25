@@ -79,6 +79,12 @@
 										SET desc_gender = UPPER(?), state = ?
 										WHERE desc_gender = ?
 								";
+								$sql2 = "
+										UPDATE gender
+										SET desc_gender = UPPER($newGender), state = $state
+										WHERE desc_gender = $oldGender
+								";
+								echo $sql2;
 								$stmt = $this->pdo->prepare($sql);
 								$stmt->execute([$newGender, $state, $oldGender]);
 
