@@ -9,7 +9,7 @@
 
 		if ($action == 'update') {
 			$update = new GenderDAO();
-			$update->updateGender($_POST['gender'], $_POST['old_gender'], $_POST['state']);
+			$update->updateGender($_POST['id_gender'], $_POST['gender'], $_POST['state']);
 		} elseif ($action == 'register') {
 			$insert = new GenderDAO();
 			$insert ->registerGender($_POST['gender'], $_POST['state']);
@@ -57,9 +57,9 @@
                           <div class="row">
                             <div class="col-md-6">
                               <div class="form-outline">
-                                <input id="space" type="text" name="gender" placeholder="Ej: Masculino, Femenino"
-                                  required style="text-transform:uppercase" maxlength="20" class="form-control" />
-                                <label class="form-label">Género:</label>
+                                <input type="text" name="gender" placeholder="Ej: Masculino, Femenino" required
+                                  style="text-transform:uppercase" maxlength="20" class="form-control" />
+                                <label class="form-label" for="gender">Género:</label>
                               </div>
                             </div>
 
@@ -67,12 +67,11 @@
                               <div class="form-outline">
                                 <label class="mr-5">Estado: </label>
                                 <div class=" form-check form-check-inline">
-                                  <input id="space" type="radio" class="form-check-input" name="state" value="1"
-                                    checked />
+                                  <input type="radio" class="form-check-input" name="state" value="1" checked />
                                   <label class="form-check-label">Activo</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                  <input id="space" type="radio" class="form-check-input" name="state" value="0" />
+                                  <input type="radio" class="form-check-input" name="state" value="0" />
                                   <label class="form-check-label">Inactivo</label>
                                 </div>
                               </div>
@@ -97,7 +96,7 @@
                         <?php if (!empty($_GET['id_gender']) && !empty($_GET['action']) && !empty($id)) { ?>
                         <form action="#" method="post" enctype="multipart/form-data">
                           <?php
-														$sql = "SELECT * FROM gender WHERE desc_gender = '$id'";
+														$sql = "SELECT * FROM gender WHERE id_gender = '$id'";
 														$query = $db->query($sql);
 														while ($r = $query->fetch(PDO::FETCH_ASSOC)) {
 													?>
@@ -106,10 +105,10 @@
                           <div class="row">
                             <div class="col-md-6">
                               <div class="form-outline">
-                                <input type="text" name="old_gender" class="form-control"
-                                  value=" <?php echo $r['desc_gender']?>" style="display: none" />
+                                <input type="text" name="id_gender" value=" <?php echo $r['id_gender']?>"
+                                  style="display: none" />
                                 <input type="text" name="gender" class="form-control"
-                                  value="<?php echo $r['desc_gender']?>" style="text-transform:uppercase" maxlength="20"
+                                  value="<?php echo $r['description']?>" style="text-transform:uppercase" maxlength="20"
                                   required />
                                 <label class="form-label">Género:</label>
                               </div>
@@ -119,12 +118,11 @@
                               <div class="form-outline">
                                 <label class="form-label mr-5">Estado</label>
                                 <div class="form-check form-check-inline">
-                                  <input id="space" type="radio" class="form-check-input" name="state" value="1"
-                                    checked />
+                                  <input type="radio" class="form-check-input" name="state" value="1" checked />
                                   <label class="form-check-label">Activo</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                  <input id="space" type="radio" class="form-check-input" name="state" value="0" />
+                                  <input type="radio" class="form-check-input" name="state" value="0" />
                                   <label class="form-check-label">Inactivo</label>
                                 </div>
                               </div>
@@ -145,7 +143,8 @@
 
                   <div class="col-md-12 text-center mt-4">
                     <?php
-											$sql="SELECT * FROM gender" ; $query=$db ->query($sql);
+											$sql="SELECT * FROM gender";
+                      $query = $db ->query($sql);
     									if ($query->rowCount() > 0):
 										?>
                     <h4 class="mb-5 text-uppercase text-primary">Géneros</h4>
@@ -162,7 +161,7 @@
                         <tbody>
                           <?php while ($row = $query->fetch(PDO::FETCH_ASSOC)): ?>
                           <tr>
-                            <td><?php echo $row['desc_gender']; ?></td>
+                            <td><?php echo $row['description']; ?></td>
                             <td>
                               <?php
 																if ($row['state'] == 1) {
@@ -173,12 +172,10 @@
 															?>
                             </td>
                             <td>
-                              <a class="btn btn-primary"
-                                href="?action=edit&id_gender=<?php echo $row['desc_gender'];?>">
+                              <a class="btn btn-primary" href="?action=edit&id_gender=<?php echo $row['id_gender'];?>">
                                 Actualizar
                               </a>
-                              <a class="btn btn-danger"
-                                href="?action=delete&id_gender=<?php echo $row['desc_gender'];?>"
+                              <a class="btn btn-danger" href="?action=delete&id_gender=<?php echo $row['id_gender'];?>"
                                 onclick="confirmDelete(event)">
                                 Eliminar
                               </a>

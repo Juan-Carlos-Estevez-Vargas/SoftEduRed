@@ -39,7 +39,10 @@
 			{
 					try {
 							if (!empty($gender)) {
-									$sql = "INSERT INTO gender(desc_gender,state) VALUES(UPPER(:gender), :state)";
+									$sql = "
+										INSERT INTO gender(description, state)
+										VALUES(UPPER(:gender), :state)
+									";
 									$stmt = $this->pdo->prepare($sql);
 									$stmt->execute(['gender' => $gender, 'state' => $state]);
 						
@@ -64,79 +67,75 @@
 			/**
 			 * Update gender information in the database.
 			 *
-			 * @param string $newGender The updated gender description.
-			 * @param string $oldGender The gender description to be updated.
-			 * @param string $state     The state of the gender in the database.
+			 * @param string $idGender The id of the gender to be updated.
+			 * @param string $gender The new gender description.
+			 * @param string $state The new state of the gender in the database.
 			 *
 			 * @return void
 			 */
-			public function updateGender(string $newGender, string $oldGender, string $state)
+			public function updateGender(string $idGender, string $gender, string $state)
 			{
 				try {
-						if (!empty($newGender) && !empty($oldGender)) {
-								$sql = "
-										UPDATE gender
-										SET desc_gender = UPPER(?), state = ?
-										WHERE desc_gender = ?
-								";
-								$sql2 = "
-										UPDATE gender
-										SET desc_gender = UPPER($newGender), state = $state
-										WHERE desc_gender = $oldGender
-								";
-								echo $sql2;
-								$stmt = $this->pdo->prepare($sql);
-								$stmt->execute([$newGender, $state, $oldGender]);
+					if (!empty($idGender) && !empty($gender)) {
+						$sql = "
+							UPDATE gender
+							SET description = UPPER(?), state = ?
+							WHERE id_gender = ?
+						";
+						$stmt = $this->pdo->prepare($sql);
+						$stmt->execute([$gender, $state, $idGender]);
 
-								$this->showSuccessMessage(
-										"Registro Actualizado Exitosamente.",
-										'../../views/atributes/genderView.php'
-								);
-						} else {
-								$this->showWarningMessage(
-										"Debes llenar todos los campos.",
-										'../../views/atributes/genderView.php'
-								);
-						}
-				} catch (Exception $e) {
-						$this->showErrorMessage(
-								"Ocurrió un error interno. Consulta al Administrador.",
-								'../../views/atributes/genderView.php'
+						$this->showSuccessMessage(
+							"Registro Actualizado Exitosamente.",
+							'../../views/atributes/genderView.php'
 						);
+					} else {
+						$this->showWarningMessage(
+							"Debes llenar todos los campos.",
+							'../../views/atributes/genderView.php'
+						);
+					}
+				} catch (Exception $e) {
+					$this->showErrorMessage(
+						"Ocurrió un error interno. Consulta al Administrador.",
+						'../../views/atributes/genderView.php'
+					);
 				}
 			}
 			
 			/**
-			 * Delete a record from the gender table based on the given gender.
+			 * Deletes a record from the gender table based on the given gender id.
 			 *
-			 * @param string $gender The gender to be deleted.
-			 *
+			 * @param string $idGender The gender id to be deleted.
 			 * @return void
 			 */
-			public function deleteGender(string $gender)
+			public function deleteGender(string $idGender)
 			{
-					try {
-							if (!empty($gender)) {
-									$sql = "DELETE FROM gender WHERE desc_gender = ?";
-									$stmt = $this->pdo->prepare($sql);
-									$stmt->bindParam(1, $gender);
-									$stmt->execute();
+				try {
+					if (!empty($idGender)) { // Check if gender id is not empty
+						$sql = "DELETE FROM gender WHERE id_gender = ?";
+						$stmt = $this->pdo->prepare($sql);
+						$stmt->bindParam(1, $idGender);
+						$stmt->execute();
 
-									$this->showSuccessMessage(
-											"Registro Eliminado Exitosamente.",
-											'../../views/atributes/genderView.php'
-									);
-						} else {
-								$this->showWarningMessage(
-										"Debes llenar todos los campos.",
-										'../../views/atributes/genderView.php'
-								);
-						}
-				} catch (Exception $e) {
-						$this->showErrorMessage(
-								"Ocurrió un error interno. Consulta al Administrador.",
-								'../../views/atributes/genderView.php'
+						// Show success message after deleting the gender
+						$this->showSuccessMessage(
+							"Registro Eliminado Exitosamente.",
+							'../../views/atributes/genderView.php'
 						);
+					} else {
+						// Show warning message if gender id is empty
+						$this->showWarningMessage(
+							"Debes llenar todos los campos.",
+							'../../views/atributes/genderView.php'
+						);
+					}
+				} catch (Exception $e) {
+					// Show error message if an error occurs while deleting the gender
+					$this->showErrorMessage(
+						"Ocurrió un error interno. Consulta al Administrador.",
+						'../../views/atributes/genderView.php'
+					);
 				}
 			}
 		
