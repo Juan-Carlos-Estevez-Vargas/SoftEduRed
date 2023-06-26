@@ -32,77 +32,80 @@
 		 * Registers a new user and student record in the database.
 		 *
 		 * @param string $idType The type of identification document.
-		 * @param int $userId The identification number of the user.
+		 * @param int $identificationNumber The identification number of the user.
 		 * @param string $firstName The first name of the user.
 		 * @param string $secondName The second name of the user.
-		 * @param string $firstLastName The first last name of the user.
-		 * @param string $secondLastName The second last name of the user.
+		 * @param string $surname The first last name of the user.
+		 * @param string $secondSurname The second last name of the user.
 		 * @param string $gender The gender of the user.
 		 * @param string $address The address of the user.
 		 * @param string $email The email of the user.
 		 * @param string $phone The phone number of the user.
 		 * @param string $username The username of the user.
 		 * @param string $password The password of the user.
-		 * @param string $securityAnswer The answer to the user's security question.
 		 * @param string $securityQuestion The security question of the user.
-		 * @param string $attendantIdType The type of identification document of the attendant.
-		 * @param int $attendantId The identification number of the attendant.
-		 * @param string $courseCode The code of the course the student is enrolled in.
+		 * @param string $securityAnswer The answer to the user's security question.
+		 * @param string $attendantId The identification number of the attendant.
+		 * @param int $courseId The ID of the course the student is enrolled in.
 		 * @return void
 		 */
 		public function registerUserAndStudent(
-			string $idType, int $userId, string $firstName, string $secondName,	string $firstLastName,
-			string $secondLastName, string $gender, string $address, string $email, string $phone,
-			string $username, string $password, string $securityAnswer, string $securityQuestion,
-			string $attendantIdType, int $attendantId, string $courseCode
+			string $idType, int $identificationNumber, string $firstName, string $secondName,
+			string $surname, string $secondSurname, string $gender, string $address, string $email,
+			string $phone, string $username, string $password, string $securityQuestion,
+			string $securityAnswer,	string $attendantId, int $courseId
 		): void {
 				try {
-				    if (!empty($idType) && !empty($userId) && !empty($firstName) && !empty($firstLastName)
-						&& !empty($gender) && !empty($email) && !empty($phone) && !empty($username) && !empty($password)
-				    && !empty($securityAnswer) && !empty($securityQuestion) && !empty($attendantIdType)
-				    && !empty($attendantId) && !empty($courseCode))
+				    if (!empty($idType) && !empty($identificationNumber) && !empty($firstName)
+						&& !empty($surname)	&& !empty($gender) && !empty($email)
+						&& !empty($username) && !empty($password) && !empty($securityAnswer)
+						&& !empty($securityQuestion) && !empty($attendantId) && !empty($courseId))
 						{
 								$stmt = $this->pdo->prepare("
 										INSERT INTO user(
-												pk_fk_cod_doc,
-												id_user,
 												first_name,
 												second_name,
 												surname,
 												second_surname,
-												`fk_gender`,
-												adress,
+												gender_id,
+												address,
 												email,
 												phone,
-												user_name,
-												pass,
+												username,
+												password,
 												security_answer,
-												`fk_s_question`)
-										VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+												document_type_id,
+												security_question_id,
+												identification_number)
+										VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, UPPER(?), ?, ?, ?);
 								");
 					
 								$stmt->execute(
-										[$idType, $userId, $firstName, $secondName, $firstLastName,
-												$secondLastName, $gender, $address, $email, $phone, $username,
-												$password, $securityAnswer, $securityQuestion
-										]);
+										[$firstName, $secondName, $surname, $secondSurname,	$gender,
+												$address, $email, $phone, $username, $password,
+												$securityAnswer, $idType, $securityQuestion, $identificationNumber
+										]
+								);
+
+								$userId = $this->pdo->lastInsertId();
 
 								$stmt = $this->pdo->prepare("
 										INSERT INTO student (
-												pk_fk_tdoc_user,
-												pk_fk_user_id,
-												fk_attendat_cod_doc,
-												fk_attendant_id,
-												fk_cod_course)
-										VALUES (?, ?, ?, ?, ?)
+												user_id,
+												attendant_id,
+												course_id)
+										VALUES (?, ?, ?)
 								");
-								$stmt->execute([$idType, $userId, $attendantIdType, $attendantId, $courseCode]);
+								$stmt->execute([$userId, $attendantId, $courseId]);
 
 								$stmt = $this->pdo->prepare("
-										INSERT INTO user_has_role (tdoc_role, pk_fk_id_user, pk_fk_role, state)
-										VALUES (?, ?, 'STUDENT', 1)
+										INSERT INTO user_has_role (
+												user_id,
+												role_id,
+												state)
+										VALUES (?, 2, 1)
 								");
-								$stmt->execute([$idType, $userId]);
+								$stmt->execute([$userId]);
 								
 								$this->showSuccessMessage(
 										"Registro Agregado Exitosamente.",
@@ -145,53 +148,59 @@
 		 * @return void
 		 */
 		public function updateUserStudent(
-			$documentType, $userId, $firstName, $secondName, $firstLastName, $secondLastName,
-			$gender, $address, $email, $phone, $username, $pass, $securityAnswer,
-			$securityQuestion, $attendantDocument, $attendantId, $course
+			int $userId, string $idType, int $identificationNumber, string $firstName,
+			string $secondName,	string $surname, string $secondSurname, string $gender,
+			string $address, string $email,	string $phone, string $username, string $password,
+			string $securityQuestion,	string $securityAnswer,	string $attendantId, int $courseId
 		) {
 				try {
-						if (!empty($documentType) && !empty($userId) && !empty($firstName) && !empty($firstLastName)
-						&& !empty($gender) && !empty($email) && !empty($phone) && !empty($username) && !empty($pass)
-						&& !empty($securityAnswer) && !empty($securityQuestion) && !empty($attendantDocument)
-						&& !empty($attendantId) && !empty($course))
+						if (!empty($idType) && !empty($identificationNumber) && !empty($firstName)
+						&& !empty($surname)	&& !empty($gender) && !empty($email) && !empty($userId)
+						&& !empty($username) && !empty($password) && !empty($securityAnswer)
+						&& !empty($securityQuestion) && !empty($attendantId) && !empty($courseId))
 						{
 								$sqlUpdateUser = "
-										UPDATE user
-										SET first_name = ?,
+										UPDATE
+												user
+										SET
+												first_name = ?,
 												second_name = ?,
 												surname = ?,
 												second_surname = ?,
-												fk_gender = ?,
-												adress = ?,
+												gender_id = ?,
+												address = ?,
 												email = ?,
 												phone = ?,
-												user_name = ?,
-												pass = ?,
+												username = ?,
+												password = ?,
 												security_answer = ?,
-												fk_s_question = ?
-										WHERE pk_fk_cod_doc = ?
-												AND id_user = ?
+												document_type_id = ?,
+												security_question_id = ?,
+												identification_number = ?
+										WHERE
+												id_user = ?
 								";
 							
 								// Update student information query
 								$sqlUpdateStudent = "
-										UPDATE student
-										SET fk_attendat_cod_doc = ?,
-												fk_attendant_id = ?,
-												fk_cod_course = ?
-										WHERE pk_fk_tdoc_user = ?
-												AND pk_fk_user_id = ?
+										UPDATE
+												student
+										SET
+												attendant_id = ?,
+												course_id = ?
+										WHERE
+												user_id = ?
 								";
 								
 								// Execute queries
 								$this->pdo->prepare($sqlUpdateUser)->execute([
-										$firstName, $secondName, $firstLastName, $secondLastName, $gender, $address,
-										$email, $phone, $username, $pass, $securityAnswer, $securityQuestion,
-										$documentType, $userId
+										$firstName, $secondName, $surname, $secondSurname, $gender,
+										$address,	$email, $phone, $username, $password, $securityAnswer,
+										$idType, $securityQuestion,	$identificationNumber, $userId
 								]);
 							
 								$this->pdo->prepare($sqlUpdateStudent)->execute([
-										$attendantDocument, $attendantId, $course, $documentType, $userId
+										$attendantId, $courseId, $userId
 								]);
 								
 								$this->showSuccessMessage(
@@ -216,21 +225,23 @@
 		 * Delete a user record based on their ID and document code.
 		 *
 		 * @param int $userId The user's ID.
-		 * @param string $documentCode The document code.
 		 * @return string A success message.
 		 */
-		public function deleteStudentUser($userId, $documentCode)
+		public function deleteStudentUser($userId)
 		{
 				try {
-					  if (!empty($userId) && !empty($documentCode)) {
-								$stmt = $this->pdo->prepare("DELETE FROM user	WHERE id_user = :id_user AND pk_fk_cod_doc = :doc_code"
-								);
+					  if (!empty($userId)) {
+								$stmtRole = $this->pdo->prepare("
+										DELETE FROM user_has_role
+										WHERE user_id = :id_user
+								");
+								$stmtRole->execute(['id_user' => $userId]);
 								
-								// Execute the SQL statement with the given parameters.
-								$stmt->execute([
-										'id_user' => $userId,
-										'doc_code' => $documentCode
-								]);
+								$stmt = $this->pdo->prepare("
+										DELETE FROM student
+										WHERE user_id = :id_user
+								");
+								$stmt->execute(['id_user' => $userId]);
 								
 								$this->showSuccessMessage(
 										"Registro Eliminado Exitosamente.",
@@ -243,6 +254,7 @@
 								);
 						}
 				} catch (Exception $e) {
+					echo $e->getMessage();
 						$this->showErrorMessage(
 								"Ocurrió un error interno. Consulta al Administrador.",
 								'../../views/user/userStudentView.php'

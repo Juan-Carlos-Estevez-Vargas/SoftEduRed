@@ -2,7 +2,7 @@
     require_once "../persistence/roles/Student.php";
     require_once "../Database/conexion.php";
 
-    $db = database::conectar();
+    $db = database::connect();
 
     if (isset($_REQUEST['action'])) {
         $action = $_REQUEST['action'];
