@@ -42,7 +42,7 @@
 				try {
 						if (!empty($description)) {
 								$sql = "
-										INSERT INTO role (desc_role, state)
+										INSERT INTO role (description, state)
 										VALUES (UPPER(:description), :state)
 								";
 								$statement = $this->pdo->prepare($sql);
@@ -69,34 +69,45 @@
 		/**
 		 * Updates a record in the "role" table.
 		 *
-		 * @param string $newDesc The new value for the "desc_role" column.
-		 * @param string $oldDesc The value to match in the "desc_role" column of the record to update.
-		 * @param string $newState The new value for the "state" column.
+		 * @param string $idRole  The ID of the role to update.
+		 * @param string $role    The new value for the "description" column.
+		 * @param string $state   The new value for the "state" column.
+		 * 
 		 * @return void
 		 */
-		public function updateRole(string $newDesc, string $oldDesc, string $newState)
+		public function updateRole(string $idRole, string $role, string $state)
 		{
 				try {
-						if (!empty($newDesc) && !empty($oldDesc)) {
+						// Only update if both $idRole and $role are not empty.
+						if (!empty($role) && !empty($idRole)) {
 								$sql = "
 										UPDATE role
-										SET desc_role = UPPER('$newDesc'),
-												state = '$newState'
-										WHERE desc_role = '$oldDesc'
+										SET description = UPPER(:role),
+												state = :state
+										WHERE id_role = :idRole
 								";
-								$this->pdo->query($sql);
-								
+								// Prepare the SQL statement.
+								$stmt = $this->pdo->prepare($sql);
+								// Bind the parameters.
+								$stmt->bindParam(':role', $role);
+								$stmt->bindParam(':state', $state);
+								$stmt->bindParam(':idRole', $idRole);
+								// Execute the statement.
+								$stmt->execute();
+								// Show success message.
 								$this->showSuccessMessage(
 										"Registro Actualizado Exitosamente.",
 										'../../views/relationship/roleView.php'
 								);
 						} else {
+								// Show warning message if $idRole or $role is empty.
 								$this->showWarningMessage(
 										"Debes llenar todos los campos.",
 										'../../views/relationship/roleView.php'
 								);
 						}
 				} catch (Exception $e) {
+						// Show error message if an exception occurs.
 						$this->showErrorMessage(
 								"Ocurrió un error interno. Consulta al Administrador.",
 								'../../views/relationship/roleView.php'
@@ -105,31 +116,35 @@
 		}
 
 		/**
-		 * Deletes a record from the "role" table based on a given description.
+		 * Deletes a record from the "role" table based on a given ID.
 		 *
-		 * @param string $description The description of the role to be deleted
+		 * @param string $idRole The ID of the role to be deleted
 		 * @throws PDOException If there is an error executing the SQL statement
 		 */
-		public function deleteRole(string $description)
+		public function deleteRole(string $idRole)
 		{
 				try {
-						if (!empty($description)) {
-								$sql = "DELETE FROM role WHERE desc_role = :description";
+						// Check if ID is not empty
+						if (!empty($idRole)) {
+								$sql = "DELETE FROM role WHERE id_role = :role";
 								$stmt = $this->pdo->prepare($sql);
-								$stmt->bindParam(':description', $description);
+								$stmt->bindParam(':role', $idRole);
 								$stmt->execute();
 								
+								// Show success message
 								$this->showSuccessMessage(
 										"Registro Eliminado Exitosamente.",
 										'../../views/relationship/roleView.php'
 								);
 						} else {
+								// Show warning message if ID is empty
 								$this->showWarningMessage(
 										"Debes llenar todos los campos.",
 										'../../views/relationship/roleView.php'
 								);
 						}
 				} catch (Exception $e) {
+						// Show error message if there is an exception
 						$this->showErrorMessage(
 								"Ocurrió un error interno. Consulta al Administrador.",
 								'../../views/relationship/roleView.php'

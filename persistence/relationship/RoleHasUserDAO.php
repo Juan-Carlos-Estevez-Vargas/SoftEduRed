@@ -32,47 +32,39 @@
 		}
 
 		/**
-		 * Registers a user with roles and states
+		 * Registers a user with the specified roles and states.
 		 *
-		 * @param string $docType The user's document type
-		 * @param int $userId The user's ID
-		 * @throws Exception If the registration fails
+		 * @param int $userId The ID of the user being registered.
+		 * @param int $roleId The ID of the role being assigned to the user.
+		 * @param string $state The state of the registration.
+		 * @throws Exception If the registration fails.
 		 */
-		public function registerUserWithRolesAndStates($docType, $userId)
+		public function registerUser(int $userId, int $roleId, string $state): void
 		{
 				try {
-						if (!empty($docType) && !empty($userId)) {
-								$sql = "SELECT * FROM role";
-								$statement = $this->pdo->prepare($sql);
-								$statement->execute();
-								$roles = $statement->fetchAll(PDO::FETCH_OBJ);
-								
-								// Iterate over each role and insert into user_has_role table if checked
-								foreach ($roles as $role) {
-										$descRole = $role->desc_role;
-									
-										if (isset($_POST[$descRole])) {
-												$state = "state_" . $descRole;
-												$stateValue = $_REQUEST[$state];
-												$sql = "
-														INSERT INTO user_has_role (tdoc_role, pk_fk_id_user, pk_fk_role, state)
-														VALUES ('$docType', '$userId', '$descRole', '$stateValue')
-												";
-												$this->pdo->query($sql);
-										}
-								}
-
-								$this->showSuccessMessage(
-										"Registro Agregado Exitosamente.",
-										'../../views/relationship/roleHasUserView.php'
-								);
-						} else {
+						if (empty($userId) || empty($roleId)) {
+								// Show warning message if user ID or role ID are empty.
 								$this->showWarningMessage(
 										"Debes llenar todos los campos.",
 										'../../views/relationship/roleHasUserView.php'
 								);
+								return;
 						}
+
+						$sql = "INSERT INTO user_has_role (user_id, role_id, state) VALUES (:user, :role, :state)";
+						$statement = $this->pdo->prepare($sql);
+						$statement->bindParam(':user', $userId);
+						$statement->bindParam(':role', $roleId);
+						$statement->bindParam(':state', $state);
+						$statement->execute();
+
+						// Show success message upon successful registration.
+						$this->showSuccessMessage(
+								"Registro Agregado Exitosamente.",
+								'../../views/relationship/roleHasUserView.php'
+						);
 				} catch (Exception $e) {
+						// Show error message if registration fails due to internal error.
 						$this->showErrorMessage(
 								"Ocurrió un error interno. Consulta al Administrador.",
 								'../../views/relationship/roleHasUserView.php'
@@ -145,18 +137,18 @@
 		 * @param string $role The role to be deleted.
 		 * @return void
 		 */
-		public function deleteUserRole(string $documentType, int $userId, string $role)
+		public function deleteUserRole(string $idUserHasRole)
 		{
 				try {
-						if (!empty($documentType) && !empty($userId) && !empty($role)) {
+						if (!empty($idUserHasRole)) {
 								$sql = "
 										DELETE FROM user_has_role
-										WHERE tdoc_role = '$documentType'
-												&& pk_fk_id_user = '$userId'
-												&& pk_fk_role = '$role'
+										WHERE id_user_has_Role = :id
 								";
 
-								$this->pdo->query($sql);
+								$statement = $this->pdo->prepare($sql);
+								$statement->bindParam(':id', $idUserHasRole);
+								$statement->execute();
 
 								$this->showSuccessMessage(
 										"Registro Eliminado Exitosamente.",

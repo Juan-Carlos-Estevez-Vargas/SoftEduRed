@@ -9,15 +9,15 @@
 
 		if ($action == 'update') {
 			$update = new RoleDAO();
-			$update->updateRole($_POST['relation'], $_POST['queryy'], $_POST['state']);
+			$update->updateRole($_POST['id_role'], $_POST['role'], $_POST['state']);
 		} elseif ($action == 'register') {
 			$insert = new RoleDAO();
-			$insert ->addRole($_POST['relation'], $_POST['state']);
+			$insert ->addRole($_POST['role'], $_POST['state']);
 		} elseif ($action == 'delete') {
 			$delete = new RoleDAO();
-			$delete->deleteRole($_GET['desc_relat']);
+			$delete->deleteRole($_GET['id_role']);
 		} elseif ($action == 'edit') {
-			$id = $_GET['desc_relat'];
+			$id = $_GET['id_role'];
 		}
 	}
 ?>
@@ -57,9 +57,9 @@
                           <div class="row">
                             <div class="col-md-6">
                               <div class="form-outline">
-                                <input id="space" type="text" name="relation" placeholder="Rol" required
+                                <input type="text" name="role" placeholder="Rol" required
                                   style="text-transform:uppercase" maxlength="15" class="form-control" />
-                                <label class="form-label">Tipo de Rol:</label>
+                                <label class="form-label" for="role">Tipo de Rol:</label>
                               </div>
                             </div>
 
@@ -67,12 +67,11 @@
                               <div class="form-outline">
                                 <label class="mr-5">Estado: </label>
                                 <div class=" form-check form-check-inline">
-                                  <input id="space" type="radio" class="form-check-input" name="state" value="1"
-                                    checked />
+                                  <input type="radio" class="form-check-input" name="state" value="1" checked />
                                   <label class="form-check-label">Activo</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                  <input id="space" type="radio" class="form-check-input" name="state" value="0" />
+                                  <input type="radio" class="form-check-input" name="state" value="0" />
                                   <label class="form-check-label">Inactivo</label>
                                 </div>
                               </div>
@@ -94,12 +93,12 @@
                   <div class="container-fluid">
                     <div class="row">
                       <div class="col-md-12">
-                        <?php if (!empty($_GET['desc_relat']) && !empty($_GET['action']) && !empty($id)) { ?>
+                        <?php if (!empty($_GET['id_role']) && !empty($_GET['action']) && !empty($id)) { ?>
                         <form action="#" method="post" enctype="multipart/form-data">
                           <?php
 														$sql = "
 															SELECT * FROM role
-															WHERE desc_role = '$id'
+															WHERE id_role = '$id'
 														";
 														$query = $db->query($sql);
 														while ($r = $query->fetch(PDO::FETCH_ASSOC)) {
@@ -109,12 +108,11 @@
                           <div class="row">
                             <div class="col-md-6">
                               <div class="form-outline">
-                                <input id="Space" type="text" class="form-control" name="queryy"
-                                  value="<?php echo $r['desc_role']?>"
-                                  style="text-transform:uppercase; display: none" />
-                                <input id="Space" type="text" class="form-control" style="text-transform:uppercase;"
-                                  name=" relation" value="<?php echo $r['desc_role']?>" maxlength="15" required />
-                                <label class="form-label">Tipo de Rol:</label>
+                                <input type="text" class="form-control" name="id_role"
+                                  value="<?php echo $r['id_role']?>" style="display: none;" />
+                                <input type="text" class="form-control" style="text-transform:uppercase;" name="role"
+                                  value="<?php echo $r['description']?>" maxlength="15" required />
+                                <label class="form-label" for="role">Tipo de Rol:</label>
                               </div>
                             </div>
 
@@ -122,12 +120,11 @@
                               <div class="form-outline">
                                 <label class="mr-5">Estado: </label>
                                 <div class=" form-check form-check-inline">
-                                  <input id="space" type="radio" class="form-check-input" name="state" value="1"
-                                    checked />
+                                  <input type="radio" class="form-check-input" name="state" value="1" checked />
                                   <label class="form-check-label">Activo</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                  <input id="space" type="radio" class="form-check-input" name="state" value="0" />
+                                  <input type="radio" class="form-check-input" name="state" value="0" />
                                   <label class="form-check-label">Inactivo</label>
                                 </div>
                               </div>
@@ -170,7 +167,7 @@
                         <tbody>
                           <?php while ($row = $query->fetch(PDO::FETCH_ASSOC)): ?>
                           <tr>
-                            <td><?php echo $row['desc_role']; ?></td>
+                            <td><?php echo $row['description']; ?></td>
                             <td>
                               <?php
 																if ($row['state'] == 1) {
@@ -181,10 +178,10 @@
 															?>
                             </td>
                             <td>
-                              <a class="btn btn-primary" href="?action=edit&desc_relat=<?php echo $row['desc_role'];?>">
+                              <a class="btn btn-primary" href="?action=edit&id_role=<?php echo $row['id_role'];?>">
                                 Actualizar
                               </a>
-                              <a class="btn btn-danger" href="?action=delete&desc_relat=<?php echo $row['desc_role'];?>"
+                              <a class="btn btn-danger" href="?action=delete&id_role=<?php echo $row['id_role'];?>"
                                 onclick="confirmDelete(event)">
                                 Eliminar
                               </a>
