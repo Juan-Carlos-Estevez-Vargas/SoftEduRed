@@ -33,32 +33,29 @@
 		 *
 		 * @param string $subject The name of the subject
 		 * @param string $state The state of the subject
-		 * @param string $documentType The type of document of the user
-		 * @param int $userId The ID of the user
+		 * @param string $teacherId The ID of teacher
 		 *
 		 * @return void
 		 */
-		public function registerSubject(string $subject, string $state, string $documentType, int $userId)
+		public function registerSubject(string $subject, string $state, string $teacherId)
 		{
 				try {
-						if (!empty($subject) && !empty($documentType) && !empty($userId)) {
+						if (!empty($subject) && !empty($teacherId)) {
 								$query = "
-										INSERT INTO `subject`
-												(`n_subject`,
-												`state`,
-												`fk_id_user_teacher`,
-												`fk_tdoc_user_teacher`)
-										VALUES (UPPER(:subject),
-												:state,
-												:userId,
-												:documentType)
+										INSERT INTO subject	(
+												description,
+												teacher_id,
+												state)
+										VALUES (
+												UPPER(:description),
+												:teacher,
+												:state);
 								";
 								$statement = $this->pdo->prepare($query);
 								$statement->execute([
-										'subject' => $subject,
-										'state' => $state,
-										'userId' => $userId,
-										'documentType' => $documentType
+										'description' => $subject,
+										'teacher' => $teacherId,
+										'state' => $state
 								]);
 								
 								$this->showSuccessMessage(
@@ -82,36 +79,34 @@
 		/**
 		 * Updates subject information in the database.
 		 *
-		 * @param string $newSubject The new subject name.
-		 * @param string $newState The new subject state.
-		 * @param string $teacherDocumentType The teacher's document type.
-		 * @param int $teacherId The teacher's ID in the database.
-		 * @param string $currentSubject The current name of the subject to be updated.
+		 * @param string $idSubject The ID of the subject to be updated.
+		 * @param string $subject The new name of the subject.
+		 * @param string $state The new state of the subject.
+		 * @param int $teacherId The ID of the teacher assigned to the subject.
 		 *
 		 * @return void
 		 */
 		public function updateSubject(
-			string $newSubject, string $newState, string $teacherDocumentType,
-			int $teacherId, string $currentSubject)
+			string $idSubject, string $subject, string $state, int $teacherId)
 		{
 				try {
-						if (!empty($newSubject) && !empty($teacherDocumentType)
-								&& !empty($teacherId) && !empty($currentSubject))
+						if (!empty($idSubject) && !empty($subject) && !empty($teacherId))
 						{
 								$sql = "
-										UPDATE subject
-										SET n_subject = UPPER(:newSubject),
-												state = :newState,
-												fk_id_user_teacher = :teacherId,
-												fk_tdoc_user_teacher = :teacherDocumentType
-										WHERE n_subject = :currentSubject
+										UPDATE
+												subject
+										SET
+												description = UPPER(:description),
+												state = :state,
+												teacher_id = :teacherId
+										WHERE
+												id_subject = :id
 								";
 								$stmt = $this->pdo->prepare($sql);
-								$stmt->bindParam(':newSubject', $newSubject);
-								$stmt->bindParam(':newState', $newState);
+								$stmt->bindParam(':description', $subject);
+								$stmt->bindParam(':state', $state);
 								$stmt->bindParam(':teacherId', $teacherId);
-								$stmt->bindParam(':teacherDocumentType', $teacherDocumentType);
-								$stmt->bindParam(':currentSubject', $currentSubject);
+								$stmt->bindParam(':id', $idSubject);
 								$stmt->execute();
 								
 								$this->showSuccessMessage(
@@ -136,15 +131,16 @@
 		/**
 		 * Deletes a subject from the database.
 		 *
-		 * @param string $subject The name of the subject to be deleted.
+		 * @param string $subjectId The ID of the subject to be deleted.
+ 		 * @return void
 		 */
-		public function deleteSubject(string $subject)
+		public function deleteSubject(string $subjectId): void
 		{
 				try {
-						if (!empty($subject)) {
-								$sql = "DELETE FROM subject WHERE n_subject = ?";
+						if (!empty($subjectId)) {
+								$sql = "DELETE FROM subject WHERE id_subject = ?";
 								$stmt = $this->pdo->prepare($sql);
-								$stmt->execute([$subject]);
+								$stmt->execute([$subjectId]);
 								
 								$this->showSuccessMessage(
 										"Registro Eliminado Exitosamente.",
