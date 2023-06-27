@@ -126,23 +126,24 @@
 		}
 
 		/**
-		 * Updates the user and attendant data in the database.
-		 *
-		 * @param string $document The user's identification document.
-		 * @param int $userId The user's id.
-		 * @param string $firstName The user's first name.
-		 * @param string $secondName The user's second name.
-		 * @param string $firstLastName The user's first last name.
-		 * @param string $secondLastName The user's second last name.
-		 * @param string $gender The user's gender.
-		 * @param string $address The user's address.
-		 * @param string $email The user's email.
-		 * @param string $phone The user's phone number.
-		 * @param string $userName The user's username.
-		 * @param string $password The user's password.
-		 * @param string $securityAnswer The user's security answer.
-		 * @param int $securityQuestion The user's security question.
-		 * @param string $relationship The attendant's relationship to the user.
+			 * Update the user and attendant data in the database.
+			*
+			* @param int $userId The user's id.
+			* @param string $idType The user's identification document type.
+			* @param int $identificationNumber The user's identification number.
+			* @param string $firstName The user's first name.
+			* @param string $secondName The user's second name.
+			* @param string $surname The user's surname.
+			* @param string $secondSurname The user's second surname.
+			* @param string $gender The user's gender.
+			* @param string $address The user's address.
+			* @param string $email The user's email.
+			* @param string $phone The user's phone number.
+			* @param string $username The user's username.
+			* @param string $password The user's password.
+			* @param int $securityQuestion The user's security question id.
+			* @param string $securityAnswer The user's security answer.
+			* @param string $relationId The attendant's relationship id to the user.
 		 */
 		public function updateAttendantUser(
 			int $userId, string $idType, int $identificationNumber, string $firstName,

@@ -267,7 +267,6 @@
                                 <input type="text" class="form-control" name="first_name" placeholder="Primer Nombre"
                                   maxlength="15" value="<?php echo $r['first_name'];?>" required />
                                 <label class="form-label" for="first_name">Primer Nombre:</label>
-
                               </div>
                             </div>
 
@@ -305,7 +304,7 @@
                                     foreach ($db->query('SELECT * FROM gender') as $row) {
                                         echo '<option value="'.$row['id_gender'].'">'.$row["description"].'</option>';
                                     }
-                                ?>
+                                  ?>
                                 </select>
                                 <label class="form-label" for="gender">Género:</label>
                               </div>

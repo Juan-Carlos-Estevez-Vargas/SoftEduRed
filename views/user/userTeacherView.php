@@ -24,23 +24,26 @@
 		if ($action === 'update') {
         $update = new UserTeacher();
         $update->updateUserTeacherInformation(
-            $_POST['tdoc'], $_POST['id_user'], $_POST['f_name'], $_POST['s_name'], $_POST['f_lname'],
-            $_POST['s_lname'], $_POST['gender'], $_POST['adress'], $_POST['email'], $_POST['phone'],
-            $_POST['u_name'], $_POST['pass'], $_POST['s_ans'], $_POST['s_ques']
+            $_POST['id_user'], $_POST['document_type'], $_POST['identification_number'],
+            $_POST['first_name'], $_POST['second_name'], $_POST['surname'],
+            $_POST['second_surname'], $_POST['gender'], $_POST['address'],
+            $_POST['email'], $_POST['phone'], $_POST['username'], $_POST['password'],
+            $_POST['security_question'], $_POST['answer'], $_POST['salary']
         );
 		} elseif ($action === 'register') {
         $insert = new UserTeacher();
         $insert->register(
-            $_POST['tdoc'], $_POST['id_user'], $_POST['f_name'], $_POST['s_name'], $_POST['f_lname'],
-            $_POST['s_lname'], $_POST['gender'], $_POST['adress'], $_POST['email'], $_POST['phone'],
-            $_POST['u_name'], $_POST['pass'], $_POST['s_ans'], $_POST['s_ques']
+            $_POST['document_type'], $_POST['identification_number'],
+            $_POST['first_name'], $_POST['second_name'], $_POST['surname'],
+            $_POST['second_surname'], $_POST['gender'], $_POST['address'],
+            $_POST['email'], $_POST['phone'], $_POST['username'], $_POST['password'],
+            $_POST['security_question'], $_POST['answer'], $_POST['salary']
         );
 		} elseif ($action === 'delete') {
 			  $delete = new UserTeacher();
-			  $delete->deleteUserTeacher($_GET['id_user'], $_GET['t_doc']);
+			  $delete->deleteUserTeacher($_GET['id_user']);
 		} elseif ($action === 'edit') {
         $id = $_GET['id_user'];
-        $tdoc = $_GET['t_doc'];
     }
 	}
 ?>
@@ -66,38 +69,38 @@
                           <div class="row mb-4">
                             <div class="col-md-3">
                               <div class="form-outline">
-                                <select class="form-control" name="tdoc">
+                                <select class="form-control" name="document_type">
                                   <?php
-																		foreach ($db->query('SELECT * FROM type_of_document') as $row) {
-																			echo '<option value="'.$row['cod_document'].'">'.$row["Des_doc"].'</option>';
+																		foreach ($db->query('SELECT * FROM document_type') as $row) {
+																			echo '<option value="'.$row['id_document_type'].'">'.$row["description"].'</option>';
 																		}
 																	?>
                                 </select>
-                                <label class="form-label">Tipo de Documento:</label>
+                                <label class="form-label" for="document_type">Tipo de Documento:</label>
                               </div>
                             </div>
 
                             <div class="col-md-3">
                               <div class="form-outline">
-                                <input id="space" type="number" class="form-control" name="id_user"
+                                <input type="number" class="form-control" name="identification_number"
                                   placeholder="Número de Identificación" required />
-                                <label class="form-label">Número de Identificación:</label>
+                                <label class="form-label" for="identification_number">Número de Identificación:</label>
                               </div>
                             </div>
 
                             <div class="col-md-3">
                               <div class="form-outline">
-                                <input id="space" type="text" class="form-control" name="f_name"
-                                  placeholder="Primer Nombre" required />
-                                <label class="form-label">Primer Nombre:</label>
+                                <input type="text" class="form-control" name="first_name" placeholder="Primer Nombre"
+                                  required />
+                                <label class="form-label" for="first_name">Primer Nombre:</label>
                               </div>
                             </div>
 
                             <div class="col-md-3">
                               <div class="form-outline">
-                                <input id="space" type="text" class="form-control" name="s_name"
+                                <input type="text" class="form-control" name="second_name"
                                   placeholder="Segundo Nombre" />
-                                <label class="form-label">Segundo Nombre:</label>
+                                <label class="form-label" for="second_name">Segundo Nombre:</label>
                               </div>
                             </div>
                           </div>
@@ -105,17 +108,17 @@
                           <div class="row mb-4">
                             <div class="col-md-3">
                               <div class="form-outline">
-                                <input id="space" type="text" class="form-control" name="f_lname"
-                                  placeholder="Primer Apellido" required />
-                                <label class="form-label">Primer Apellido:</label>
+                                <input type="text" class="form-control" name="surname" placeholder="Primer Apellido"
+                                  required />
+                                <label class="form-label" for="surname">Primer Apellido:</label>
                               </div>
                             </div>
 
                             <div class="col-md-3">
                               <div class="form-outline">
-                                <input id="space" class="form-control" type="text" name="s_lname"
+                                <input class="form-control" type="text" name="second_surname"
                                   placeholder="Segundo Apellido" />
-                                <label class="form-label">Segundo Apellido:</label>
+                                <label class="form-label" for="second_surname">Segundo Apellido:</label>
                               </div>
                             </div>
 
@@ -124,19 +127,18 @@
                                 <select class="form-control" name="gender">
                                   <?php
                                     foreach ($db->query('SELECT * FROM gender') as $row) {
-                                        echo '<option value="'.$row['desc_gender'].'">'.$row["desc_gender"].'</option>';
+                                        echo '<option value="'.$row['id_gender'].'">'.$row["description"].'</option>';
                                     }
-                                ?>
+                                  ?>
                                 </select>
-                                <label class="form-label">Género:</label>
+                                <label class="form-label" for="gender">Género:</label>
                               </div>
                             </div>
 
                             <div class="col-md-3">
                               <div class="form-outline">
-                                <input id="space" type="text" class="form-control" name="adress"
-                                  placeholder="Dirección" />
-                                <label class="form-label">Dirección:</label>
+                                <input type="text" class="form-control" name="address" placeholder="Dirección" />
+                                <label class="form-label" for="address">Dirección:</label>
                               </div>
                             </div>
                           </div>
@@ -144,60 +146,67 @@
                           <div class="row mb-4">
                             <div class="col-md-3">
                               <div class="form-outline">
-                                <input id="space" type="text" class="form-control" name="email"
-                                  placeholder="Correo Electrónico" required />
-                                <label class="form-label">Correo electrónico:</label>
-                              </div>
-                            </div>
-
-                            <div class="col-md-3">
-                              <div class="form-outline">
-                                <input id="space" type="text" class="form-control" name="phone" placeholder="Teléfono"
+                                <input type="text" class="form-control" name="email" placeholder="Correo Electrónico"
                                   required />
-                                <label class="form-label">Teléfono:</label>
+                                <label class="form-label" for="email">Correo electrónico:</label>
                               </div>
                             </div>
 
                             <div class="col-md-3">
                               <div class="form-outline">
-                                <input id="space" type="text" class="form-control" name="u_name" placeholder="Usuario"
+                                <input type="text" class="form-control" name="phone" placeholder="Teléfono" required />
+                                <label class="form-label" for="phone">Teléfono:</label>
+                              </div>
+                            </div>
+
+                            <div class="col-md-3">
+                              <div class="form-outline">
+                                <input type="text" class="form-control" name="username" placeholder="Usuario"
                                   required />
-                                <label class="form-label">Usuario:</label>
+                                <label class="form-label" for="username">Usuario:</label>
                               </div>
                             </div>
 
                             <div class="col-md-3">
                               <div class="form-outline">
-                                <input id="space" type="password" class="form-control" name="pass"
-                                  placeholder="Contraseña" required />
-                                <label class="form-label">Contraseña:</label>
+                                <input type="password" class="form-control" name="password" placeholder="Contraseña"
+                                  required />
+                                <label class="form-label" for="password">Contraseña:</label>
                               </div>
                             </div>
                           </div>
 
                           <div class="row mb-4">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                               <div class="form-outline">
-                                <select class="form-control" name="s_ques">
+                                <select class="form-control" name="security_question">
                                   <?php
-																		foreach ($db->query('SELECT * FROM security_question') as $row2) {
-																			echo '<option value="'.$row2['question'].'">'.$row2["question"].'</option>';
+																		foreach ($db->query('SELECT * FROM security_question') as $row) {
+																			echo '<option value="'.$row['id_security_question'].'">'.$row["description"].'</option>';
 																		}
 																	?>
                                 </select>
-                                <label class="form-label">Pregunta de Seguridad:</label>
+                                <label class="form-label" for="security_question">Pregunta de Seguridad:</label>
                               </div>
                             </div>
 
                             <div class="col-md-3">
                               <div class="form-outline">
-                                <input id="space" type="text" class="form-control" name="s_ans" placeholder="Respuesta"
+                                <input type="text" class="form-control" name="answer" placeholder="Respuesta"
                                   required />
-                                <label class="form-label">Respuesta:</label>
+                                <label class="form-label" for="answer">Respuesta:</label>
                               </div>
                             </div>
 
                             <div class="col-md-3">
+                              <div class="form-outline">
+                                <input type="number" class="form-control" name="salary" placeholder="Salario"
+                                  required />
+                                <label class="form-label" for="salary">Salario:</label>
+                              </div>
+                            </div>
+
+                            <div class="col-md-2">
                               <div class="form-outline">
                                 <input id="boton" type="submit" class="btn btn-primary btn-block" value="Guardar"
                                   onclick="this.form.action ='?action=register'" />
@@ -213,45 +222,60 @@
                   <div class="container-fluid">
                     <div class="row">
                       <div class="col-md-12">
-                        <?php if (!empty($_GET['t_doc']) && !empty($_GET['id_user']) && !empty($_GET['action']) && !empty($id)) { ?>
+                        <?php if (!empty($_GET['action']) && !empty($id)) { ?>
                         <form action="#" method="post" enctype="multipart/form-data">
                           <?php
-                           	$sql = "SELECT * FROM user WHERE pk_fk_cod_doc = '$tdoc' and id_user = '$id'";
+                           	$sql = "
+                              SELECT u.*, t.salary AS salary
+                              FROM `user` u
+                              JOIN `teacher` t ON u.id_user = t.user_id
+                              WHERE u.id_user = '$id';
+                            ";
 													 	$query = $db->query($sql);
 													 	while ($r = $query->fetch(PDO::FETCH_ASSOC)) {
                             ?>
                           <h4 class="mb-5 text-uppercase text-center text-success">Actualizar Docente</h4>
 
-                          <div class="row mb-4">
+                          <div>
+                            <input type="text" style="display: none;" value="<?php echo $r['id_user'];?>"
+                              name="id_user" />
+                          </div>
+                          <div class=" row mb-4">
                             <div class="col-md-3">
                               <div class="form-outline">
-                                <input id="space" type="text" class="form-control" name="tdoc"
-                                  value="<?php echo $r['pk_fk_cod_doc'];?>" readonly required />
-                                <label class="form-label">Tipo de Documento:</label>
+                                <select class="form-control" name="document_type">
+                                  <?php
+                                    foreach ($db->query('SELECT * FROM document_type') as $row1) {
+                                        echo '<option value="'.$row1['id_document_type'].'">'.$row1["description"].'</option>';
+                                    }
+                                  ?>
+                                </select>
+                                <label class=" form-label" for="document_type">Tipo de Documento:</label>
                               </div>
                             </div>
 
                             <div class="col-md-3">
                               <div class="form-outline">
-                                <input id="space" type="number" class="form-control" name="id_user"
-                                  value="<?php echo $r['id_user'];?>" readonly required />
-                                <label class="form-label">Número de Identificación:</label>
+                                <input type="number" class="form-control" name="identification_number"
+                                  placeholder="Número de Identificación" maxlength="15"
+                                  value="<?php echo $r['identification_number'];?>" required />
+                                <label class="form-label" for="identification_number">Número de Identificación:</label>
                               </div>
                             </div>
 
                             <div class="col-md-3">
                               <div class="form-outline">
-                                <input id="space" type="text" class="form-control" name="f_name"
-                                  value="<?php echo $r['first_name'];?>" placeholder="Primer Nombre" required />
-                                <label class="form-label">Primer Nombre:</label>
+                                <input type="text" class="form-control" name="first_name" placeholder="Primer Nombre"
+                                  maxlength="15" value="<?php echo $r['first_name'];?>" required />
+                                <label class="form-label" for="first_name">Primer Nombre:</label>
                               </div>
                             </div>
 
                             <div class="col-md-3">
                               <div class="form-outline">
-                                <input id="space" type="text" class="form-control" name="s_name"
-                                  value="<?php echo $r['second_name'];?>" placeholder="Segundo Nombre" />
-                                <label class="form-label">Segundo Nombre:</label>
+                                <input type="text" class="form-control" name="second_name" placeholder="Segundo Nombre"
+                                  maxlength="15" value="<?php echo $r['second_name'];?>" />
+                                <label class="form-label" for="second_name">Segundo Nombre:</label>
                               </div>
                             </div>
                           </div>
@@ -259,17 +283,18 @@
                           <div class="row mb-4">
                             <div class="col-md-3">
                               <div class="form-outline">
-                                <input id="space" type="text" class="form-control" name="f_lname"
-                                  value="<?php echo $r['surname'];?>" placeholder="Primer Apellido" required />
-                                <label class="form-label">Primer Apellido:</label>
+                                <input type="text" class="form-control" name="surname" placeholder="Primer Apellido"
+                                  maxlength="15" value="<?php echo $r['surname'];?>" required />
+                                <label class="form-label" for="surname">Primer Apellido:</label>
                               </div>
                             </div>
 
                             <div class="col-md-3">
                               <div class="form-outline">
-                                <input id="space" type="text" class="form-control" name="s_lname"
-                                  value="<?php echo $r['second_surname'];?>" placeholder="Segundo Apellido" />
-                                <label class="form-label">Segundo Apellido:</label>
+                                <input class="form-control" type="text" name="second_surname"
+                                  placeholder="Segundo Apellido" value="<?php echo $r['second_surname'];?>"
+                                  maxlength="15" />
+                                <label class="form-label" for="second_surname">Segundo Apellido:</label>
                               </div>
                             </div>
 
@@ -277,22 +302,20 @@
                               <div class="form-outline">
                                 <select class="form-control" name="gender">
                                   <?php
-																		foreach ($db->query('SELECT * FROM gender') as $row1) {
-																			$selected = $r['fk_gender'] == $row1['desc_gender'] ? 'selected' : '';
-																			echo '<option value="'.$row1['desc_gender'].'" '.$selected.'>'.$row1['desc_gender'].'</option>';
-																		}
-																	?>
+                                    foreach ($db->query('SELECT * FROM gender') as $row) {
+                                        echo '<option value="'.$row['id_gender'].'">'.$row["description"].'</option>';
+                                    }
+                                  ?>
                                 </select>
-                                <label class="form-label">Género:</label>
+                                <label class="form-label" for="gender">Género:</label>
                               </div>
                             </div>
 
                             <div class="col-md-3">
                               <div class="form-outline">
-                                <input id="space" type="text" class="form-control" name="adress"
-                                  value="<?php echo $r['adress'];?>" placeholder="Dirección" />
-
-                                <label class="form-label">Dirección:</label>
+                                <input type="text" class="form-control" name="address" placeholder="Dirección"
+                                  maxlength="40" value="<?php echo $r['address'];?>" />
+                                <label class="form-label" for="address">Dirección:</label>
                               </div>
                             </div>
                           </div>
@@ -300,61 +323,68 @@
                           <div class="row mb-4">
                             <div class="col-md-3">
                               <div class="form-outline">
-                                <input id="space" type="text" class="form-control" name="email"
-                                  value="<?php echo $r['email'];?>" placeholder="Correo Electrónico" required />
-                                <label class="form-label">Correo:</label>
+                                <input type="text" class="form-control" name="email" placeholder="Correo Electrónico"
+                                  maxlength="35" value="<?php echo $r['email'];?>" required />
+                                <label class="form-label" for="email">Correo electrónico:</label>
                               </div>
                             </div>
 
                             <div class="col-md-3">
                               <div class="form-outline">
-                                <input id="space" type="text" class="form-control" name="phone"
-                                  value="<?php echo $r['phone'];?>" placeholder="Teléfono" required />
-                                <label class="form-label">Teléfono:</label>
+                                <input type="text" class="form-control" name="phone" placeholder="Teléfono"
+                                  maxlength="15" value="<?php echo $r['phone'] ;?>" />
+                                <label class="form-label" for="phone">Teléfono:</label>
                               </div>
                             </div>
 
                             <div class="col-md-3">
                               <div class="form-outline">
-                                <input id="space" type="text" class="form-control" name="u_name"
-                                  value="<?php echo $r['user_name'];?>" placeholder="Usuario" required />
-                                <label class="form-label">Usuario:</label>
+                                <input type="text" class="form-control" name="username" placeholder="Usuario" required
+                                  maxlength="40" value="<?php echo $r['username'];?>" />
+                                <label class="form-label" for="username">Usuario:</label>
                               </div>
                             </div>
 
                             <div class="col-md-3">
                               <div class="form-outline">
-                                <input id="space" type="password" class="form-control" name="pass"
-                                  placeholder="Contraseña" required />
-                                <label class="form-label">Contraseña:</label>
+                                <input type="password" class="form-control" name="password" placeholder="Contraseña"
+                                  maxlength="20" value="<?php echo $r['password'];?>" required />
+                                <label class="form-label" for="password">Contraseña:</label>
                               </div>
                             </div>
                           </div>
 
                           <div class="row mb-4">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                               <div class="form-outline">
-                                <select class="form-control" name="s_ques">
+                                <select class="form-control" name="security_question">
                                   <?php
-																		foreach ($db->query('SELECT * FROM security_question') as $row2) {
-																			$selected = $r['fk_s_question'] == $row2['question'] ? 'selected' : '';
-																			echo '<option value="'.$row2['question'].'" '.$selected.'>'.$row2["question"].'</option>';
-																		}
-																	?>
+                                    foreach ($db->query('SELECT * FROM security_question') as $row2) {
+                                      echo '<option value="'.$row2['id_security_question'].'">'.$row2["description"].'</option>';
+                                    }
+                                  ?>
                                 </select>
-                                <label class="form-label">Pregunta de Seguridad:</label>
+                                <label class="form-label" for="security_question">Pregunta de Seguridad:</label>
                               </div>
                             </div>
 
                             <div class="col-md-3">
                               <div class="form-outline">
-                                <input id="ans" type="text" class="form-control" name="s_ans"
-                                  value="<?php echo $r['security_answer'];?>" required />
-                                <label class="form-label">Respuesta:</label>
+                                <input type="text" class="form-control" name="answer" placeholder="Respuesta" required
+                                  value="<?php echo $r['security_answer'];?>" />
+                                <label class=" form-label" for="answer">Respuesta:</label>
                               </div>
                             </div>
 
                             <div class="col-md-3">
+                              <div class="form-outline">
+                                <input type="number" class="form-control" name="salary" placeholder="Salario"
+                                  value="<?php echo $r['salary'];?>" required />
+                                <label class="form-label" for="salary">Salario:</label>
+                              </div>
+                            </div>
+
+                            <div class="col-md-2">
                               <div class="form-outline">
                                 <input id="reg" type="submit" class="btn btn-primary btn-block" value="Actualizar"
                                   onclick="this.form.action = '?action=update';">
@@ -372,11 +402,14 @@
 
                   <div class="col-md-12 text-center mt-4">
                     <?php
-											$sql = "SELECT * FROM user
-												JOIN user_has_role
-												ON tdoc_role = pk_fk_cod_doc
-												AND id_user = pk_fk_id_user
-												WHERE pk_fk_role = 'TEACHER'";
+											$sql = "
+                        SELECT u.*, dt.type AS document_type
+                        FROM `user` AS u
+                        INNER JOIN `user_has_role` AS uhr ON u.id_user = uhr.user_id
+                        INNER JOIN `role` AS r ON uhr.role_id = r.id_role
+                        INNER JOIN `document_type` AS dt ON u.document_type_id = dt.id_document_type
+                        WHERE r.description = 'DOCENTE'
+                      ";
 											$query = $db->query($sql);
 										
 											if ($query->rowCount() > 0):
@@ -398,20 +431,20 @@
                         <tbody>
                           <?php while ($row = $query->fetch(PDO::FETCH_ASSOC)): ?>
                           <tr>
-                            <?php echo "<td>".$row['pk_fk_cod_doc']."</td>";?>
-                            <?php echo "<td>".$row['id_user'] . "</td>";?>
+                            <?php echo "<td>".$row['document_type']."</td>";?>
+                            <?php echo "<td>".$row['identification_number'] . "</td>";?>
                             <?php echo "<td>".$row['first_name'] . "</td>";?>
                             <?php echo "<td>".$row['surname'] . "</td>";?>
                             <?php echo "<td>".$row['phone'] . "</td>";?>
                             <td>
-                              <a class="btn btn-primary btn-block"
-                                href="?action=edit&id_user=<?php echo $row['id_user']; ?>&t_doc=<?php echo $row['pk_fk_cod_doc']; ?>">
-                                Actualizar
+                              <a class="btn btn-primary btn-block" id="boton"
+                                href="?action=edit&id_user=<?php echo $row['id_user'];?>">
+                                Update
                               </a>
-                              <a class="btn btn-danger btn-block"
-                                href="?action=delete&id_user=<?php echo $row['id_user']; ?>&t_doc=<?php echo $row['pk_fk_cod_doc']; ?>"
+                              <a class="btn btn-danger btn-block" id="boton"
+                                href="?action=delete&id_user=<?php echo $row['id_user'];?>"
                                 onclick="confirmDelete(event)">
-                                Eliminar
+                                Delete
                               </a>
                             </td>
                           </tr>
