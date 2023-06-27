@@ -31,32 +31,24 @@
 		 * Registers a course with its corresponding subjects and state.
 		 *
 		 * @param int $course The ID of the course to be registered.
+		 * @param int $subject The ID of the subject to be registered.
+		 * @param string $state The state of the subject in the course.
 		 *
 		 * @return void
 		 */
-		public function addSubjectHasCourse($course)
+		public function addSubjectHasCourse($course, $subject, $state)
 		{
 				try {
-						if (!empty($course)) {
-								$stm1 = $this->pdo->prepare("SELECT * FROM subject");
-								$stm1->execute();
-
-								foreach ($stm1->fetchAll(PDO::FETCH_OBJ) as $row){
-										$subject =  $row->n_subject;
-										if (isset($_POST[$subject])) {
-												$state="state_".$subject;
-												$stateS=$_REQUEST[$state];
-
-												$sql1 = "
-														INSERT INTO subject_has_course (
-																pk_fk_te_sub,
-																pk_fk_course_stu,
-																state_sub_course)
-														VALUES ('$subject', '$course', '$stateS')
-												";
-												$this->pdo->query($sql1);
-										}
-								}
+						if (!empty($course) && !empty($subject)) {
+								$sql = "
+										INSERT INTO subject_has_course (
+												course_id,
+												subject_id,
+												state)
+										VALUES (?, ?, ?)
+								";
+								$stmt = $this->pdo->prepare($sql);
+								$stmt->execute([$course, $subject, $state]);
 								
 								$this->showSuccessMessage(
 										"Registro Agregado Exitosamente.",
@@ -79,33 +71,30 @@
 		/**
 		 * Updates a record in the subject_has_course table.
 		 *
-		 * @param string $newSubj The new subject ID.
-		 * @param string $currSubj The current subject ID.
-		 * @param string $newCourse The new course ID.
-		 * @param string $currCourse The current course ID.
-		 * @param string $newState The new state value.
-		 *
+		 * @param string $id The id of the record to be updated.
+		 * @param string $course The new course id.
+		 * @param string $subject The new subject id.
+		 * @param string $state The new state.
 		 * @return void
 		 */
 		public function updateSubjectHasCourse(
-			string $newSubj, string $currSubj,
-		 	string $newCourse, string $currCourse, string $newState
+			string $id, string $course,	string $subject, string $state
 		)	{
 				try {
-						if (!empty($newSubj) && !empty($currSubj) && !empty($newCourse) && !empty($currCourse))
+						if (!empty($id) && !empty($course) && !empty($subject))
 						{
 								$sql = "
 										UPDATE
 												subject_has_course
 										SET
-												pk_fk_te_sub = '$newSubj',
-												pk_fk_course_stu = '$newCourse',
-												state_sub_course = '$newState'
+												course_id = ?,
+												subject_id = ?,
+												state = ?
 										WHERE
-												pk_fk_te_sub = '$currSubj' &&
-												pk_fk_course_stu = '$currCourse'
+												id_subject_has_course = ?
 								";
-								$this->pdo->query($sql);
+								$stmt = $this->pdo->prepare($sql);
+								$stmt->execute([$course, $subject, $state, $id]);
 							
 								$this->showSuccessMessage(
 										"Registro Actualizado Exitosamente.",
@@ -128,22 +117,19 @@
 		/**
 		 * Deletes a record from the subject_has_course table
 		 *
-		 * @param string $subject - the value to match with pk_fk_te_sub
-		 * @param string $course - the value to match with pk_fk_course_stu
+		 *v@param string $id - the value to match with id_subject_has_course
 		 */
-		public function deleteSubjectHasCourse(string $subject, string $course)
+		public function deleteSubjectHasCourse(string $id)
 		{
 				try {
-						if (!empty($subject) && !empty($course)) {
+						if (!empty($id)) {
 								$sql = "
 										DELETE FROM subject_has_course
-										WHERE pk_fk_te_sub = ?
-												AND pk_fk_course_stu = ?
+										WHERE id_subject_has_course = ?
 								";
 					
 								$stmt = $this->pdo->prepare($sql);
-								$stmt->bindValue(1, $subject);
-								$stmt->bindValue(2, $course);
+								$stmt->bindValue(1, $id);
 								$stmt->execute();
 								
 								$this->showSuccessMessage(

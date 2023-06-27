@@ -9,19 +9,15 @@
 
 		if ($action == 'update') {
 			$update = new SubjectCourseDAO();
-			$update->updateSubjectHasCourse(
-        $_POST['subj'], $_POST['subj2'], $_POST['course'],
-        $_POST['course2'],$_POST['state']
-      );
+			$update->updateSubjectHasCourse($_POST['id'], $_POST['course'], $_POST['subject'], $_POST['state']);
 		} elseif ($action == 'register') {
 			$insert = new SubjectCourseDAO();
-			$insert->addSubjectHasCourse($_POST['course']);
+			$insert->addSubjectHasCourse($_POST['course'], $_POST['subject'], $_POST['state']);
 		} elseif ($action == 'delete') {
 			$delete = new SubjectCourseDAO();
-			$delete->deleteSubjectHasCourse($_GET['subj'], $_GET['course']);
+			$delete->deleteSubjectHasCourse($_GET['id_subject']);
 		} elseif ($action == 'edit') {
-			$subj = $_GET['subj'];
-      $course = $_GET['course'];
+			$id = $_GET['id_subject'];
 		}
 	}
 ?>
@@ -59,12 +55,12 @@
                           <h4 class="mb-5 text-uppercase text-center text-success">Nueva Materia por Curso</h4>
 
                           <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-2">
                               <div class="form-outline">
                                 <select class="form-control" name="course">
                                   <?php
 																		foreach ($db->query('SELECT * FROM course WHERE state = 1') as $row) {
-																			echo '<option value="'.$row['cod_course'].'">'.$row["cod_course"].'</option>';
+																			echo '<option value="'.$row['id_course'].'">'.$row["course"].'</option>';
 																		}
 																	?>
                                 </select>
@@ -74,15 +70,28 @@
 
                             <div class="col-md-4">
                               <div class="form-outline">
-                                <?php
-																	foreach ($db->query('SELECT * FROM subject where state= 1') as $row) { ?>
-                                <input type="checkbox" name="<?php echo $row['n_subject']?>" />
-                                <?php echo $row['n_subject'];?>
-                                <input type="radio" name="state_<?php echo $row['n_subject']?>" value="1"
-                                  checked />Active
-                                <input type="radio" name="state_<?php echo $row['n_subject']?>" value="0"
-                                  checked />Inactive
-                                <?php } ?>
+                                <select class="form-control" name="subject">
+                                  <?php
+																		foreach ($db->query('SELECT * FROM subject WHERE state = 1') as $row) {
+																			echo '<option value="'.$row['id_subject'].'">'.$row["description"].'</option>';
+																		}
+																	?>
+                                </select>
+                                <label class="form-label">Materia:</label>
+                              </div>
+                            </div>
+
+                            <div class="col-md-4">
+                              <div class="form-outline">
+                                <label class="mr-5">Estado: </label>
+                                <div class=" form-check form-check-inline">
+                                  <input type="radio" class="form-check-input" name="state" value="1" checked />
+                                  <label class="form-check-label">Activo</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                  <input type="radio" class="form-check-input" name="state" value="0" />
+                                  <label class="form-check-label">Inactivo</label>
+                                </div>
                               </div>
                             </div>
 
@@ -102,13 +111,21 @@
                   <div class="container-fluid">
                     <div class="row">
                       <div class="col-md-12">
-                        <?php if (!empty($_GET['subj']) && !empty($_GET['course']) && !empty($_GET['action'])) { ?>
+                        <?php if (!empty($id) && !empty($_GET['action'])) { ?>
                         <form action="#" method="post" enctype="multipart/form-data">
                           <?php
 														$sql = "
-															SELECT * FROM subject_has_course
-															WHERE pk_fk_te_sub = '$subj' &&
-																		pk_fk_course_stu = '$course'
+                              SELECT
+                                s.description AS subject,
+                                c.course AS course,
+                                shc.state AS state,
+                                shc.id_subject_has_course AS id
+                              FROM subject s
+                              JOIN subject_has_course shc
+                                ON s.id_subject = shc.subject_id
+                              JOIN course c
+                                ON shc.course_id = c.id_course
+                              WHERE shc.id_subject_has_course = '$id';
 														";
 										
 														$query = $db->query($sql);
@@ -116,13 +133,17 @@
 													?>
                           <h4 class="mb-5 text-uppercase text-center text-success">Actualizar Materia por Curso</h4>
 
-                          <div class="row">
-                            <div class="col-md-6">
+                          <div>
+                            <input type="text" name="id" value="<?php echo $r['id']; ?>" style="display: none;" />
+                          </div>
+
+                          <div class=" row">
+                            <div class="col-md-2">
                               <div class="form-outline">
-                                <select class="form-control" name="subj">
+                                <select class="form-control" name="subject">
                                   <?php
 																		foreach ($db->query('SELECT * FROM subject WHERE state = 1') as $row) {
-																			echo '<option value="'.$row['n_subject'].'">'.$row["n_subject"].'</option>';
+																			echo '<option value="'.$row['id_subject'].'">'.$row["description"].'</option>';
 																		}
 																	?>
                                 </select>
@@ -130,12 +151,12 @@
                               </div>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                               <div class="form-outline">
                                 <select class="form-control" name="course">
                                   <?php
 																		foreach ($db->query('SELECT * FROM course WHERE state = 1') as $row) {
-																			echo '<option value="'.$row['cod_course'].'">'.$row["cod_course"].'</option>';
+																			echo '<option value="'.$row['id_course'].'">'.$row["course"].'</option>';
 																		}
 																	?>
                                 </select>
@@ -148,12 +169,12 @@
                                 <label class="mr-5">Estado: </label>
                                 <div class=" form-check form-check-inline">
                                   <input type="radio" name="state" value="1"
-                                    <?php echo $r['state_sub_course'] === '1' ? 'checked' : '' ?> />
+                                    <?php echo $r['state'] === '1' ? 'checked' : '' ?> />
                                   <label class="form-check-label">Activo</label>
                                 </div>
                                 <div class="form-check form-check-inline">
                                   <input type="radio" name="state" value="0"
-                                    <?php echo $r['state_sub_course'] === '0' ? 'checked' : '' ?> />
+                                    <?php echo $r['state'] === '0' ? 'checked' : '' ?> />
                                   <label class="form-check-label">Inactivo</label>
                                 </div>
                               </div>
@@ -177,7 +198,18 @@
 
                   <div class="col-md-12 text-center mt-4">
                     <?php
-											$sql = "SELECT * FROM subject_has_course ORDER BY pk_fk_te_sub ASC";
+											$sql = "
+                        SELECT
+                          s.description AS subject,
+                          c.course AS course,
+                          shc.state AS state,
+                          shc.id_subject_has_course AS id
+                        FROM subject s
+                        JOIN subject_has_course shc
+                          ON s.id_subject = shc.subject_id
+                        JOIN course c
+                          ON shc.course_id = c.id_course;
+                      ";
 											$query = $db->query($sql);
 										
 											if ($query->rowCount() > 0):
@@ -197,11 +229,11 @@
                         <tbody>
                           <?php while ($row = $query->fetch(PDO::FETCH_ASSOC)): ?>
                           <tr>
-                            <td><?php echo $row['pk_fk_course_stu']; ?></td>
-                            <td><?php echo $row['pk_fk_te_sub']; ?></td>
+                            <td><?php echo $row['course']; ?></td>
+                            <td><?php echo $row['subject']; ?></td>
                             <td>
                               <?php
-																if ($row['state_sub_course'] == 1) {
+																if ($row['state'] == 1) {
 																	echo "Activo";
 																} else {
 																	echo "Inactivo";
@@ -209,12 +241,10 @@
 															?>
                             </td>
                             <td>
-                              <a class="btn btn-primary"
-                                href="?action=edit&subj=<?php echo $row['pk_fk_te_sub'];?>&course=<?php echo $row['pk_fk_course_stu'];?>">
+                              <a class="btn btn-primary" href="?action=edit&id_subject=<?php echo $row['id'];?>">
                                 Actualizar
                               </a>
-                              <a class="btn btn-danger"
-                                href="?action=delete&subj=<?php echo $row['pk_fk_te_sub'];?>&course=<?php echo $row['pk_fk_course_stu'];?>"
+                              <a class="btn btn-danger" href="?action=delete&id_subject=<?php echo $row['id'];?>"
                                 onclick="confirmDelete(event)">
                                 Eliminar
                               </a>
