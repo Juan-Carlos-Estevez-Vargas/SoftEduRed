@@ -42,7 +42,7 @@
 				try {
 					 	if (!empty($course)) {
 								$sql = "
-									INSERT INTO course (cod_course, state)
+									INSERT INTO course (course, state)
 									VALUES (UPPER(:course), :state)
 								";
 								$stmt = $this->pdo->prepare($sql);
@@ -72,27 +72,27 @@
 		/**
 		 * Updates a course record in the database.
 		 *
-		 * @param string $newCourseCode - The updated course code.
-		 * @param string $currentCourseCode - The current course code to update.
-		 * @param string $newState - The updated state of the course.
+		 * @param string $courseId - The id of the course to update.
+ 		 * @param string $course - The updated course code.
+		 * @param string $state - The updated state of the course.
 		 * @return void
 		 */
-		public function updateCourseRecord(string $newCourseCode, string $currentCourseCode, string $newState)
+		public function updateCourseRecord(string $courseId, string $course, string $state)
 		{
 				try {
-						if (!empty($newCourseCode) && !empty($currentCourseCode)) {
+						if (!empty($courseId) && !empty($course)) {
 								$sql = "
 										UPDATE course
-										SET cod_course = UPPER(:newCourseCode),
-												state = :newState
-										WHERE cod_course = :currentCourseCode
+										SET course = UPPER(:course),
+												state = :state
+										WHERE id_course = :id
 								";
 							
 								$stmt = $this->pdo->prepare($sql);
 								$stmt->execute([
-										'newCourseCode' => $newCourseCode,
-										'newState' => $newState,
-										'currentCourseCode' => $currentCourseCode
+										'course' => $course,
+										'state' => $state,
+										'id' => $courseId
 								]);
 								
 								$this->showSuccessMessage(
@@ -116,16 +116,16 @@
 		/**
 		 * Deletes a course from the database
 		 *
-		 * @param string $courseCode The code of the course to be deleted
+		 * @param string $courseId - The code of the course to be deleted
 		 * @return void
 		 */
-		public function deleteCourse(string $courseCode)
+		public function deleteCourse(string $courseId)
 		{
 				try {
-						if (!empty($courseCode)) {
+						if (!empty($courseId)) {
 								$sql = "
 										DELETE FROM course
-										WHERE cod_course = '$courseCode'
+										WHERE id_course = '$courseId'
 								";
 								$this->pdo->query($sql);
 								

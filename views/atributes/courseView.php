@@ -9,7 +9,7 @@
 
 		if ($action == 'update') {
 			$update = new CourseDAO();
-			$update->updateCourseRecord($_POST['course'], $_POST['queryy'], $_POST['state']);
+			$update->updateCourseRecord($_POST['id_course'], $_POST['course'], $_POST['state']);
 		} elseif ($action == 'register') {
 			$insert = new CourseDAO();
 			$insert ->registerCourse($_POST['course'], $_POST['state']);
@@ -57,9 +57,9 @@
                           <div class="row">
                             <div class="col-md-6">
                               <div class="form-outline">
-                                <input id="space" class="form-control" type="text" name="course" placeholder="Curso"
-                                  required maxlength="5" />
-                                <label class=" form-label">Curso:</label>
+                                <input class="form-control" type="text" name="course" placeholder="Curso" required
+                                  maxlength="5" />
+                                <label class="form-label" for="course">Curso:</label>
                               </div>
                             </div>
 
@@ -67,12 +67,11 @@
                               <div class="form-outline">
                                 <label class="mr-5">Estado: </label>
                                 <div class=" form-check form-check-inline">
-                                  <input id="space" type="radio" class="form-check-input" name="state" value="1"
-                                    checked />
+                                  <input type="radio" class="form-check-input" name="state" value="1" checked />
                                   <label class="form-check-label">Activo</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                  <input id="space" type="radio" class="form-check-input" name="state" value="0" />
+                                  <input type="radio" class="form-check-input" name="state" value="0" />
                                   <label class="form-check-label">Inactivo</label>
                                 </div>
                               </div>
@@ -94,23 +93,26 @@
                   <div class="container-fluid">
                     <div class="row">
                       <div class="col-md-12">
-                        <?php if (!empty($_GET['id_course']) && !empty($_GET['action']) && !empty($id)) { ?>
+                        <?php if (!empty($_GET['action']) && !empty($id)) { ?>
                         <form action="#" method="post" enctype="multipart/form-data">
                           <?php
-														$sql = "SELECT * FROM course WHERE cod_course = '$id'";
+														$sql = "SELECT * FROM course WHERE id_course = '$id'";
 														$query = $db->query($sql);
 														while ($r = $query->fetch(PDO::FETCH_ASSOC)) {
 													?>
                           <h4 class="mb-5 text-uppercase text-center text-success">Actualizar Curso</h4>
 
-                          <div class="row">
+                          <div>
+                            <input type="text" name="id_course" value="<?php echo $r['id_course']?>"
+                              style="display: none;">
+                          </div>
+
+                          <div class=" row">
                             <div class="col-md-6">
                               <div class="form-outline">
-                                <input id="Space" class="form-control" type="text" name="queryy"
-                                  value="<?php echo $r['cod_course']?>" style="display: none" />
-                                <input id="Space" class="form-control" type=" text" name="course"
-                                  value="<?php echo $r['cod_course']?>" required maxlength="5" />
-                                <label class="form-label">Asunto:</label>
+                                <input class="form-control" type="text" name="course" value="<?php echo $r['course']?>"
+                                  required maxlength="5" />
+                                <label class="form-label">Curso:</label>
                               </div>
                             </div>
 
@@ -166,7 +168,7 @@
                         <tbody>
                           <?php while ($row = $query->fetch(PDO::FETCH_ASSOC)): ?>
                           <tr>
-                            <td><?php echo $row['cod_course']; ?></td>
+                            <td><?php echo $row['course']; ?></td>
                             <td>
                               <?php
 																if ($row['state'] == 1) {
@@ -177,10 +179,10 @@
 															?>
                             </td>
                             <td>
-                              <a class="btn btn-primary" href="?action=edit&id_course=<?php echo $row['cod_course'];?>">
+                              <a class="btn btn-primary" href="?action=edit&id_course=<?php echo $row['id_course'];?>">
                                 Actualizar
                               </a>
-                              <a class="btn btn-danger" href="?action=delete&id_course=<?php echo $row['cod_course'];?>"
+                              <a class="btn btn-danger" href="?action=delete&id_course=<?php echo $row['id_course'];?>"
                                 onclick="confirmDelete(event)">
                                 Eliminar
                               </a>
