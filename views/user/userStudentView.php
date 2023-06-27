@@ -448,12 +448,12 @@
                   <div class="col-md-12 text-center mt-4">
                     <?php
                         $sql = "
-                        SELECT u.*, dt.type AS document_type
-                        FROM `user` AS u
-                        INNER JOIN `user_has_role` AS uhr ON u.id_user = uhr.user_id
-                        INNER JOIN `role` AS r ON uhr.role_id = r.id_role
-                        INNER JOIN `document_type` AS dt ON u.document_type_id = dt.id_document_type
-                        WHERE r.description = 'estudiante'
+                          SELECT u.*, dt.type AS document_type
+                          FROM `user` AS u
+                          INNER JOIN `user_has_role` AS uhr ON u.id_user = uhr.user_id
+                          INNER JOIN `role` AS r ON uhr.role_id = r.id_role
+                          INNER JOIN `document_type` AS dt ON u.document_type_id = dt.id_document_type
+                          WHERE r.description = 'estudiante'
                         ";
                     
                         $query = $db ->query($sql);

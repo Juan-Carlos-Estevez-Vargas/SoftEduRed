@@ -80,12 +80,11 @@
 										VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, UPPER(?), ?, ?, ?);
 								");
 					
-								$stmt->execute(
-										[$firstName, $secondName, $surname, $secondSurname,	$gender,
-												$address, $email, $phone, $username, $password,
-												$securityAnswer, $idType, $securityQuestion, $identificationNumber
-										]
-								);
+								$stmt->execute([
+										$firstName, $secondName, $surname, $secondSurname,	$gender,
+										$address, $email, $phone, $username, $password,
+										$securityAnswer, $idType, $securityQuestion, $identificationNumber
+								]);
 
 								$userId = $this->pdo->lastInsertId();
 
@@ -128,23 +127,23 @@
 		/**
 		 * Updates user and student information in the database
 		 *
-		 * @param string $documentType The document type of the user
 		 * @param int $userId The user's ID
+		 * @param string $idType The document type of the user
+		 * @param int $identificationNumber The user's identification number
 		 * @param string $firstName The user's first name
 		 * @param string $secondName The user's second name
-		 * @param string $firstLastName The user's first last name
-		 * @param string $secondLastName The user's second last name
+		 * @param string $surname The user's surname
+		 * @param string $secondSurname The user's second surname
 		 * @param string $gender The user's gender
 		 * @param string $address The user's address
 		 * @param string $email The user's email
 		 * @param string $phone The user's phone number
 		 * @param string $username The user's username
-		 * @param string $pass The user's password
-		 * @param string $securityAnswer The user's security answer
+		 * @param string $password The user's password
 		 * @param string $securityQuestion The user's security question
-		 * @param string $attendantDocument The document type of the attendant
-		 * @param int $attendantId The ID of the attendant
-		 * @param int $course The ID of the course
+		 * @param string $securityAnswer The user's security answer
+		 * @param string $attendantId The ID of the attendant
+		 * @param int $courseId The ID of the course
 		 * @return void
 		 */
 		public function updateUserStudent(

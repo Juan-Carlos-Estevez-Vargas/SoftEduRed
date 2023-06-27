@@ -33,78 +33,79 @@
 		 * Registers a new attendant user, attendant, and assigns role to user.
 		 *
 		 * @param string $documentType The type of document.
-		 * @param string $userId The user's ID.
+		 * @param int $identificationNumber The user's identification number.
 		 * @param string $firstName The user's first name.
 		 * @param string $secondName The user's second name.
-		 * @param string $firstLastName The user's first last name.
-		 * @param string $secondLastName The user's second last name.
+		 * @param string $surname The user's first last name.
+		 * @param string $secondSurname The user's second last name.
 		 * @param string $gender The user's gender.
 		 * @param string $address The user's address.
 		 * @param string $email The user's email.
 		 * @param string $phone The user's phone number.
 		 * @param string $username The user's username.
 		 * @param string $password The user's password.
-		 * @param string $securityAnswer The user's security answer.
 		 * @param string $securityQuestion The user's security question.
-		 * @param string $relation The user's relationship with the attendant.
+		 * @param string $securityAnswer The user's security answer.
+		 * @param string $relationId The user's relationship with the attendant.
 		 *
 		 * @return void
 		 */
 		public function registerAttendantUser(
-			string $documentType, string $userId, string $firstName, string $secondName,
-			string $firstLastName, string $secondLastName, string $gender, string $address,
-			string $email, string $phone, string $username, string $password,
-			string $securityAnswer, string $securityQuestion,	string $relation
+			string $documentType, int $identificationNumber, string $firstName, string $secondName,
+			string $surname, string $secondSurname, string $gender, string $address, string $email,
+			string $phone, string $username, string $password, string $securityQuestion,
+			string $securityAnswer,	string $relationId
 		): void {
 				try {
-						if (!empty($documentType) && !empty($userId) && !empty($firstName)
-								&& !empty($firstLastName) && !empty($gender) && !empty($email)
-								&& !empty($username) && !empty($pass)	&& !empty($securityAnswer)
-								&& !empty($securityQuestion))
+						if (!empty($documentType) && !empty($identificationNumber) && !empty($firstName)
+						&& !empty($surname)	&& !empty($gender) && !empty($email)
+						&& !empty($username) && !empty($password) && !empty($securityAnswer)
+						&& !empty($securityQuestion))
 						{
-								$insertUserSql = "
-										INSERT INTO user (
-												pk_fk_cod_doc,
-												id_user,
+								$sql = "
+										INSERT INTO user(
 												first_name,
 												second_name,
 												surname,
 												second_surname,
-												fk_gender,
-												adress,
+												gender_id,
+												address,
 												email,
 												phone,
-												user_name,
-												pass,
+												username,
+												password,
 												security_answer,
-												fk_s_question)
-										VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+												document_type_id,
+												security_question_id,
+												identification_number)
+										VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, UPPER(?), ?, ?, ?);
 								";
-
-								$this->pdo->prepare($insertUserSql)->execute([
-										$documentType, $userId, $firstName, $secondName,
-										$firstLastName, $secondLastName, $gender, $address,
-										$email, $phone, $username, $password, $securityAnswer,
-										$securityQuestion
+								
+								$stmt = $this->pdo->prepare($sql);
+								$stmt->execute([
+										$firstName, $secondName, $surname, $secondSurname,	$gender,
+										$address, $email, $phone, $username, $password,
+										$securityAnswer, $documentType, $securityQuestion, $identificationNumber
 								]);
 					
-								$insertAttendantSql = "
+								$userId = $this->pdo->lastInsertId();
+
+								$stmtAttendant = $this->pdo->prepare("
 										INSERT INTO attendant (
-												user_pk_fk_cod_doc,
-												user_id_user,
-												fk_relationship)
-										VALUES (?, ?, ?)
-								";
-								$this->pdo->prepare($insertAttendantSql)->execute([$documentType, $userId, $relation]);
-					
-								$assignRoleSql = "
+												user_id,
+												relationship_id)
+										VALUES (?, ?)
+								");
+								$stmtAttendant->execute([$userId, $relationId]);
+
+								$stmtRole = $this->pdo->prepare("
 										INSERT INTO user_has_role (
-												tdoc_role,
-												pk_fk_id_user,
-												pk_fk_role, state)
-										VALUES (?, ?, 'ATTENDANT', 1)
-								";
-								$this->pdo->prepare($assignRoleSql)->execute([$documentType, $userId]);
+												user_id,
+												role_id,
+												state)
+										VALUES (?, 5, 1)
+								");
+								$stmtRole->execute([$userId]);
 								
 								$this->showSuccessMessage(
 										"Registro Agregado Exitosamente.",
@@ -144,50 +145,59 @@
 		 * @param string $relationship The attendant's relationship to the user.
 		 */
 		public function updateAttendantUser(
-			$document, $userId, $firstName, $secondName, $firstLastName, $secondLastName,
-			$gender, $address, $email, $phone, $userName, $password, $securityAnswer,
-			$securityQuestion, $relationship
+			int $userId, string $idType, int $identificationNumber, string $firstName,
+			string $secondName,	string $surname, string $secondSurname, string $gender,
+			string $address, string $email,	string $phone, string $username, string $password,
+			string $securityQuestion,	string $securityAnswer,	string $relationId
 		) {
 				try {
-						if (!empty($document) && !empty($userId) && !empty($firstName)
-								&& !empty($firstLastName) && !empty($gender) && !empty($email)
-								&& !empty($userName) && !empty($password)	&& !empty($securityAnswer)
-								&& !empty($securityQuestion))
+						if (!empty($idType) && !empty($identificationNumber) && !empty($firstName)
+						&& !empty($surname)	&& !empty($gender) && !empty($email) && !empty($userId)
+						&& !empty($username) && !empty($password) && !empty($securityAnswer)
+						&& !empty($securityQuestion) && !empty($relationId))
 						{
-								// Update the user's data in the database.
-								$sql = "
-										UPDATE user
-										SET	first_name = ?,
+								$sqlUpdateUser = "
+										UPDATE
+												user
+										SET
+												first_name = ?,
 												second_name = ?,
 												surname = ?,
 												second_surname = ?,
-												fk_gender = ?,
-												adress = ?,
+												gender_id = ?,
+												address = ?,
 												email = ?,
 												phone = ?,
-												user_name = ?,
-												pass = ?,
+												username = ?,
+												password = ?,
 												security_answer = ?,
-												fk_s_question = ?
-										WHERE pk_fk_cod_doc = ?
-												AND id_user = ?
+												document_type_id = ?,
+												security_question_id = ?,
+												identification_number = ?
+										WHERE
+												id_user = ?
 								";
-								$stmt = $this->pdo->prepare($sql);
-								$stmt->execute([
-										$firstName, $secondName, $firstLastName, $secondLastName,
-										$gender, $address, $email, $phone, $userName, $password,
-										$securityAnswer, $securityQuestion, $document, $userId
+							
+								// Update student information query
+								$sqlUpdateStudent = "
+										UPDATE
+												attendant
+										SET
+												relationship_id = ?
+										WHERE
+												user_id = ?
+								";
+								
+								// Execute queries
+								$this->pdo->prepare($sqlUpdateUser)->execute([
+										$firstName, $secondName, $surname, $secondSurname, $gender,
+										$address,	$email, $phone, $username, $password, $securityAnswer,
+										$idType, $securityQuestion,	$identificationNumber, $userId
 								]);
-
-								// Update the attendant's data in the database.
-								$sql2 = "
-										UPDATE attendant
-										SET fk_relationship = ?
-										WHERE user_pk_fk_cod_doc = ?
-												AND user_id_user = ?
-								";
-								$stmt2 = $this->pdo->prepare($sql2);
-								$stmt2->execute([$relationship, $document, $userId]);
+							
+								$this->pdo->prepare($sqlUpdateStudent)->execute([
+										$relationId, $userId
+								]);
 								
 								$this->showSuccessMessage(
 										"Registro Actualizado Exitosamente.",
@@ -211,19 +221,22 @@
 		 * Deletes an attendant user from the database.
 		 *
 		 * @param string $userId The user's ID.
-		 * @param string $documentCode The user's document code.
 		 * @return void
 		 */
-		public function deleteAttendantUser(string $userId, string $documentCode): void {
+		public function deleteAttendantUser(string $userId): void {
 				try {
-						if (!empty($userId) && !empty($documentCode)) {
-								$sql = "
-										DELETE FROM user
-										WHERE id_user = ?
-												AND pk_fk_cod_doc = ?
-								";
-								$statement = $this->pdo->prepare($sql);
-								$statement->execute([$userId, $documentCode]);
+						if (!empty($userId)) {
+								$stmtRole = $this->pdo->prepare("
+										DELETE FROM user_has_role
+										WHERE user_id = :id_user
+								");
+								$stmtRole->execute(['id_user' => $userId]);
+								
+								$stmt = $this->pdo->prepare("
+										DELETE FROM attendant
+										WHERE user_id = :id_user
+								");
+								$stmt->execute(['id_user' => $userId]);
 								
 								$this->showSuccessMessage(
 										"Registro Eliminado Exitosamente.",

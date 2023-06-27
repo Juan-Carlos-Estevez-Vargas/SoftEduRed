@@ -48,81 +48,63 @@
 		 * @return void
 		 */
 		public function register(
-			$documentType, $userId, $firstName, $secondName, $firstLastName, $secondLastName, $gender,
-			$address, $email, $phone, $username, $pass, $securityAnswer, $securityQuestion
-		) {
+			string $documentType, int $identificationNumber, string $firstName, string $secondName,
+			string $surname, string $secondSurname, string $gender, string $address, string $email,
+			string $phone, string $username, string $password, string $securityQuestion,
+			string $securityAnswer,	string $relationId) {
 				try {
-						if (!empty($documentType) && !empty($userId) && !empty($firstName)
-								&& !empty($firstLastName) && !empty($gender) && !empty($email)
-								&& !empty($username) && !empty($pass)	&& !empty($securityAnswer)
-								&& !empty($securityQuestion))
-								{
-										$sql = "
-												INSERT INTO user (
-														pk_fk_cod_doc,
-														id_user,
-														first_name,
-														second_name,
-														surname,
-														second_surname,
-														`fk_gender`,
-														adress,
-														email,
-														phone,
-														user_name,
-														pass,
-														security_answer,
-														fk_s_question`
-												) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-										";
-										
-										$stmt = $this->pdo->prepare($sql);
-										$stmt->execute([
-												$documentType, $userId, $firstName,	$secondName, $firstLastName,
-												$secondLastName, $gender,	$address,	$email,	$phone, $username,
-												$pass,	$securityAnswer, $securityQuestion
-										]);
-							
-										$this->registerTeacher($documentType, $userId);
-										$this->registerUserAsTeacherRole($documentType, $userId);
-										
-										$this->showSuccessMessage(
-												"Registro Agregado Exitosamente.",
-												'../../views/user/userTeacherView.php'
-										);
-								} else {
-										$this->showWarningMessage(
-												"Debes llenar todos los campos.",
-												'../../views/user/userTeacherView.php'
-										);
-								}
-				} catch (Exception $e) {
-						$this->showErrorMessage(
-								"Ocurrió un error interno. Consulta al Administrador.",
-								'../../views/user/userTeacherView.php'
-						);
-				}
-		}
-
-		/**
-		 * Registers a teacher with the given document number and user ID.
-		 *
-		 * @param string $documentNumber The document number of the teacher.
-		 * @param int $userId The user ID of the teacher.
-		 */
-		private function registerTeacher(string $documentNumber, int $userId): void
-		{
-				try {
-						if (!empty($documentNumber) && !empty($userId)) {
-								$query = "
-										INSERT INTO teacher (user_pk_fk_cod_doc, user_id_user)
-										VALUES (?, ?)
+						if (!empty($documentType) && !empty($identificationNumber) && !empty($firstName)
+						&& !empty($surname)	&& !empty($gender) && !empty($email)
+						&& !empty($username) && !empty($password) && !empty($securityAnswer)
+						&& !empty($securityQuestion))
+						{
+								$sql = "
+										INSERT INTO user(
+												first_name,
+												second_name,
+												surname,
+												second_surname,
+												gender_id,
+												address,
+												email,
+												phone,
+												username,
+												password,
+												security_answer,
+												document_type_id,
+												security_question_id,
+												identification_number)
+										VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, UPPER(?), ?, ?, ?);
 								";
-								$stmt = $this->pdo->prepare($query);
-								$stmt->execute([$documentNumber, $userId]);
+								
+								$stmt = $this->pdo->prepare($sql);
+								$stmt->execute([
+										$firstName, $secondName, $surname, $secondSurname,	$gender,
+										$address, $email, $phone, $username, $password,
+										$securityAnswer, $documentType, $securityQuestion, $identificationNumber
+								]);
+					
+								$userId = $this->pdo->lastInsertId();
+
+								$stmtAttendant = $this->pdo->prepare("
+										INSERT INTO attendant (
+												user_id,
+												relationship_id
+										VALUES (?, ?)
+								");
+								$stmtAttendant->execute([$userId, $relationId]);
+
+								$stmtRole = $this->pdo->prepare("
+										INSERT INTO user_has_role (
+												user_id,
+												role_id,
+												state)
+										VALUES (?, 5, 1)
+								");
+								$stmtRole->execute([$userId]);
 								
 								$this->showSuccessMessage(
-										"Registro Actualizado Exitosamente.",
+										"Registro Agregado Exitosamente.",
 										'../../views/user/userTeacherView.php'
 								);
 						} else {
@@ -137,27 +119,6 @@
 								'../../views/user/userTeacherView.php'
 						);
 				}
-		}
-
-		/**
-		 * Registers a user as a teacher role in the database.
-		 *
-		 * @param string $documentType The type of document for the user.
-		 * @param int $userId The ID of the user to register.
-		 *
-		 * @return void
-		 */
-		private function registerUserAsTeacherRole(string $documentType, int $userId): void
-		{
-				$sql = "
-						INSERT INTO user_has_role (tdoc_role, pk_fk_id_user, pk_fk_role, state)
-						VALUES (:documentType, :userId, 'TEACHER', 1)
-				";
-				
-				$stmt = $this->pdo->prepare($sql);
-				$stmt->bindValue(':documentType', $documentType);
-				$stmt->bindValue(':userId', $userId);
-				$stmt->execute();
 		}
 
 		/**
