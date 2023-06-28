@@ -37,20 +37,22 @@
 				 *
 				 * @param string $documentType The code of the document type
 				 * @param string $description The description of the document type
+				 * @param string $state The state of the document type
 				 * @return void
 				 */
-				public function registerDocumentType(string $documentType, string $description): void
+				public function registerDocumentType(string $documentType, string $description, string $state): void
 				{
 						try {
 								if (!empty($documentType) && !empty($description)) {
 										$sql = "
-												INSERT INTO document_type (type, description)
-												VALUES (UPPER(:documentType), UPPER(:description))
+												INSERT INTO document_type (type, description, state)
+												VALUES (UPPER(:documentType), UPPER(:description), :state)
 										";
 										
 										$stmt = $this->pdo->prepare($sql);
 										$stmt->bindParam(':documentType', $documentType);
 										$stmt->bindParam(':description', $description);
+										$stmt->bindParam(':state', $state);
 										$stmt->execute();
 		
 										$this->showSuccessMessage(
@@ -77,24 +79,30 @@
 				 * @param string $idDocumentType The id of the document type to be updated.
 				 * @param string $type The new code of the document type.
 				 * @param string $description The new description of the document type.
+				 * @param string $state The new state of the document type
 				 * @return void
 				 */
-				public function updateDocumentType(string $idDocumentType, string $type, string $description): void
+				public function updateDocumentType(string $idDocumentType, string $type, string $description, string $state): void
 				{
 						try {
 								// Check if all parameters are not empty.
 								if (!empty($idDocumentType) && !empty($type) && !empty($description)) {
 										$query = "
-												UPDATE document_type
-												SET type = UPPER(:type),
-														description = UPPER(:description)
-												WHERE id_document_type = :id
+												UPDATE
+														document_type
+												SET
+														type = UPPER(:type),
+														description = UPPER(:description),
+														state = :state
+												WHERE
+														id_document_type = :id
 										";
 										
 										$statement = $this->pdo->prepare($query);
 										$statement->execute([
 												':type' => $type,
 												':description' => $description,
+												':state' => $state,
 												':id' => $idDocumentType
 										]);
 

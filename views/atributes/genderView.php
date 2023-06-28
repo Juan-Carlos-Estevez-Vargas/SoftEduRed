@@ -118,11 +118,13 @@
                               <div class="form-outline">
                                 <label class="form-label mr-5">Estado</label>
                                 <div class="form-check form-check-inline">
-                                  <input type="radio" class="form-check-input" name="state" value="1" checked />
+                                  <input type="radio" class="form-check-input" name="state" value="1"
+                                    <?php echo $r['state'] === 1 ? 'checked' : '' ?> />
                                   <label class="form-check-label">Activo</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                  <input type="radio" class="form-check-input" name="state" value="0" />
+                                  <input type="radio" class="form-check-input" name="state" value="0"
+                                    <?php echo $r['state'] === 0 ? 'checked' : '' ?> />
                                   <label class="form-check-label">Inactivo</label>
                                 </div>
                               </div>
@@ -162,15 +164,13 @@
                           <?php while ($row = $query->fetch(PDO::FETCH_ASSOC)): ?>
                           <tr>
                             <td><?php echo $row['description']; ?></td>
-                            <td>
-                              <?php
-																if ($row['state'] == 1) {
-																	echo "Activo";
-																} else {
-																	echo "Inactivo";
-																}
-															?>
-                            </td>
+                            <?php
+                              if ($row['state'] == 1) {
+                                echo "<td class='text-success'>Activo</td>";
+                              } else {
+                                echo "<td class='text-warning'>Inactivo</td>";
+                              }
+                            ?>
                             <td>
                               <a class="btn btn-primary" href="?action=edit&id_gender=<?php echo $row['id_gender'];?>">
                                 Actualizar

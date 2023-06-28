@@ -137,15 +137,15 @@
 
                             <div class="col-md-3">
                               <div class="form-outline">
-                                <input type="text" class="form-control" name="address" placeholder="Dirección"
-                                  maxlength="40" />
-                                <label class="form-label" for="address">Dirección:</label>
+                                <input type="text" class="form-control" name="phone" placeholder="Teléfono"
+                                  maxlength="15" />
+                                <label class="form-label" for="phone">Teléfono:</label>
                               </div>
                             </div>
                           </div>
 
                           <div class=" row mb-4">
-                            <div class="col-md-3">
+                            <div class="col-md-6">
                               <div class="form-outline">
                                 <input type="text" class="form-control" name="email" placeholder="Correo Electrónico"
                                   maxlength="35" required />
@@ -153,15 +153,17 @@
                               </div>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-6">
                               <div class="form-outline">
-                                <input type="text" class="form-control" name="phone" placeholder="Teléfono"
-                                  maxlength="15" />
-                                <label class="form-label" for="phone">Teléfono:</label>
+                                <input type="text" class="form-control" name="address" placeholder="Dirección"
+                                  maxlength="40" />
+                                <label class="form-label" for="address">Dirección:</label>
                               </div>
                             </div>
+                          </div>
 
-                            <div class=" col-md-3">
+                          <div class="row mb-4">
+                            <div class=" col-md-4">
                               <div class="form-outline">
                                 <input type="text" class="form-control" name="username" placeholder="Usuario" required
                                   maxlength="40" />
@@ -169,16 +171,29 @@
                               </div>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                               <div class="form-outline">
                                 <input type="password" class="form-control" name="password" placeholder="Contraseña"
                                   maxlength="20" required />
                                 <label class="form-label" for="password">Contraseña:</label>
                               </div>
                             </div>
+
+                            <div class="col-md-4">
+                              <div class="form-outline">
+                                <select class="form-control" name="relation">
+                                  <?php
+                                    foreach ($db->query('SELECT * FROM relationship WHERE state = 1') as $row) {
+                                      echo '<option value="'.$row['id_relationship'].'">'.$row["description"].'</option>';
+                                    }
+                                  ?>
+                                </select>
+                                <label class="form-label" for="relation">Parentesco:</label>
+                              </div>
+                            </div>
                           </div>
 
-                          <div class=" row mb-4">
+                          <div class="row mb-4">
                             <div class="col-md-6">
                               <div class="form-outline">
                                 <select class="form-control" name="security_question">
@@ -197,19 +212,6 @@
                                 <input type="text" class="form-control" name="answer" placeholder="Respuesta"
                                   required />
                                 <label class="form-label" for="answer">Respuesta:</label>
-                              </div>
-                            </div>
-
-                            <div class="col-md-3">
-                              <div class="form-outline">
-                                <select class="form-control" name="relation">
-                                  <?php
-                                    foreach ($db->query('SELECT * FROM relationship WHERE state = 1') as $row) {
-                                      echo '<option value="'.$row['id_relationship'].'">'.$row["description"].'</option>';
-                                    }
-                                  ?>
-                                </select>
-                                <label class="form-label" for="relation">Parentesco:</label>
                               </div>
                             </div>
 
@@ -312,6 +314,24 @@
 
                             <div class="col-md-3">
                               <div class="form-outline">
+                                <input type="text" class="form-control" name="phone" placeholder="Teléfono"
+                                  maxlength="15" value="<?php echo $r['phone'] ;?>" />
+                                <label class="form-label" for="phone">Teléfono:</label>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="row mb-4">
+                            <div class="col-md-6">
+                              <div class="form-outline">
+                                <input type="text" class="form-control" name="email" placeholder="Correo Electrónico"
+                                  maxlength="35" value="<?php echo $r['email'];?>" required />
+                                <label class="form-label" for="email">Correo electrónico:</label>
+                              </div>
+                            </div>
+
+                            <div class="col-md-6">
+                              <div class="form-outline">
                                 <input type="text" class="form-control" name="address" placeholder="Dirección"
                                   maxlength="40" value="<?php echo $r['address'];?>" />
                                 <label class="form-label" for="address">Dirección:</label>
@@ -320,23 +340,7 @@
                           </div>
 
                           <div class="row mb-4">
-                            <div class="col-md-3">
-                              <div class="form-outline">
-                                <input type="text" class="form-control" name="email" placeholder="Correo Electrónico"
-                                  maxlength="35" value="<?php echo $r['email'];?>" required />
-                                <label class="form-label" for="email">Correo electrónico:</label>
-                              </div>
-                            </div>
-
-                            <div class="col-md-3">
-                              <div class="form-outline">
-                                <input type="text" class="form-control" name="phone" placeholder="Teléfono"
-                                  maxlength="15" value="<?php echo $r['phone'] ;?>" />
-                                <label class="form-label" for="phone">Teléfono:</label>
-                              </div>
-                            </div>
-
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                               <div class="form-outline">
                                 <input type="text" class="form-control" name="username" placeholder="Usuario" required
                                   maxlength="40" value="<?php echo $r['username'];?>" />
@@ -344,11 +348,25 @@
                               </div>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                               <div class="form-outline">
                                 <input type="password" class="form-control" name="password" placeholder="Contraseña"
                                   maxlength="20" value="<?php echo $r['password'];?>" required />
                                 <label class="form-label" for="password">Contraseña:</label>
+                              </div>
+                            </div>
+
+                            <div class="col-md-4">
+                              <div class="form-outline">
+                                <select class="form-control" name="relation">
+                                  <?php
+                                      foreach ($db->query('SELECT * FROM relationship WHERE state = 1') as $row)
+                                      {
+                                          echo '<option value="'.$row['id_relationship'].'">'.$row["description"].'</option>';
+                                      }
+                                  ?>
+                                </select>
+                                <label class="form-label">Parentesco:</label>
                               </div>
                             </div>
                           </div>
@@ -372,20 +390,6 @@
                                 <input type="text" class="form-control" name="answer" placeholder="Respuesta" required
                                   value="<?php echo $r['security_answer'];?>" />
                                 <label class=" form-label" for="answer">Respuesta:</label>
-                              </div>
-                            </div>
-
-                            <div class="col-md-3">
-                              <div class="form-outline">
-                                <select class="form-control" name="relation">
-                                  <?php
-                                      foreach ($db->query('SELECT * FROM relationship WHERE state = 1') as $row)
-                                      {
-                                          echo '<option value="'.$row['id_relationship'].'">'.$row["description"].'</option>';
-                                      }
-                                  ?>
-                                </select>
-                                <label class="form-label">Parentesco:</label>
                               </div>
                             </div>
 

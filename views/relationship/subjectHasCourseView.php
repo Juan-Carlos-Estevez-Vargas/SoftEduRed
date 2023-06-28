@@ -166,15 +166,15 @@
 
                             <div class="col-md-4">
                               <div class="form-outline">
-                                <label class="mr-5">Estado: </label>
-                                <div class=" form-check form-check-inline">
-                                  <input type="radio" name="state" value="1"
-                                    <?php echo $r['state'] === '1' ? 'checked' : '' ?> />
+                                <label class="form-label mr-5">Estado</label>
+                                <div class="form-check form-check-inline">
+                                  <input type="radio" class="form-check-input" name="state" value="1"
+                                    <?php echo $r['state'] === 1 ? 'checked' : '' ?> />
                                   <label class="form-check-label">Activo</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                  <input type="radio" name="state" value="0"
-                                    <?php echo $r['state'] === '0' ? 'checked' : '' ?> />
+                                  <input type="radio" class="form-check-input" name="state" value="0"
+                                    <?php echo $r['state'] === 0 ? 'checked' : '' ?> />
                                   <label class="form-check-label">Inactivo</label>
                                 </div>
                               </div>
@@ -231,15 +231,13 @@
                           <tr>
                             <td><?php echo $row['course']; ?></td>
                             <td><?php echo $row['subject']; ?></td>
-                            <td>
-                              <?php
-																if ($row['state'] == 1) {
-																	echo "Activo";
-																} else {
-																	echo "Inactivo";
-																}
-															?>
-                            </td>
+                            <?php
+                              if ($row['state'] == 1) {
+                                echo "<td class='text-success'>Activo</td>";
+                              } else {
+                                echo "<td class='text-warning'>Inactivo</td>";
+                              }
+                            ?>
                             <td>
                               <a class="btn btn-primary" href="?action=edit&id_subject=<?php echo $row['id'];?>">
                                 Actualizar

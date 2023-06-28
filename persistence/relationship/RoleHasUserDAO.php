@@ -11,7 +11,7 @@
 
 <body>
   <?php
-	class RoleUserDAO
+	class RoleHasUserDAO
 	{
 		private $pdo;
 
@@ -39,10 +39,10 @@
 		 * @param string $state The state of the registration.
 		 * @throws Exception If the registration fails.
 		 */
-		public function registerUser(int $userId, int $roleId, string $state): void
+		public function registerUserRole(int $userId, int $roleId, string $state): void
 		{
 				try {
-						if (empty($userId) || empty($roleId)) {
+						if (empty($userId) || empty($roleId) || ($state !== '1' && $state !== '0')) {
 								// Show warning message if user ID or role ID are empty.
 								$this->showWarningMessage(
 										"Debes llenar todos los campos.",
@@ -51,7 +51,12 @@
 								return;
 						}
 
-						$sql = "INSERT INTO user_has_role (user_id, role_id, state) VALUES (:user, :role, :state)";
+						$sql = "
+								INSERT INTO user_has_role (
+										user_id,
+										role_id,
+										state)
+								VALUES (:user, :role, :state);";
 						$statement = $this->pdo->prepare($sql);
 						$statement->bindParam(':user', $userId);
 						$statement->bindParam(':role', $roleId);
@@ -75,41 +80,24 @@
 		/**
 		 * Updates a record in the user_has_role database table.
 		 *
-		 * @param string $newTDocRole The new value for the tdoc_role field.
-		 * @param string $oldTDocRole The current value of the tdoc_role field.
-		 * @param int $newPkFkIdUser The new value for the pk_fk_id_user field.
-		 * @param int $oldPkFkIdUser The current value of the pk_fk_id_user field.
-		 * @param string $newPkFkRole The new value for the pk_fk_role field.
-		 * @param string $oldPkFkRole The current value of the pk_fk_role field.
-		 * @param bool $newState The new value for the state field.
+		 * @param string $id The id_user_has_role to update.
+		 * @param string $state The new value for the state field.
 		 *
 		 * @return void
 		 */
-		public function updateUserRoles(
-			string $newTDocRole, string $oldTDocRole, int $newPkFkIdUser,
-			int $oldPkFkIdUser, string $newPkFkRole, string $oldPkFkRole,
-			bool $newState
-		) {
+		public function updateUserRoles(string $id, string $state): void
+		{
 				try {
-						if (!empty($newTDocRole) && !empty($oldTDocRole) && !empty($newPkFkIdUser)
-							&& !empty($oldPkFkIdUser) && !empty($newPkFkRole) && !empty($oldPkFkRole))
+						if (!empty($id))
 						{
 								$sql = "
 										UPDATE user_has_role
-										SET tdoc_role = ?,
-												pk_fk_id_user = ?,
-												pk_fk_role = ?,
-												state = ?
-										WHERE tdoc_role = ? &&
-													pk_fk_id_user = ? &&
-													pk_fk_role = ?
+										SET state = ?
+										WHERE id_user_has_role = ?
 								";
 
 								$stmt = $this->pdo->prepare($sql);
-								$stmt->execute([
-									$newTDocRole, $newPkFkIdUser, $newPkFkRole, $newState,
-									$oldTDocRole, $oldPkFkIdUser, $oldPkFkRole
-								]);
+								$stmt->execute([$state, $id]);
 
 								$this->showSuccessMessage(
 										"Registro Actualizado Exitosamente.",

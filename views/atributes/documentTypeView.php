@@ -9,10 +9,13 @@
 
 		if ($action == 'update') {
 			$update = new DocumentTypeDAO();
-			$update->updateDocumentType($_POST['id_document_type'], $_POST['document_type'],$_POST['description']);
+			$update->updateDocumentType(
+        $_POST['id_document_type'], $_POST['document_type'],
+        $_POST['description'], $_POST['state']
+      );
 		} elseif ($action == 'register') {
 			$insert = new DocumentTypeDAO();
-			$insert ->registerDocumentType($_POST['document_type'],$_POST['description']);
+			$insert ->registerDocumentType($_POST['document_type'], $_POST['description'], $_POST['state']);
 		} elseif ($action == 'delete') {
 			$delete = new DocumentTypeDAO();
 			$delete->deleteDocumentType($_GET['id_document_type']);
@@ -55,7 +58,7 @@
                           <h4 class="mb-5 text-uppercase text-center text-success">Nuevo Tipo de Documento</h4>
 
                           <div class="row">
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                               <div class="form-outline">
                                 <input type="text" name="document_type" placeholder="Ej: C.C" required
                                   style="text-transform:uppercase" class="form-control" maxlength="3" />
@@ -63,7 +66,7 @@
                               </div>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                               <div class="form-outline">
                                 <input type="text" name="description" placeholder="Ej: Cedula de Ciudadania"
                                   style="text-transform:uppercase" class="form-control" required maxlength="35"
@@ -72,7 +75,21 @@
                               </div>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-4">
+                              <div class="form-outline">
+                                <label class="form-label mr-5">Estado</label>
+                                <div class="form-check form-check-inline">
+                                  <input type="radio" class="form-check-input" name="state" value="1" checked />
+                                  <label class="form-check-label">Activo</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                  <input type="radio" class="form-check-input" name="state" value="0" />
+                                  <label class="form-check-label">Inactivo</label>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="col-md-2">
                               <div class="form-outline">
                                 <input id="boton" type="submit" class="btn btn-primary btn-block" value="Guardar"
                                   onclick="this.form.action ='?action=register'" />
@@ -88,7 +105,7 @@
                   <div class="container-fluid">
                     <div class="row">
                       <div class="col-md-12">
-                        <?php if (!empty($_GET['id_document_type']) && !empty($_GET['action']) && !empty($id)) { ?>
+                        <?php if (!empty($id) && !empty($_GET['action'])) { ?>
                         <form action="#" method="post" enctype="multipart/form-data">
                           <?php
 														$sql = "
@@ -104,7 +121,7 @@
                             <input type="text" name="id_document_type" value="<?php echo $r['id_document_type']?>"
                               style="display: none;" />
 
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                               <div class="form-outline">
                                 <input type="text" name="document_type" placeholder="Ej: C.C" required
                                   style="text-transform:uppercase" class="form-control" maxlength="3"
@@ -113,7 +130,7 @@
                               </div>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                               <div class="form-outline">
                                 <input type="text" name="description" placeholder="Ej: Cedula de Ciudadania"
                                   style="text-transform:uppercase" class="form-control"
@@ -122,7 +139,23 @@
                               </div>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-4">
+                              <div class="form-outline">
+                                <label class="form-label mr-5">Estado</label>
+                                <div class="form-check form-check-inline">
+                                  <input type="radio" class="form-check-input" name="state" value="1"
+                                    <?php echo $r['state'] === 1 ? 'checked' : '' ?> />
+                                  <label class="form-check-label">Activo</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                  <input type="radio" class="form-check-input" name="state" value="0"
+                                    <?php echo $r['state'] === 0 ? 'checked' : '' ?> />
+                                  <label class="form-check-label">Inactivo</label>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="col-md-2">
                               <div class="form-outline">
                                 <input id="boton" type="submit" class="btn btn-primary btn-block" value="Actualizar"
                                   onclick="this.form.action = '?action=update';" />
@@ -140,7 +173,7 @@
 
                   <div class="col-md-12 text-center mt-4">
                     <?php
-											$sql = "SELECT * FROM document_type";
+											$sql = "SELECT * FROM document_type ORDER BY state DESC";
 											$query = $db->query($sql);
 
 											if ($query->rowCount()>0):
@@ -153,6 +186,7 @@
                           <tr>
                             <th>Tipo de Documento</th>
                             <th>Descripción</th>
+                            <th>Estado</th>
                             <th>Acciones</th>
                           </tr>
                         </thead>
@@ -161,6 +195,13 @@
                           <tr>
                             <td><?php echo $row['type']; ?></td>
                             <td><?php echo $row['description']; ?></td>
+                            <?php
+                              if ($row['state'] == 1) {
+                                echo "<td class='text-success'>Activo</td>";
+                              } else {
+                                echo "<td class='text-warning'>Inactivo</td>";
+                              }
+                            ?>
                             <td>
                               <a class="btn btn-primary"
                                 href="?action=edit&id_document_type=<?php echo $row['id_document_type'];?>">

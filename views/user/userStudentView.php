@@ -137,6 +137,24 @@
 
                             <div class="col-md-3">
                               <div class="form-outline">
+                                <input type="number" class="form-control" name="phone" placeholder="Teléfono"
+                                  maxlength="15" />
+                                <label class="form-label" for="phone">Teléfono:</label>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="row mb-4">
+                            <div class="col-md-6">
+                              <div class="form-outline">
+                                <input class="form-control" type="email" name="email" placeholder="Correo Electrónico"
+                                  maxlength="35" required />
+                                <label class="form-label" for="email">Correo:</label>
+                              </div>
+                            </div>
+
+                            <div class="col-md-6">
+                              <div class="form-outline">
                                 <input type="text" class="form-control" name="address" placeholder="Dirección"
                                   maxlength="40" />
                                 <label class="form-label" for="address">Dirección:</label>
@@ -145,23 +163,7 @@
                           </div>
 
                           <div class="row mb-4">
-                            <div class="col-md-3">
-                              <div class="form-outline">
-                                <input class="form-control" type="email" name="email" placeholder="Correo Electrónico"
-                                  maxlength="35" required />
-                                <label class="form-label" for="email">Correo:</label>
-                              </div>
-                            </div>
-
-                            <div class="col-md-3">
-                              <div class="form-outline">
-                                <input type="number" class="form-control" name="phone" placeholder="Teléfono"
-                                  maxlength="15" />
-                                <label class="form-label" for="phone">Teléfono:</label>
-                              </div>
-                            </div>
-
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                               <div class="form-outline">
                                 <input type="text" class="form-control" name="username" placeholder="Usuario" required
                                   maxlength="45" />
@@ -169,34 +171,11 @@
                               </div>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                               <div class="form-outline">
                                 <input class="form-control" type="password" name="password" placeholder="Contraseña"
                                   required maxlength="20" />
                                 <label class="form-label" for="password">Contraseña:</label>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div class="row mb-4">
-                            <div class="col-md-5">
-                              <div class="form-outline">
-                                <select class="form-control" name="security_question">
-                                  <?php
-                                        foreach ($db->query('SELECT * FROM security_question') as $security)  {
-                                          echo '<option value="'.$security['id_security_question'].'">'.$security["description"].'</option>';
-                                        }
-                                      ?>
-                                </select>
-                                <label class="form-label" for="security_question">Pregunta de Seguridad:</label>
-                              </div>
-                            </div>
-
-                            <div class=" col-md-3">
-                              <div class="form-outline">
-                                <input type="text" class="form-control" name="answer" placeholder="Respuesta"
-                                  required />
-                                <label class="form-label" for="answer">Respuesta:</label>
                               </div>
                             </div>
 
@@ -219,6 +198,27 @@
                           </div>
 
                           <div class="row mb-4">
+                            <div class="col-md-6">
+                              <div class="form-outline">
+                                <select class="form-control" name="security_question">
+                                  <?php
+                                        foreach ($db->query('SELECT * FROM security_question') as $security)  {
+                                          echo '<option value="'.$security['id_security_question'].'">'.$security["description"].'</option>';
+                                        }
+                                      ?>
+                                </select>
+                                <label class="form-label" for="security_question">Pregunta de Seguridad:</label>
+                              </div>
+                            </div>
+
+                            <div class=" col-md-3">
+                              <div class="form-outline">
+                                <input type="text" class="form-control" name="answer" placeholder="Respuesta"
+                                  style="text-transform:uppercase" required />
+                                <label class="form-label" for="answer">Respuesta:</label>
+                              </div>
+                            </div>
+
                             <div class="col-md-3">
                               <div class="form-outline">
                                 <select class="form-control" name="course">
@@ -231,7 +231,9 @@
                                 <label class="form-label">Curso del Estudiante:</label>
                               </div>
                             </div>
+                          </div>
 
+                          <div class="row mb-4 justify-content-end">
                             <div class="col-md-3">
                               <div class="form-outline">
                                 <input id="boton" type="submit" class="btn btn-primary btn-block" value="Guardar"
@@ -334,6 +336,24 @@
 
                             <div class="col-md-3">
                               <div class="form-outline">
+                                <input type="number" class="form-control" name="phone" placeholder="Teléfono"
+                                  maxlength="15" value="<?php echo $r['phone'];?>" />
+                                <label class="form-label" for="phone">Teléfono:</label>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="row mb-4">
+                            <div class="col-md-6">
+                              <div class="form-outline">
+                                <input class="form-control" type="email" name="email" placeholder="Correo Electrónico"
+                                  maxlength="35" value="<?php echo $r['email'];?>" required />
+                                <label class="form-label" for="email">Correo:</label>
+                              </div>
+                            </div>
+
+                            <div class="col-md-6">
+                              <div class="form-outline">
                                 <input type="text" class="form-control" name="address" placeholder="Dirección"
                                   maxlength="40" value="<?php echo $r['address'];?>" />
                                 <label class="form-label" for="address">Dirección:</label>
@@ -342,23 +362,7 @@
                           </div>
 
                           <div class="row mb-4">
-                            <div class="col-md-3">
-                              <div class="form-outline">
-                                <input class="form-control" type="email" name="email" placeholder="Correo Electrónico"
-                                  maxlength="35" value="<?php echo $r['email'];?>" required />
-                                <label class="form-label" for="email">Correo:</label>
-                              </div>
-                            </div>
-
-                            <div class="col-md-3">
-                              <div class="form-outline">
-                                <input type="number" class="form-control" name="phone" placeholder="Teléfono"
-                                  maxlength="15" value="<?php echo $r['phone'];?>" />
-                                <label class="form-label" for="phone">Teléfono:</label>
-                              </div>
-                            </div>
-
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                               <div class="form-outline">
                                 <input type="text" class="form-control" name="username" placeholder="Usuario" required
                                   maxlength="45" value="<?php echo $r['username'];?>" />
@@ -366,34 +370,11 @@
                               </div>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                               <div class="form-outline">
                                 <input class="form-control" type="password" name="password" placeholder="Contraseña"
                                   required maxlength="20" value="<?php echo $r['password'];?>" />
                                 <label class="form-label" for="password">Contraseña:</label>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div class="row mb-4">
-                            <div class="col-md-5">
-                              <div class="form-outline">
-                                <select class="form-control" name="security_question">
-                                  <?php
-                                    foreach ($db->query('SELECT * FROM security_question') as $security)  {
-                                      echo '<option value="'.$security['id_security_question'].'">'.$security["description"].'</option>';
-                                    }
-                                  ?>
-                                </select>
-                                <label class="form-label" for="security_question">Pregunta de Seguridad:</label>
-                              </div>
-                            </div>
-
-                            <div class="col-md-3">
-                              <div class="form-outline">
-                                <input type="text" class="form-control" name="answer" placeholder="Respuesta"
-                                  value="<?php echo $r['security_answer'];?>" required />
-                                <label class="form-label" for="answer">Respuesta:</label>
                               </div>
                             </div>
 
@@ -416,6 +397,27 @@
                           </div>
 
                           <div class="row mb-4">
+                            <div class="col-md-6">
+                              <div class="form-outline">
+                                <select class="form-control" name="security_question">
+                                  <?php
+                                    foreach ($db->query('SELECT * FROM security_question') as $security)  {
+                                      echo '<option value="'.$security['id_security_question'].'">'.$security["description"].'</option>';
+                                    }
+                                  ?>
+                                </select>
+                                <label class="form-label" for="security_question">Pregunta de Seguridad:</label>
+                              </div>
+                            </div>
+
+                            <div class="col-md-3">
+                              <div class="form-outline">
+                                <input type="text" class="form-control" name="answer" style="text-transform:uppercase;"
+                                  placeholder=" Respuesta" value="<?php echo $r['security_answer'];?>" required />
+                                <label class="form-label" for="answer">Respuesta:</label>
+                              </div>
+                            </div>
+
                             <div class="col-md-3">
                               <div class="form-outline">
                                 <select class="form-control" name="course">
@@ -428,7 +430,9 @@
                                 <label class="form-label">Curso del Estudiante:</label>
                               </div>
                             </div>
+                          </div>
 
+                          <div class="row mb-4 justify-content-end">
                             <div class="col-md-3">
                               <div class="form-outline">
                                 <input id="reg" type="submit" class="btn btn-primary btn-block" value="Actualizar"

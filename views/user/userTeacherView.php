@@ -137,14 +137,14 @@
 
                             <div class="col-md-3">
                               <div class="form-outline">
-                                <input type="text" class="form-control" name="address" placeholder="Dirección" />
-                                <label class="form-label" for="address">Dirección:</label>
+                                <input type="text" class="form-control" name="phone" placeholder="Teléfono" required />
+                                <label class="form-label" for="phone">Teléfono:</label>
                               </div>
                             </div>
                           </div>
 
                           <div class="row mb-4">
-                            <div class="col-md-3">
+                            <div class="col-md-6">
                               <div class="form-outline">
                                 <input type="text" class="form-control" name="email" placeholder="Correo Electrónico"
                                   required />
@@ -152,14 +152,16 @@
                               </div>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-6">
                               <div class="form-outline">
-                                <input type="text" class="form-control" name="phone" placeholder="Teléfono" required />
-                                <label class="form-label" for="phone">Teléfono:</label>
+                                <input type="text" class="form-control" name="address" placeholder="Dirección" />
+                                <label class="form-label" for="address">Dirección:</label>
                               </div>
                             </div>
+                          </div>
 
-                            <div class="col-md-3">
+                          <div class="row mb-4">
+                            <div class="col-md-4">
                               <div class="form-outline">
                                 <input type="text" class="form-control" name="username" placeholder="Usuario"
                                   required />
@@ -167,17 +169,25 @@
                               </div>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                               <div class="form-outline">
                                 <input type="password" class="form-control" name="password" placeholder="Contraseña"
                                   required />
                                 <label class="form-label" for="password">Contraseña:</label>
                               </div>
                             </div>
+
+                            <div class="col-md-4">
+                              <div class="form-outline">
+                                <input type="number" class="form-control" name="salary" placeholder="Salario"
+                                  required />
+                                <label class="form-label" for="salary">Salario:</label>
+                              </div>
+                            </div>
                           </div>
 
                           <div class="row mb-4">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                               <div class="form-outline">
                                 <select class="form-control" name="security_question">
                                   <?php
@@ -193,20 +203,12 @@
                             <div class="col-md-3">
                               <div class="form-outline">
                                 <input type="text" class="form-control" name="answer" placeholder="Respuesta"
-                                  required />
+                                  style="text-transform: uppercase" required />
                                 <label class="form-label" for="answer">Respuesta:</label>
                               </div>
                             </div>
 
                             <div class="col-md-3">
-                              <div class="form-outline">
-                                <input type="number" class="form-control" name="salary" placeholder="Salario"
-                                  required />
-                                <label class="form-label" for="salary">Salario:</label>
-                              </div>
-                            </div>
-
-                            <div class="col-md-2">
                               <div class="form-outline">
                                 <input id="boton" type="submit" class="btn btn-primary btn-block" value="Guardar"
                                   onclick="this.form.action ='?action=register'" />
@@ -313,6 +315,24 @@
 
                             <div class="col-md-3">
                               <div class="form-outline">
+                                <input type="text" class="form-control" name="phone" placeholder="Teléfono"
+                                  maxlength="15" value="<?php echo $r['phone'] ;?>" />
+                                <label class="form-label" for="phone">Teléfono:</label>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="row mb-4">
+                            <div class="col-md-6">
+                              <div class="form-outline">
+                                <input type="text" class="form-control" name="email" placeholder="Correo Electrónico"
+                                  maxlength="35" value="<?php echo $r['email'];?>" required />
+                                <label class="form-label" for="email">Correo electrónico:</label>
+                              </div>
+                            </div>
+
+                            <div class="col-md-6">
+                              <div class="form-outline">
                                 <input type="text" class="form-control" name="address" placeholder="Dirección"
                                   maxlength="40" value="<?php echo $r['address'];?>" />
                                 <label class="form-label" for="address">Dirección:</label>
@@ -321,23 +341,7 @@
                           </div>
 
                           <div class="row mb-4">
-                            <div class="col-md-3">
-                              <div class="form-outline">
-                                <input type="text" class="form-control" name="email" placeholder="Correo Electrónico"
-                                  maxlength="35" value="<?php echo $r['email'];?>" required />
-                                <label class="form-label" for="email">Correo electrónico:</label>
-                              </div>
-                            </div>
-
-                            <div class="col-md-3">
-                              <div class="form-outline">
-                                <input type="text" class="form-control" name="phone" placeholder="Teléfono"
-                                  maxlength="15" value="<?php echo $r['phone'] ;?>" />
-                                <label class="form-label" for="phone">Teléfono:</label>
-                              </div>
-                            </div>
-
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                               <div class="form-outline">
                                 <input type="text" class="form-control" name="username" placeholder="Usuario" required
                                   maxlength="40" value="<?php echo $r['username'];?>" />
@@ -345,17 +349,25 @@
                               </div>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                               <div class="form-outline">
                                 <input type="password" class="form-control" name="password" placeholder="Contraseña"
                                   maxlength="20" value="<?php echo $r['password'];?>" required />
                                 <label class="form-label" for="password">Contraseña:</label>
                               </div>
                             </div>
+
+                            <div class="col-md-4">
+                              <div class="form-outline">
+                                <input type="number" class="form-control" name="salary" placeholder="Salario"
+                                  value="<?php echo $r['salary'];?>" required />
+                                <label class="form-label" for="salary">Salario:</label>
+                              </div>
+                            </div>
                           </div>
 
                           <div class="row mb-4">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                               <div class="form-outline">
                                 <select class="form-control" name="security_question">
                                   <?php
@@ -371,20 +383,12 @@
                             <div class="col-md-3">
                               <div class="form-outline">
                                 <input type="text" class="form-control" name="answer" placeholder="Respuesta" required
-                                  value="<?php echo $r['security_answer'];?>" />
+                                  value="<?php echo $r['security_answer'];?>" style="text-transform: uppercase" />
                                 <label class=" form-label" for="answer">Respuesta:</label>
                               </div>
                             </div>
 
                             <div class="col-md-3">
-                              <div class="form-outline">
-                                <input type="number" class="form-control" name="salary" placeholder="Salario"
-                                  value="<?php echo $r['salary'];?>" required />
-                                <label class="form-label" for="salary">Salario:</label>
-                              </div>
-                            </div>
-
-                            <div class="col-md-2">
                               <div class="form-outline">
                                 <input id="reg" type="submit" class="btn btn-primary btn-block" value="Actualizar"
                                   onclick="this.form.action = '?action=update';">

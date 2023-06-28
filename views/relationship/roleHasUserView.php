@@ -8,15 +8,15 @@
 		$action = $_REQUEST['action'];
 
 		if ($action == 'update') {
-			$update = new RoleUserDAO();
+			$update = new RoleHasUserDAO();
 			$update->updateUserRoles(
-				$_POST['id_user_has_role'], $_POST['id_user'], $_POST['role'], $_POST['state']
+				$_POST['id_user_has_role'], $_POST['state']
 			);
 		} elseif ($action == 'register') {
-			$insert = new RoleUserDAO();
-			$insert ->registerUserWithRolesAndStates($_POST['id_user'], $_POST['role'], $_POST['state']);
+			$insert = new RoleHasUserDAO();
+			$insert ->registerUserRole($_POST['id_user'], $_POST['role'], $_POST['state']);
 		} elseif ($action == 'delete') {
-			$delete = new RoleUserDAO();
+			$delete = new RoleHasUserDAO();
 			$delete->deleteUserRole($_GET['id_user_has_role']);
 		} elseif ($action == 'edit') {
 			$id = $_GET['id_user'];
@@ -58,7 +58,7 @@
                           <h4 class="mb-5 text-uppercase text-center text-success">Nuevo Rol de Usuario</h4>
 
                           <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                               <div class="form-outline">
                                 <select class="form-control" name="id_user">
                                   <?php
@@ -71,7 +71,7 @@
                               </div>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                               <div class="form-outline">
                                 <select class="form-control" name="role">
                                   <?php
@@ -97,25 +97,24 @@
                                 <label class="form-label" for="role">Rol:</label>
                               </div>
                             </div>
-                          </div>
 
-                          <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                               <div class="form-outline">
-                                <label class="mr-5">Estado: </label>
+                                <label class="mr-2">Estado:</label>
                                 <div class=" form-check form-check-inline">
-                                  <input id="space" type="radio" class="form-check-input" name="state" value="1"
-                                    checked />
+                                  <input type="radio" class="form-check-input" name="state" value="1" checked />
                                   <label class="form-check-label">Activo</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                  <input id="space" type="radio" class="form-check-input" name="state" value="0" />
+                                  <input type="radio" class="form-check-input" name="state" value="0" />
                                   <label class="form-check-label">Inactivo</label>
                                 </div>
                               </div>
                             </div>
+                          </div>
 
-                            <div class="col-md-2">
+                          <div class="row justify-content-end">
+                            <div class="col-md-2 text-end">
                               <div class="form-outline">
                                 <input id="boton" type="submit" class="btn btn-primary btn-block" value="Guardar"
                                   onclick="this.form.action ='?action=register'" />
@@ -135,11 +134,22 @@
                         <form action="#" method="post" enctype="multipart/form-data">
                           <?php
 														$sql = "
-															SELECT user.first_name, user.surname, role.description FROM user_has_role
-                              JOIN user ON user.id_user = user_has_role.user_id
-                              JOIN role ON role.id_role = user_has_role.role_id
-															WHERE user_id  = '$id' &&
-																	role_id = '$role'
+															SELECT
+                                user.id_user,
+                                user.first_name,
+                                user.surname,
+                                role.description,
+                                user_has_role.state,
+                                user_has_role.id_user_has_role
+                              FROM
+                                user_has_role
+                              JOIN user
+                                ON user.id_user = user_has_role.user_id
+                              JOIN role
+                                ON role.id_role = user_has_role.role_id
+															WHERE
+                                user_id  = '$id' &&
+																role_id = '$role'
 														";
 														$query = $db->query($sql);
 										
@@ -147,61 +157,38 @@
 													?>
                           <h4 class="mb-5 text-uppercase text-center text-success">Actualizar Rol de Usuario</h4>
 
+                          <div>
+                            <input type="text" name="id_user_has_role" value="<?php echo $r['id_user_has_role']?>"
+                              style="display: none" class="form-control" />
+                          </div>
                           <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-3">
                               <div class="form-outline">
-                                <select class="form-control" name="id_user">
-                                  <?php
-                                    foreach ($db->query('SELECT * FROM user') as $row) {
-                                        echo '<option value="'.$row['id_user'].'">'.$row["identification_number"]." - ".$row["first_name"]." - ".$row["surname"].'</option>';
-                                    }
-                                  ?>
-                                </select>
-                                <input type="text" name="id_user_has_role" value="<?php echo $r['id_user']?>"
-                                  style="display: none" class="form-control" />
+                                <input type="text" class="form-control" style="text-transform:uppercase;" name="role"
+                                  value="<?php echo $r['first_name']." ".$r['surname']?>" disabled required />
                                 <label class="form-label">Usuario:</label>
                               </div>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-3">
                               <div class="form-outline">
-                                <select class="form-control" name="role">
-                                  <?php
-                                    $selectedUserId = $_POST['id_user'];
-
-                                    $sql = '
-                                    SELECT r.id_role, r.description
-                                    FROM role r
-                                    LEFT JOIN user_has_role uhr
-                                        ON r.id_role = uhr.role_id
-                                        AND uhr.user_id = :user_id
-                                    WHERE uhr.user_id IS NULL
-                                    ';
-
-                                    $stmt = $db->prepare($sql);
-                                    $stmt->execute(['user_id' => $selectedUserId]);
-
-                                    foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
-                                        echo '<option value="'.$row['id_role'].'">'.$row["description"].'</option>';
-                                    }
-                                  ?>
-                                </select>
-                                <label class="form-label" for="role">Rol:</label>
+                                <input type="text" class="form-control" style="text-transform:uppercase;" name="role"
+                                  value="<?php echo $r['description']?>" maxlength="15" disabled required />
+                                <label class="form-label" for="role">Tipo de Rol:</label>
                               </div>
                             </div>
-                          </div>
 
-                          <div class="row">
                             <div class="col-md-4">
                               <div class="form-outline">
-                                <label class="mr-5">Estado: </label>
-                                <div class=" form-check form-check-inline">
-                                  <input id="space" type="radio" class="form-check-input" name="state" value="1"
-                                    checked />
+                                <label class="form-label mr-5">Estado</label>
+                                <div class="form-check form-check-inline">
+                                  <input type="radio" class="form-check-input" name="state" value="1"
+                                    <?php echo $r['state'] === 1 ? 'checked' : '' ?> />
                                   <label class="form-check-label">Activo</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                  <input id="space" type="radio" class="form-check-input" name="state" value="0" />
+                                  <input type="radio" class="form-check-input" name="state" value="0"
+                                    <?php echo $r['state'] === 0 ? 'checked' : '' ?> />
                                   <label class="form-check-label">Inactivo</label>
                                 </div>
                               </div>
@@ -235,7 +222,7 @@
                         user_has_role.role_id,
                         user_has_role.id_user_has_role,
                         role.description,
-                        role.state
+                        user_has_role.state
                       FROM user_has_role
                       JOIN user ON user.id_user = user_has_role.user_id
                       JOIN role ON role.id_role = user_has_role.role_id
@@ -256,22 +243,20 @@
                           <th>Rol</th>
                           <th>Estado</th>
                           <th>Acciones</th>
-
+                        </tr>
                       </thead>
                       <tbody>
                         <?php while ($row=$query->fetch(PDO::FETCH_ASSOC)): ?>
                         <tr>
                           <td><?php echo $row['first_name'].' '.$row['surname']; ?></td>
                           <td><?php echo $row['description']; ?></td>
-                          <td>
-                            <?php
-                              if ($row['state'] == 1) {
-                                echo "Activo";
-                              } else {
-                                echo "Inactivo";
-                              }
-                            ?>
-                          </td>
+                          <?php
+                            if ($row['state'] == 1) {
+                              echo "<td class='text-success'>Activo</td>";
+                            } else {
+                              echo "<td class='text-warning'>Inactivo</td>";
+                            }
+                          ?>
                           <td>
                             <a class="btn btn-primary"
                               href="?action=edit&id_user_has_role=<?php echo $row['id_user_has_role'];?>&id_user=<?php echo $row['user_id'];?>&role=<?php echo $row['role_id'];?>">
