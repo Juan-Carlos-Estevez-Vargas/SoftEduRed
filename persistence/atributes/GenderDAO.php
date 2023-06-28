@@ -113,7 +113,11 @@
 			{
 				try {
 					if (!empty($idGender)) { // Check if gender id is not empty
-						$sql = "DELETE FROM gender WHERE id_gender = ?";
+						$sql = "
+							UPDATE gender
+							SET state = 3
+							WHERE id_gender = ?
+						";
 						$stmt = $this->pdo->prepare($sql);
 						$stmt->bindParam(1, $idGender);
 						$stmt->execute();
