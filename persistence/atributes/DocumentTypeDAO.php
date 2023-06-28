@@ -139,8 +139,12 @@
 						try {
 								if (!empty($idDocumentType)) {
 										$query = "
-												DELETE FROM document_type
-												WHERE id_document_type = :id
+												UPDATE
+														document_type
+												SET
+														state = 3
+												WHERE
+														id_document_type = :id
 										";
 										$statement = $this->pdo->prepare($query);
 										$statement->execute([':id' => $idDocumentType]);

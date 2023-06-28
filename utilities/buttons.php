@@ -40,7 +40,7 @@
     </div>
   </header>
   <?php endif;
-  	if ($_SESSION['role_index'] === 'att'): ?>
+  	if ($_SESSION['role_index'] === 'a'): ?>
   <div>
     <p id="header">Bienvenido Acudiente</p>
   </div>
