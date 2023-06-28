@@ -291,10 +291,10 @@
                         </nav>
                       </div>
                     </div>
-                    <?php endif; ?>
+                    <?php else: ?>
+                    <h4><?php echo "No se encontraron registros"; ?></h4>
+                    <?php endif ?>
                   </div>
-                  <?php else: ?>
-                  <h4><?php if (!$hasRecords) { echo "No se encontraron registros"; } ?></h4>
                   <?php endif; ?>
                 </div>
               </div>
