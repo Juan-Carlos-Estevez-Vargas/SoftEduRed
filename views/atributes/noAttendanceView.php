@@ -1,6 +1,6 @@
 <?php
   require_once "../../persistence/database/Database.php";
-  require_once "../../persistence/atributes/NoAttendance.php";
+  require_once "../../persistence/atributes/NoAttendanceDAO.php";
 
   session_start();
 
@@ -54,8 +54,8 @@
                           <label class="col-auto me-2">Seleccione un Curso: </label>
                           <div class="col-md-6">
                             <select name="s" class="form-control">
-                              <?php foreach ($db->query('SELECT * FROM course WHERE state= 1') as $row1) { ?>
-                              <option value="<?php echo $row1['cod_course']; ?>"> <?php echo $row1['cod_course']; ?>
+                              <?php foreach ($db->query('SELECT * FROM course WHERE state = 1') as $row1) { ?>
+                              <option value="<?php echo $row1['id_course']; ?>"> <?php echo $row1['course']; ?>
                               </option>
                               <?php } ?>
                             </select>

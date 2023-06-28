@@ -127,13 +127,13 @@
         {
             $_SESSION['active'] = 1;
             switch ($role) {
-                case 'TEACHER':
+                case 'DOCENTE':
                     header('location: ../utilities/index.php?role=t');
                     break;
                 case 'ADMINISTRADOR':
                     header('location: ../utilities/index.php?role=e');
                     break;
-                case 'ATTENDANT':
+                case 'ACUDIENTE':
                     header('location: ../utilities/index.php?role=a');
                     break;
                 default:

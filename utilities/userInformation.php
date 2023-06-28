@@ -11,10 +11,10 @@
     if ($action == 'update') {
       $update = new UserCrudDAO();
       $update->updateUser(
-        $_POST['tdoc'], $_POST['id_user'], $_POST['f_name'], $_POST['s_name'],
-        $_POST['f_lname'], $_POST['s_lname'], $_POST['gender'], $_POST['adress'],
-        $_POST['email'], $_POST['phone'], $_POST['u_name'], $_POST['pass'],
-        $_POST['s_ans'], $_POST['s_ques']
+        $_POST['id_user'], $_POST['document_type'], $_POST['identification_number'],
+        $_POST['first_name'], $_POST['second_name'], $_POST['surname'], $_POST['second_surname'],
+        $_POST['gender'], $_POST['phone'], $_POST['address'], $_POST['email'],
+        $_POST['username'], $_POST['password'], $_POST['security_question'], $_POST['answer']
       );
     }
   }
@@ -36,15 +36,13 @@
 <body>
   <section class="h-100 bg-white">
     <?php
-    $tdoc = $_SESSION["TIPO_DOC"];
-    $id = $_SESSION["ID_PERSONA"];
+    $id = $_SESSION["ID_USER"];
     ?>
     <div class="container py-4 h-100">
       <form action="#" method="post" enctype="multipart/form-data">
         <?php $sql = "
           SELECT * FROM user
-          WHERE pk_fk_cod_doc = '$tdoc'
-            AND id_user = '$id'
+          WHERE id_user = '$id'
         ";
 
         $query = $db->query($sql);
@@ -62,28 +60,33 @@
 
                     <div class="container-fluid">
                       <div class="row">
-                        <div class="col-md-6 mb-4">
+                        <div>
+                          <input type="text" value="<?php echo $r['id_user']; ?>" name="id_user" style="display: none;">
+                        </div>
+
+                        <div class=" col-md-6 mb-4">
                           <div class="form-outline">
-                            <select id="select" class="form-control" name="tipo_doc">
+                            <select class="form-control" name="document_type">
                               <?php
-                              foreach ($db->query('SELECT * FROM type_of_document') as $row) {
+                              foreach ($db->query('SELECT * FROM document_type') as $row) {
                                 echo '
                                   <option
-                                    value="' . $row['cod_document'] . '">
-                                    ' . $row["Des_doc"] .
+                                    value="' . $row['id_document_type'] . '">
+                                    ' . $row["description"] .
                                   '</option>
                                 ';
                               }
                               ?>
                             </select>
                           </div>
-                          <label class="form-label" id="titulo">Tipo de Documento</label>
+                          <label class="form-label" for="document_type">Tipo de Documento</label>
                         </div>
+
                         <div class="col-md-6 mb-4">
                           <div class="form-outline">
-                            <input type="number" id="space" class="form-control" name="n_id"
-                              value="<?php echo $r['id_user']; ?>" readonly required />
-                            <label class="form-label" for="n_id">No° de Identificación</label>
+                            <input type="number" class="form-control" name="identification_number"
+                              value="<?php echo $r['identification_number']; ?>" readonly required />
+                            <label class="form-label" for="identification_number">No° de Identificación</label>
                           </div>
                         </div>
                       </div>
@@ -91,17 +94,17 @@
                       <div class="row">
                         <div class="col-md-6 mb-4">
                           <div class="form-outline">
-                            <input type="text" name="name" id="space" value="<?php echo $r['first_name']; ?>"
+                            <input type="text" name="first_name" value="<?php echo $r['first_name']; ?>"
                               placeholder="Primer Nombre" maxlength="15" class="form-control" required />
-                            <label class="form-label" for="name" id="name">Primer Nombre</label>
+                            <label class="form-label" for="first_name">Primer Nombre</label>
                           </div>
                         </div>
 
                         <div class="col-md-6 mb-4">
                           <div class="form-outline">
-                            <input type="text" name="sname" id="space" value="<?php echo $r['second_name']; ?>"
+                            <input type="text" name="second_name" value="<?php echo $r['second_name']; ?>"
                               placeholder="Segundo Nombre" class="form-control" maxlength="15" />
-                            <label class="form-label" for="sname" id="sname">Segundo Nombre
+                            <label class="form-label" for="second_name">Segundo Nombre
                             </label>
                           </div>
                         </div>
@@ -110,20 +113,18 @@
                       <div class="row">
                         <div class="col-md-6 mb-4">
                           <div class="form-outline">
-                            <input type="text" name="lname" id="ape" value="<?php echo $r['surname']; ?>"
+                            <input type="text" name="surname" value="<?php echo $r['surname']; ?>"
                               placeholder="Primer Apellido" class="form-control" maxlength="15" required />
-                            <label class="form-label" for="lname" id="Apellido">Primer Apellido
+                            <label class="form-label" for="surname">Primer Apellido
                             </label>
                           </div>
                         </div>
 
                         <div class="col-md-6 mb-4">
                           <div class="form-outline">
-                            <input type="text" name="slname" id="sa" value="<?php echo $r['second_surname']; ?>"
+                            <input type="text" name="second_surname" value="<?php echo $r['second_surname']; ?>"
                               placeholder="Segundo Apellido" class="form-control" maxlength="15" />
-                            <label class="form-label" for="slname" id="sape">
-                              Segundo Apellido
-                            </label>
+                            <label class="form-label" for="second_surname">Segundo Apellido</label>
                           </div>
                         </div>
                       </div>
@@ -131,24 +132,25 @@
                       <div class="row">
                         <div class="col-md-6 mb-4">
                           <div class="form-outline">
-                            <select id="slect" class="form-control" name="gender">
+                            <select class="form-control" name="gender">
                               <?php
                               $result = $db->query('SELECT * FROM gender WHERE state = 1');
                               ?>
                               <?php foreach ($result as $row): ?>
-                              <option value="<?php echo $row['desc_gender']; ?>">
-                                <?php echo $row['desc_gender']; ?>
+                              <option value="<?php echo $row['id_gender']; ?>">
+                                <?php echo $row['description']; ?>
                               </option>
                               <?php endforeach; ?>
                             </select>
                           </div>
-                          <label id="gender" class="form-label">Género</label>
+                          <label for="gender" class="form-label">Género</label>
                         </div>
+
                         <div class="col-md-6 mb-4">
                           <div class="form-outline">
-                            <input type="number" name="phone" id="phone" value="<?php echo $r['phone']; ?>"
-                              placeholder="Teléfono" class="form-control" maxlength="15" />
-                            <label class="form-label" for="slname" id="tel">Teléfono</label>
+                            <input type="number" name="phone" value="<?php echo $r['phone']; ?>" placeholder="Teléfono"
+                              class="form-control" maxlength="15" />
+                            <label class="form-label" for="phone">Teléfono</label>
                           </div>
                         </div>
                       </div>
@@ -156,17 +158,17 @@
                       <div class="row">
                         <div class="col-md-6 mb-4">
                           <div class="form-outline">
-                            <input type="text" name="direc" id="dir" value="<?php echo $r['adress']; ?>"
+                            <input type="text" name="address" value="<?php echo $r['address']; ?>"
                               placeholder="Dirección" class="form-control" maxlength="40" />
-                            <label class="form-label" for="direc" id="direc">Dirección</label>
+                            <label class="form-label" for="address">Dirección</label>
                           </div>
                         </div>
 
                         <div class="col-md-6 mb-4">
                           <div class="form-outline">
-                            <input type="email" name="email" id="mail" value="<?php echo $r['email']; ?>"
+                            <input type="email" name="email" value="<?php echo $r['email']; ?>"
                               placeholder="Correo electrónico" class="form-control" maxlength="35" required />
-                            <label class="form-label" for="email" id="email">Correo</label>
+                            <label class="form-label" for="email">Correo</label>
                           </div>
                         </div>
                       </div>
@@ -174,17 +176,17 @@
                       <div class="row">
                         <div class="col-md-6 mb-4">
                           <div class="form-outline">
-                            <input type="text" name="usern" id="User" value="<?php echo $r['user_name']; ?>"
+                            <input type="text" name="username" value="<?php echo $r['username']; ?>"
                               placeholder="Usuario" class="form-control" maxlength="30" required />
-                            <label class="form-label" for="usern" id="nickname">Usuario</label>
+                            <label class="form-label" for="username">Usuario</label>
                           </div>
                         </div>
 
                         <div class="col-md-6 mb-4">
                           <div class="form-outline">
-                            <input type="password" name="pass" id="pass" value="<?php echo $r['pass']; ?>"
+                            <input type="password" name="password" value="<?php echo $r['password']; ?>"
                               placeholder="Contraseña" class="form-control" maxlength="20" minlength="10" required />
-                            <label class="form-label" for="pass" id="pasw">Contraseña</label>
+                            <label class="form-label" for="password">Contraseña</label>
                           </div>
                         </div>
                       </div>
@@ -192,11 +194,9 @@
                       <div class="row">
                         <div class="col-md-12 mb-4">
                           <div class="form-outline">
-                            <input type="file" name="usern" id="photo" placeholder="Imagen de perfil"
-                              class="form-control" accept="image/*" />
-                            <label class="form-label" for="photo" id="photo">
-                              Foto de perfil
-                            </label>
+                            <input type="file" name="photo" placeholder="Imagen de perfil" class="form-control"
+                              accept="image/*" />
+                            <label class="form-label" for="photo">Foto de perfil</label>
                           </div>
                         </div>
                       </div>
@@ -204,7 +204,7 @@
                       <div class="row">
                         <div class="col-md-6 mb-4">
                           <div class="form-outline">
-                            <select id="listp" class="form-control" name="p_seg">
+                            <select class="form-control" name="security_question">
                               <?php
                                 $result = $db->query('
                                   SELECT * FROM security_question
@@ -212,24 +212,21 @@
                                 ');
                               ?>
                               <?php foreach ($result as $row): ?>
-                              <option value="<?php echo $row['question']; ?>">
-                                <?php echo $row['question']; ?>
+                              <option value="<?php echo $row['id_security_question']; ?>">
+                                <?php echo $row['description']; ?>
                               </option>
                               <?php endforeach; ?>
                             </select>
-                            <label class="form-label" for="p_seg" id="ask">
-                              Pregunta de seguridad
-                            </label>
+                            <label class="form-label" for="security_question">Pregunta de seguridad</label>
                           </div>
                         </div>
+
                         <div class="col-md-6 mb-4">
                           <div class="form-outline">
-                            <input type="text" name="r_seg" id="ans" value="<?php echo $r['security_answer']; ?>"
+                            <input type="text" name="answer" value="<?php echo $r['security_answer']; ?>"
                               placeholder="Respuesta de seguridad" class="form-control" style="text-transform:uppercase"
                               required />
-                            <label class="form-label" for="p_seg" id="answer">
-                              Ingrese Su Respuesta De Seguridad
-                            </label>
+                            <label class="form-label" for="answer">Ingrese Su Respuesta De Seguridad</label>
                           </div>
                         </div>
                       </div>

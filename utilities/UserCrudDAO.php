@@ -49,49 +49,56 @@
 		 * @return void
 		 */
 		public function updateUser(
-			$documentType,
 			$userId,
+			$documentType,
+			$identificationNumber,
 			$firstName,
 			$secondName,
-			$firstLastName,
-			$secondLastName,
+			$surname,
+			$secondSurname,
 			$gender,
+			$phone,
 			$address,
 			$email,
-			$phone,
 			$username,
 			$password,
-			$securityAnswer,
-			$securityQuestion
+			$securityQuestion,
+			$securityAnswer
 	) {
 			try {
 					if (!empty($documentType) && !empty($userId) && !empty($firstName)
-						&& !empty($firstLastName) && !empty($gender) && !empty($email)
+						&& !empty($surname) && !empty($gender) && !empty($email)
 						&& !empty($username) && !empty($password) && !empty($securityAnswer)
-						&& !empty($securityQuestion))
+						&& !empty($securityQuestion) && !empty($identificationNumber))
 					{
-							$sql = "UPDATE user SET
+							$sql = "
+									UPDATE
+											user
+									SET
 											first_name = ?,
 											second_name = ?,
 											surname = ?,
 											second_surname = ?,
-											fk_gender = ?,
-											adress = ?,
+											gender_id = ?,
+											address = ?,
 											email = ?,
 											phone = ?,
-											user_name = ?,
-											pass = ?,
+											username = ?,
+											password = ?,
 											security_answer = ?,
-											fk_s_question = ?
-											WHERE pk_fk_cod_doc = ?
-											AND id_user = ?";
+											document_type_id = ?,
+											security_question_id = ?,
+											identification_number = ?
+									WHERE
+											id_user = ?
+							";
 			
 							$statement = $this->pdo->prepare($sql);
 							$statement->execute([
 									$firstName,
 									$secondName,
-									$firstLastName,
-									$secondLastName,
+									$surname,
+									$secondSurname,
 									$gender,
 									$address,
 									$email,
@@ -99,8 +106,9 @@
 									$username,
 									$password,
 									$securityAnswer,
-									$securityQuestion,
 									$documentType,
+									$securityQuestion,
+									$identificationNumber,
 									$userId
 							]);
 			
