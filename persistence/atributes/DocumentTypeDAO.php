@@ -11,7 +11,7 @@
 
 <body>
   <?php
-		require_once "../../persistence/database/Database.php";
+		require_once '../../utils/Message.php';
 
 		class DocumentTypeDAO
 		{
@@ -55,18 +55,18 @@
 										$stmt->bindParam(':state', $state);
 										$stmt->execute();
 		
-										$this->showSuccessMessage(
+										Message::showSuccessMessage(
 												"Registro Agregado Exitosamente.",
 												'../../views/atributes/documentTypeView.php'
 										);
 								} else {
-										$this->showWarningMessage(
+										Message::showWarningMessage(
 												"Debes llenar todos los campos.",
 												'../../views/atributes/documentTypeView.php'
 										);
 								}
 						} catch (Exception $e) {
-								$this->showErrorMessage(
+								Message::showErrorMessage(
 										"Ocurrió un error interno. Consulta al Administrador.",
 										'../../views/atributes/documentTypeView.php'
 								);
@@ -107,20 +107,20 @@
 										]);
 
 										// If the update is successful, show a success message.
-										$this->showSuccessMessage(
+										Message::showSuccessMessage(
 												"Registro Actualizado Exitosamente.",
 												'../../views/atributes/documentTypeView.php'
 										);
 								} else {
 										// If any parameter is empty, show a warning message.
-										$this->showWarningMessage(
+										Message::showWarningMessage(
 												"Debes llenar todos los campos.",
 												'../../views/atributes/documentTypeView.php'
 										);
 								}
 						} catch (Exception $e) {
 								// If an error occurs, show an error message.
-								$this->showErrorMessage(
+								Message::showErrorMessage(
 										"Ocurrió un error interno. Consulta al Administrador.",
 										'../../views/atributes/documentTypeView.php'
 								);
@@ -149,91 +149,22 @@
 										$statement = $this->pdo->prepare($query);
 										$statement->execute([':id' => $idDocumentType]);
 
-										$this->showSuccessMessage(
+										Message::showSuccessMessage(
 												"Registro Eliminado Exitosamente.",
 												'../../views/atributes/documentTypeView.php'
 										);
 								} else {
-										$this->showWarningMessage(
+										Message::showWarningMessage(
 												"Debes llenar todos los campos.",
 												'../../views/atributes/documentTypeView.php'
 										);
 								}
 						} catch (Exception $e) {
-								$this->showErrorMessage(
+								Message::showErrorMessage(
 										"Ocurrió un error interno. Consulta al Administrador.",
 										'../../views/atributes/documentTypeView.php'
 								);
 						}
-				}
-
-				/**
-				 * Displays a success message using SweetAlert and redirects the user to a specified location.
-				 *
-				 * @param string $message The success message to display
-				 * @param string $redirectURL The URL to redirect to after displaying the message
-				 */
-				private function showSuccessMessage(string $message, string $redirectURL): void
-				{
-						echo "
-								<script>
-										Swal.fire({
-												position: 'top-end',
-												icon: 'success',
-												title: '$message',
-												showConfirmButton: false,
-												timer: 2000
-										}).then(() => {
-												window.location = '$redirectURL';
-										});
-								</script>
-						";
-				}
-
-				/**
-				 * Displays an error message using SweetAlert and redirects the user to a specified location.
-				 *
-				 * @param string $message The error message to display
-				 * @param string $redirectURL The URL to redirect to after displaying the message
-				 */
-				private function showErrorMessage(string $message, string $redirectURL): void
-				{
-						echo "
-								<script>
-										Swal.fire({
-												position: 'top-center',
-												icon: 'error',
-												title: '$message',
-												showConfirmButton: false,
-												timer: 2000
-										}).then(() => {
-												window.location = '$redirectURL';
-										});
-								</script>
-						";
-				}
-
-				/**
-				 * Displays an warning message using SweetAlert and redirects the user to a specified location.
-				 *
-				 * @param string $message The error message to display
-				 * @param string $redirectURL The URL to redirect to after displaying the message
-				 */
-				private function showWarningMessage(string $message, string $redirectURL): void
-				{
-						echo "
-								<script>
-										Swal.fire({
-												position: 'top-center',
-												icon: 'warning',
-												title: '$message',
-												showConfirmButton: false,
-												timer: 2000
-										}).then(() => {
-												window.location = '$redirectURL';
-										});
-								</script>
-						";
 				}
 		}
 	?>

@@ -11,6 +11,8 @@
 
 <body>
   <?php
+	require_once '../../utils/Message.php';
+
 	class SecurityQuestionDAO
 	{
 		private $pdo;
@@ -52,18 +54,18 @@
 										':state' => $state,
 								]);
 			
-								$this->showSuccessMessage(
+								Message::showSuccessMessage(
 										"Registro Agregado Exitosamente.",
 										'../../views/atributes/questionView.php'
 								);
 						} else {
-								$this->showWarningMessage(
+								Message::showWarningMessage(
 										"Debes llenar todos los campos.",
 										'../../views/atributes/questionView.php'
 								);
 						}
 				} catch (Exception $e) {
-						$this->showErrorMessage(
+						Message::showErrorMessage(
 								"Ocurrió un error interno. Consulta al Administrador.",
 								'../../views/atributes/questionView.php'
 						);
@@ -89,18 +91,18 @@
 								$stmt = $this->pdo->prepare($query);
 								$stmt->execute([$state, $idSecurityQuestion]);
 
-								$this->showSuccessMessage(
+								Message::showSuccessMessage(
 										"Registro Actualizado Exitosamente.",
 										'../../views/atributes/questionView.php'
 								);
 						} else {
-								$this->showWarningMessage(
+								Message::showWarningMessage(
 										"Debes llenar todos los campos.",
 										'../../views/atributes/questionView.php'
 								);
 						}
 				} catch (Exception $e) {
-						$this->showErrorMessage(
+						Message::showErrorMessage(
 								"Ocurrió un error interno. Consulta al Administrador.",
 								'../../views/atributes/questionView.php'
 						);
@@ -118,97 +120,29 @@
 				try {
 						if (!empty($idSecurityQuestion)) {
 								$sql = "
-										DELETE FROM security_question
+										UPDATE security_question
+										SET state = 3
 										WHERE id_security_question = ?
 								";
 								$stmt = $this->pdo->prepare($sql);
 								$stmt->execute([$idSecurityQuestion]);
 
-								$this->showSuccessMessage(
+								Message::showSuccessMessage(
 										"Registro Eliminado Exitosamente.",
 										'../../views/atributes/questionView.php'
 								);
 						} else {
-								$this->showWarningMessage(
+								Message::showWarningMessage(
 										"Debes llenar todos los campos.",
 										'../../views/atributes/questionView.php'
 								);
 						}
 				} catch (Exception $e) {
-						$this->showErrorMessage(
+						Message::showErrorMessage(
 								"Ocurrió un error interno. Consulta al Administrador.",
 								'../../views/atributes/questionView.php'
 						);
 				}
-		}
-
-		/**
-		 * Displays a success message using SweetAlert and redirects the user to a specified location.
-		 *
-		 * @param string $message The success message to display
-		 * @param string $redirectURL The URL to redirect to after displaying the message
-		 */
-		private function showSuccessMessage(string $message, string $redirectURL): void
-		{
-				echo "
-						<script>
-								Swal.fire({
-										position: 'top-end',
-										icon: 'success',
-										title: '$message',
-										showConfirmButton: false,
-										timer: 2000
-								}).then(() => {
-										window.location = '$redirectURL';
-								});
-						</script>
-				";
-		}
-
-		/**
-		 * Displays an error message using SweetAlert and redirects the user to a specified location.
-		 *
-		 * @param string $message The error message to display
-		 * @param string $redirectURL The URL to redirect to after displaying the message
-		 */
-		private function showErrorMessage(string $message, string $redirectURL): void
-		{
-				echo "
-						<script>
-								Swal.fire({
-										position: 'top-center',
-										icon: 'error',
-										title: '$message',
-										showConfirmButton: false,
-										timer: 2000
-								}).then(() => {
-										window.location = '$redirectURL';
-								});
-						</script>
-				";
-		}
-
-		/**
-		 * Displays an warning message using SweetAlert and redirects the user to a specified location.
-		 *
-		 * @param string $message The error message to display
-		 * @param string $redirectURL The URL to redirect to after displaying the message
-		 */
-		private function showWarningMessage(string $message, string $redirectURL): void
-		{
-				echo "
-						<script>
-								Swal.fire({
-										position: 'top-center',
-										icon: 'warning',
-										title: '$message',
-										showConfirmButton: false,
-										timer: 2000
-								}).then(() => {
-										window.location = '$redirectURL';
-								});
-						</script>
-				";
 		}
 	}
 ?>

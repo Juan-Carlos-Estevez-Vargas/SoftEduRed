@@ -57,7 +57,6 @@
                       <div class="col-md-12">
                         <?php if (!empty($_GET['m']) && !empty($_GET['action'])) { ?>
                         <form action="#" method="post" enctype="multipart/form-data">
-
                           <div class="row justify-content-end align-items-center mb-5">
                             <div class="col-md-11 d-flex align-items-center justify-content-center">
                               <h4 class="text-uppercase text-success">Nuevo Tipo de Documento</h4>
@@ -193,30 +192,30 @@
                   <?php if (!isset($_REQUEST['action']) || ($_REQUEST['action'] !== 'ver' && $_REQUEST['action'] !== 'edit')) : ?>
                   <div class="col-md-12 text-center mt-4">
                     <?php
-                    // Obtener el número total de registros
-                    $sqlCount = "
-                        SELECT COUNT(*) AS total
-                        FROM document_type
-                        WHERE state != 3
-                    ";
-                    $countQuery = $db->query($sqlCount);
-                    $totalRecords = $countQuery->fetch(PDO::FETCH_ASSOC)['total'];
+                      // Obtener el número total de registros
+                      $sqlCount = "
+                          SELECT COUNT(*) AS total
+                          FROM document_type
+                          WHERE state != 3
+                      ";
+                      $countQuery = $db->query($sqlCount);
+                      $totalRecords = $countQuery->fetch(PDO::FETCH_ASSOC)['total'];
 
-                    // Calcular el límite y el desplazamiento para la consulta actual
-                    $recordsPerPage = 5; // Número de registros por página
-                    $currentPage = isset($_GET['page']) ? $_GET['page'] : 1; // Página actual
-                    $offset = ($currentPage - 1) * $recordsPerPage;
+                      // Calcular el límite y el desplazamiento para la consulta actual
+                      $recordsPerPage = 5; // Número de registros por página
+                      $currentPage = isset($_GET['page']) ? $_GET['page'] : 1; // Página actual
+                      $offset = ($currentPage - 1) * $recordsPerPage;
 
-                    // Consulta para obtener los registros de la página actual con límite y desplazamiento
-                    $sql = "
-                        SELECT * FROM document_type
-                        WHERE state != 3
-                        LIMIT $offset, $recordsPerPage
-                    ";
-                    $query = $db->query($sql);
+                      // Consulta para obtener los registros de la página actual con límite y desplazamiento
+                      $sql = "
+                          SELECT * FROM document_type
+                          WHERE state != 3
+                          LIMIT $offset, $recordsPerPage
+                      ";
+                      $query = $db->query($sql);
 
-                    // Verificar si existen registros
-                    $hasRecords = $query->rowCount() > 0;
+                      // Verificar si existen registros
+                      $hasRecords = $query->rowCount() > 0;
                     ?>
                     <h4 class="mb-5 text-uppercase text-primary">Tipos de Documento</h4>
                     <?php if ($hasRecords) : ?>

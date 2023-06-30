@@ -11,6 +11,8 @@
 
 <body>
   <?php
+	require_once '../../utils/Message.php';
+
 	class RoleDAO
 	{
 		private $pdo;
@@ -48,18 +50,18 @@
 								$statement = $this->pdo->prepare($sql);
 								$statement->execute(['description' => $description, 'state' => $state]);
 								
-								$this->showSuccessMessage(
+								Message::showSuccessMessage(
 										"Registro Agregado Exitosamente.",
 										'../../views/relationship/roleView.php'
 								);
 					} else {
-							$this->showWarningMessage(
+							Message::showWarningMessage(
 									"Debes llenar todos los campos.",
 									'../../views/relationship/roleView.php'
 							);
 					}
 			} catch (Exception $e) {
-					$this->showErrorMessage(
+					Message::showErrorMessage(
 							"Ocurrió un error interno. Consulta al Administrador.",
 							'../../views/relationship/roleView.php'
 					);
@@ -72,7 +74,7 @@
 		 * @param string $idRole  The ID of the role to update.
 		 * @param string $role    The new value for the "description" column.
 		 * @param string $state   The new value for the "state" column.
-		 * 
+		 *
 		 * @return void
 		 */
 		public function updateRole(string $idRole, string $role, string $state)
@@ -95,20 +97,20 @@
 								// Execute the statement.
 								$stmt->execute();
 								// Show success message.
-								$this->showSuccessMessage(
+								Message::showSuccessMessage(
 										"Registro Actualizado Exitosamente.",
 										'../../views/relationship/roleView.php'
 								);
 						} else {
 								// Show warning message if $idRole or $role is empty.
-								$this->showWarningMessage(
+								Message::showWarningMessage(
 										"Debes llenar todos los campos.",
 										'../../views/relationship/roleView.php'
 								);
 						}
 				} catch (Exception $e) {
 						// Show error message if an exception occurs.
-						$this->showErrorMessage(
+						Message::showErrorMessage(
 								"Ocurrió un error interno. Consulta al Administrador.",
 								'../../views/relationship/roleView.php'
 						);
@@ -126,99 +128,34 @@
 				try {
 						// Check if ID is not empty
 						if (!empty($idRole)) {
-								$sql = "DELETE FROM role WHERE id_role = :role";
+								$sql = "
+										UPDATE role
+										SET state = 3
+										WHERE id_role = :role
+								";
 								$stmt = $this->pdo->prepare($sql);
 								$stmt->bindParam(':role', $idRole);
 								$stmt->execute();
 								
 								// Show success message
-								$this->showSuccessMessage(
+								Message::showSuccessMessage(
 										"Registro Eliminado Exitosamente.",
 										'../../views/relationship/roleView.php'
 								);
 						} else {
 								// Show warning message if ID is empty
-								$this->showWarningMessage(
+								Message::showWarningMessage(
 										"Debes llenar todos los campos.",
 										'../../views/relationship/roleView.php'
 								);
 						}
 				} catch (Exception $e) {
 						// Show error message if there is an exception
-						$this->showErrorMessage(
+						Message::showErrorMessage(
 								"Ocurrió un error interno. Consulta al Administrador.",
 								'../../views/relationship/roleView.php'
 						);
 				}
-		}
-
-		/**
-		 * Displays a success message using SweetAlert and redirects the user to a specified location.
-		 *
-		 * @param string $message The success message to display
-		 * @param string $redirectURL The URL to redirect to after displaying the message
-		 */
-		private function showSuccessMessage(string $message, string $redirectURL): void
-		{
-				echo "
-						<script>
-								Swal.fire({
-										position: 'top-end',
-										icon: 'success',
-										title: '$message',
-										showConfirmButton: false,
-										timer: 2000
-								}).then(() => {
-										window.location = '$redirectURL';
-								});
-						</script>
-				";
-		}
-
-		/**
-		 * Displays an error message using SweetAlert and redirects the user to a specified location.
-		 *
-		 * @param string $message The error message to display
-		 * @param string $redirectURL The URL to redirect to after displaying the message
-		 */
-		private function showErrorMessage(string $message, string $redirectURL): void
-		{
-				echo "
-						<script>
-								Swal.fire({
-										position: 'top-center',
-										icon: 'error',
-										title: '$message',
-										showConfirmButton: false,
-										timer: 2000
-								}).then(() => {
-										window.location = '$redirectURL';
-								});
-						</script>
-				";
-		}
-
-		/**
-		 * Displays an warning message using SweetAlert and redirects the user to a specified location.
-		 *
-		 * @param string $message The error message to display
-		 * @param string $redirectURL The URL to redirect to after displaying the message
-		 */
-		private function showWarningMessage(string $message, string $redirectURL): void
-		{
-				echo "
-						<script>
-								Swal.fire({
-										position: 'top-center',
-										icon: 'warning',
-										title: '$message',
-										showConfirmButton: false,
-										timer: 2000
-								}).then(() => {
-										window.location = '$redirectURL';
-								});
-						</script>
-				";
 		}
 	}
 ?>
