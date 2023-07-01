@@ -287,8 +287,11 @@
                               <div class="form-outline">
                                 <select class="form-control" name="document_type">
                                   <?php
+                                    $editField = $r['document_type_id'];
+
                                     foreach ($db->query('SELECT * FROM document_type WHERE state = 1') as $row) {
-                                      echo '<option value="'.$row['id_document_type'].'">'.$row["description"].'</option>';
+                                      $selected = ($row['id_document_type'] == $editField) ? 'selected' : '';
+                                      echo '<option value="'.$row['id_document_type'].'" '.$selected.'>'.$row["description"].'</option>';
                                     }
                                   ?>
                                 </select>
@@ -344,8 +347,11 @@
                               <div class="form-outline">
                                 <select class="form-control" name="gender">
                                   <?php
+                                    $editField = $r['gender_id'];
+
                                     foreach ($db->query('SELECT * FROM gender WHERE state = 1') as $row) {
-                                      echo '<option value="'.$row['id_gender'].'">'.$row["description"].'</option>';
+                                      $selected = ($row['id_gender'] == $editField) ? 'selected' : '';
+                                      echo '<option value="'.$row['id_gender'].'" '.$selected.'>'.$row["description"].'</option>';
                                     }
                                   ?>
                                 </select>
@@ -407,8 +413,8 @@
                                       INNER JOIN `attendant` AS a ON u.id_user = a.user_id
                                       WHERE u.state = 1
                                       AND a.state = 1
-                                    ') as $row1)  {
-                                        echo '<option value="'.$row1['id_attendant'].'">'.$row1["identification_number"].' - '.$row1["first_name"].' '.$row1["surname"].'</option>';
+                                    ') as $row) {
+                                        echo '<option value="'.$row['id_attendant'].'">'.$row["identification_number"].' - '.$row["first_name"].' '.$row["surname"].'</option>';
                                     }
                                   ?>
                                 </select>
@@ -422,8 +428,11 @@
                               <div class="form-outline">
                                 <select class="form-control" name="security_question">
                                   <?php
-                                    foreach ($db->query('SELECT * FROM security_question WHERE state = 1') as $security)  {
-                                      echo '<option value="'.$security['id_security_question'].'">'.$security["description"].'</option>';
+                                    $editField = $r['security_question_id'];
+
+                                    foreach ($db->query('SELECT * FROM security_question WHERE state = 1') as $row) {
+                                      $selected = ($row['id_security_question'] == $editField) ? 'selected' : '';
+                                      echo '<option value="'.$row['id_security_question'].'" '.$selected.'>'.$row["description"].'</option>';
                                     }
                                   ?>
                                 </select>

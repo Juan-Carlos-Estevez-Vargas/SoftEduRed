@@ -31,6 +31,28 @@
 				}
 		}
 
+		/**
+		 * Registers a user and a student.
+		 *
+		 * @param string $idType The type of identification.
+		 * @param int $identificationNumber The identification number.
+		 * @param string $firstName The first name.
+		 * @param string $secondName The second name.
+		 * @param string $surname The surname.
+		 * @param string $secondSurname The second surname.
+		 * @param string $gender The gender.
+		 * @param string $address The address.
+		 * @param string $email The email.
+		 * @param string $phone The phone number.
+		 * @param string $username The username.
+		 * @param string $password The password.
+		 * @param string $securityQuestion The security question.
+		 * @param string $securityAnswer The security answer.
+		 * @param string $attendantId The attendant ID.
+		 * @param int $courseId The course ID.
+		 *
+		 * @return void
+		 */
 		public function registerUserAndStudent(
 			string $idType,
 			int $identificationNumber,
@@ -64,7 +86,7 @@
 								$attendantId,
 								$courseId
 						)) {
-								if (Message::isRegistered($this->pdo, 'identification_number', $identificationNumber)) {
+								if (Message::isRegistered($this->pdo, 'identification_number', $identificationNumber, false, null)) {
 										Utils::showErrorMessage(
 												"El número de identificación ingresado ya se encuentra registrado en la plataforma",
 												'../../views/user/userStudentView.php'
@@ -72,7 +94,7 @@
 										return;
 								}
 		
-								if (Message::isRegistered($this->pdo, 'email', $email)) {
+								if (Message::isRegistered($this->pdo, 'email', $email, false, null)) {
 										Utils::showErrorMessage(
 												"El correo electrónico ingresado ya se encuentra registrado en la plataforma.",
 												'../../views/user/userStudentView.php'
@@ -80,7 +102,7 @@
 										return;
 								}
 		
-								if (!empty($phone) && Message::isRegistered($this->pdo, 'phone', $phone)) {
+								if (!empty($phone) && Message::isRegistered($this->pdo, 'phone', $phone, false, null)) {
 										Utils::showErrorMessage(
 												"El teléfono ingresado ya se encuentra registrado en la plataforma.",
 												'../../views/user/userStudentView.php'
@@ -88,7 +110,7 @@
 										return;
 								}
 		
-								if (Message::isRegistered($this->pdo, 'username', $username)) {
+								if (Message::isRegistered($this->pdo, 'username', $username, false, null)) {
 										Utils::showErrorMessage(
 												"El usuario ingresado ya se encuentra registrado en la plataforma.",
 												'../../views/user/userStudentView.php'
@@ -116,7 +138,6 @@
 								);
 						}
 				} catch (Exception $e) {
-						echo "Error: " . $e->getMessage();
 						Message::showErrorMessage(
 								"Ocurrió un error interno. Consulta al Administrador.",
 								'../../views/user/userStudentView.php'
@@ -124,7 +145,28 @@
 				}
 		}
 	
-
+		/**
+		 * Updates a user's student information.
+		 *
+		 * @param int $userId - The ID of the user.
+		 * @param string $idType - The type of identification.
+		 * @param int $identificationNumber - The identification number.
+		 * @param string $firstName - The first name.
+		 * @param string $secondName - The second name.
+		 * @param string $surname - The surname.
+		 * @param string $secondSurname - The second surname.
+		 * @param string $gender - The gender.
+		 * @param string $address - The address.
+		 * @param string $email - The email.
+		 * @param string $phone - The phone number.
+		 * @param string $username - The username.
+		 * @param string $password - The password.
+		 * @param string $securityQuestion - The security question.
+		 * @param string $securityAnswer - The security answer.
+		 * @param string $attendantId - The attendant ID.
+		 * @param int $courseId - The course ID.
+		 * @return void
+		 */
 		public function updateUserStudent(
 			int $userId,
 			string $idType,
@@ -143,49 +185,39 @@
 			string $securityAnswer,
 			string $attendantId,
 			int $courseId
-	) {
+		) {
 			try {
-					// if (User::validateUserFields([
-					// 		$idType,
-					// 		$identificationNumber,
-					// 		$firstName,
-					// 		$surname,
-					// 		$gender,
-					// 		$email,
-					// 		$userId,
-					// 		$username,
-					// 		$password,
-					// 		$securityAnswer,
-					// 		$securityQuestion,
-					// 		$attendantId,
-					// 		$courseId
-					// ])) {
-							if (Message::isRegistered($this->pdo, 'identification_number', $identificationNumber)) {
-									$this->showErrorMessage(
+					if (!empty($idType) && !empty($identificationNumber) && !empty($firstName)
+					&& !empty($surname)	&& !empty($gender) && !empty($email) && !empty($userId)
+					&& !empty($username) && !empty($password) && !empty($securityAnswer)
+					&& !empty($securityQuestion) && !empty($attendantId) && !empty($courseId))
+					{
+							if (Message::isRegistered($this->pdo, 'identification_number', $identificationNumber, true, $userId)) {
+									Message::showErrorMessage(
 											"El número de identificación ingresado ya se encuentra registrado en la plataforma",
 											'../../views/user/userStudentView.php'
 									);
 									return;
 							}
 	
-							if (Message::isRegistered($this->pdo, 'email', $email)) {
-									$this->showErrorMessage(
+							if (Message::isRegistered($this->pdo, 'email', $email, true, $userId)) {
+									Message::showErrorMessage(
 											"El correo electrónico ingresado ya se encuentra registrado en la plataforma.",
 											'../../views/user/userStudentView.php'
 									);
 									return;
 							}
 	
-							if (!empty($phone) && Message::isRegistered($this->pdo, 'phone', $phone)) {
-									$this->showErrorMessage(
+							if (!empty($phone) && Message::isRegistered($this->pdo, 'phone', $phone, true, $userId)) {
+									Message::showErrorMessage(
 											"El teléfono ingresado ya se encuentra registrado en la plataforma.",
 											'../../views/user/userStudentView.php'
 									);
 									return;
 							}
 	
-							if (Message::isRegistered($this->pdo, 'username', $username)) {
-									$this->showErrorMessage(
+							if (Message::isRegistered($this->pdo, 'username', $username, true, $userId)) {
+									Message::showErrorMessage(
 											"El usuario ingresado ya se encuentra registrado en la plataforma.",
 											'../../views/user/userStudentView.php'
 									);
@@ -193,10 +225,10 @@
 							}
 
 							User::updateUser(
-									$firstName,	$secondName, $surname,
-									$secondSurname,	$gender, $address, $email, $phone,
-									$username, $password,	$securityAnswer, $idType,
-									$securityQuestion, $identificationNumber,	$userId
+									$firstName,	$secondName, $surname, $secondSurname,
+									$gender, $address, $email, $phone, $username,
+									$password,	$securityAnswer, $idType, $securityQuestion,
+									$identificationNumber, $userId, $this->pdo
 							);
 		
 							$this->updateStudent($attendantId, $courseId,	$userId);
@@ -205,20 +237,27 @@
 									"Registro Actualizado Exitosamente.",
 									'../../views/user/userStudentView.php'
 							);
-					// } else {
-					// 		Message::showWarningMessage(
-					// 				"Debes llenar todos los campos.",
-					// 				'../../views/user/userStudentView.php'
-					// 		);
-					// }
+					} else {
+							Message::showWarningMessage(
+									"Debes llenar todos los campos.",
+									'../../views/user/userStudentView.php'
+							);
+					}
 			} catch (Exception $e) {
+				echo $e->getMessage();
 					Message::showErrorMessage(
 							"Ocurrió un error interno. Consulta al Administrador.",
 							'../../views/user/userStudentView.php'
 					);
 			}
-	}
+		}
 	
+		/**
+		 * Deletes a student user.
+		 *
+		 * @param int $userId The ID of the user to delete.
+		 * @throws Exception If an error occurs during the deletion process.
+		 */
 		public function deleteStudentUser($userId)
 		{
 				try {
@@ -254,6 +293,15 @@
 				}
 		}
 		
+		/**
+		 * Create a new student record.
+		 *
+		 * @param int    $userId      The ID of the user associated with the student.
+		 * @param string $attendantId The attendant ID of the student.
+		 * @param int    $courseId    The ID of the course associated with the student.
+		 *
+		 * @return void
+		 */
 		private function createStudent(int $userId, string $attendantId, int $courseId): void {
 				$stmt = $this->pdo->prepare("
 						INSERT INTO student (user_id, attendant_id, course_id, state)
@@ -261,7 +309,32 @@
 				");
 				$stmt->execute([$userId, $attendantId, $courseId]);
 		}
+
+		/**
+		 * Update the student's attendant ID and course ID based on user ID.
+		 *
+		 * @param string $attendantId The new attendant ID.
+		 * @param int $courseId The new course ID.
+		 * @param int $userId The user ID.
+		 *
+		 * @return void
+		 */
+		private function updateStudent(string $attendantId, int $courseId, int $userId): void {
+				$stmt = $this->pdo->prepare("
+						UPDATE student
+						SET attendant_id = ?, course_id = ?
+						WHERE user_id = ?
+				");
+				$stmt->execute([$attendantId, $courseId, $userId]);
+		}
 		
+		/**
+		 * Assigns a user role to a user with the given ID.
+		 *
+		 * @param int $userId The ID of the user.
+		 *
+		 * @return void
+		 */
 		private function assignUserRole(int $userId): void {
 				$stmt = $this->pdo->prepare("
 						INSERT INTO user_has_role (user_id, role_id, state)

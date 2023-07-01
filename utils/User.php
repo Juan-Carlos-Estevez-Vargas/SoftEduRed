@@ -80,6 +80,27 @@ class User {
     return $pdo->lastInsertId();
   }
 
+  /**
+   * Update a user in the database.
+   *
+   * @param string $firstName The first name of the user.
+   * @param string $secondName The second name of the user.
+   * @param string $surname The surname of the user.
+   * @param string $secondSurname The second surname of the user.
+   * @param string $gender The gender of the user.
+   * @param string $address The address of the user.
+   * @param string $email The email of the user.
+   * @param string $phone The phone number of the user.
+   * @param string $username The username of the user.
+   * @param string $password The password of the user.
+   * @param string $securityAnswer The security answer of the user.
+   * @param string $idType The identification type of the user.
+   * @param string $securityQuestion The security question of the user.
+   * @param string $identificationNumber The identification number of the user.
+   * @param int $userId The ID of the user to update.
+   * @param PDO $pdo The PDO object for database connection.
+   * @return void
+   */
   public static function updateUser(
     $firstName,
     $secondName,
@@ -97,7 +118,7 @@ class User {
     $identificationNumber,
     $userId,
     PDO $pdo
-  ): int {
+  ) {
       $sqlUpdateUser = "
           UPDATE user
           SET
@@ -137,6 +158,23 @@ class User {
       ]);
   }
 
+  /**
+   * Validates user fields.
+   *
+   * @param string $idType - The type of identification.
+   * @param int $identificationNumber - The identification number.
+   * @param string $firstName - The first name.
+   * @param string $surname - The surname.
+   * @param string $gender - The gender.
+   * @param string $email - The email.
+   * @param string $username - The username.
+   * @param string $password - The password.
+   * @param string $securityAnswer - The security answer.
+   * @param string $securityQuestion - The security question.
+   * @param string $attendantId - The attendant ID.
+   * @param int $courseId - The course ID.
+   * @return bool - Returns true if all fields are not empty, false otherwise.
+   */
   public static function validateUserFields(
     string $idType,
     int $identificationNumber,

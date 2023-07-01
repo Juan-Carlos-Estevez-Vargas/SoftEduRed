@@ -8,18 +8,27 @@ class Message {
      * @param PDO $pdo The database connection.
      * @param string $field The field to search in the user table.
      * @param mixed $value The value to search for in the specified field.
+     * @param bool $excludeCurrentUser Whether to exclude the current user (optional).
+     * @param int $currentUserId The ID of the current user to exclude (optional).
      * @return bool Returns true if a registered user is found, false otherwise.
      */
-    public static function isRegistered($pdo, $field, $value): bool
+    public static function isRegistered(PDO $pdo, string $field, $value, bool $excludeCurrentUser = false, int $currentUserId = null): bool
     {
-        // Prepare the SQL statement to find a user with the specified field and value
+        // Define the SQL query to find the registered user
         $findRegister = "SELECT * FROM user WHERE $field = ?";
-        
-        // Prepare and execute the SQL statement using PDO
+        if ($excludeCurrentUser && $currentUserId !== null) {
+            $findRegister .= " AND id_user != ?";
+        }
+
+        // Prepare and execute the SQL query
         $stmt = $pdo->prepare($findRegister);
-        $stmt->execute([$value]);
-        
-        // Return true if a registered user is found, false otherwise
+        if ($excludeCurrentUser && $currentUserId !== null) {
+            $stmt->execute([$value, $currentUserId]);
+        } else {
+            $stmt->execute([$value]);
+        }
+
+        // Check if a registered user was found
         return $stmt->rowCount() > 0;
     }
 
