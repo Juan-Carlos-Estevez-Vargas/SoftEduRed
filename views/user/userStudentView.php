@@ -264,7 +264,10 @@
                         <?php if (!empty($_GET['id_user']) && !empty($_GET['action']) && !empty($id)) { ?>
                         <form action="#" method="post" enctype="multipart/form-data">
                           <?php
-                            $sql = "SELECT * FROM user WHERE id_user = '$id'";
+                            $sql = "
+                              SELECT * FROM user AS u
+                              JOIN student AS s ON s.user_id = '$id'
+                              WHERE u.id_user = '$id'";
                             $query = $db->query($sql);
                         
                             while ($r = $query->fetch(PDO::FETCH_ASSOC)) {
@@ -452,8 +455,10 @@
                               <div class="form-outline">
                                 <select class="form-control" name="course">
                                   <?php
-                                    foreach ($db->query('SELECT * FROM course WHERE state = 1') as $course) {
-                                      echo '<option value="'.$course['id_course'].'">'.$course["course"].'</option>';
+                                    $editField = $r['course_id'];
+                                    foreach ($db->query("SELECT * FROM course WHERE state = 1") as $row) {
+                                      $selected = ($row['id_course'] == $editField) ? 'selected' : '';
+                                      echo '<option value="'.$row['id_course'].'"'.$selected.'>'.$row["course"].'</option>';
                                     }
                                   ?>
                                 </select>
