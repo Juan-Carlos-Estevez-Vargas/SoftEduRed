@@ -410,6 +410,7 @@
                               <div class="form-outline">
                                 <select class="form-control" name="attendant">
                                   <?php
+                                    $editField = $r['attendant_id'];
                                     foreach ($db->query('
                                       SELECT u.first_name, u.surname, u.identification_number, a.id_attendant
                                       FROM `user` AS u
@@ -417,7 +418,8 @@
                                       WHERE u.state = 1
                                       AND a.state = 1
                                     ') as $row) {
-                                        echo '<option value="'.$row['id_attendant'].'">'.$row["identification_number"].' - '.$row["first_name"].' '.$row["surname"].'</option>';
+                                      $selected = ($row['id_attendant'] == $editField) ? 'selected' : '';
+                                      echo '<option value="'.$row['id_attendant'].'"'.$selected.'>'.$row["identification_number"].' - '.$row["first_name"].' '.$row["surname"].'</option>';
                                     }
                                   ?>
                                 </select>
