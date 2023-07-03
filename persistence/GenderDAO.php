@@ -11,7 +11,7 @@
 
 <body>
   <?php
- 		require_once '../../utils/Message.php';
+ 		require_once '../utils/Message.php';
 		
 		class GenderDAO
 		{
@@ -37,31 +37,19 @@
 			 * @param string $gender The name of the gender to be registered.
 			 * @param string $state The state where the gender is located.
 			 */
-			public function registerGender(string $gender, string $state)
+			public function register(string $gender, string $state)
 			{
 					try {
-							if (!empty($gender)) {
-									$sql = "
-										INSERT INTO gender(description, state)
-										VALUES(UPPER(:gender), :state)
-									";
-									$stmt = $this->pdo->prepare($sql);
-									$stmt->execute(['gender' => $gender, 'state' => $state]);
-						
-									Message::showSuccessMessage(
-											"Registro Agregado Exitosamente.",
-											'../../views/atributes/genderView.php'
-									);
-							} else {
-								Message::showWarningMessage(
-										"Debes llenar todos los campos.",
-										'../../views/atributes/genderView.php'
-								);
-							}
+							$sql = "
+								INSERT INTO gender(description, state)
+								VALUES(UPPER(:gender), :state)
+							";
+							$stmt = $this->pdo->prepare($sql);
+							$stmt->execute(['gender' => $gender, 'state' => $state]);
 					} catch (Exception $e) {
 							Message::showErrorMessage(
 									"Ocurrió un error interno. Consulta al Administrador.",
-									'../../views/atributes/genderView.php'
+									'../../views/genderView.php'
 							);
 					}
 			}
@@ -75,10 +63,9 @@
 			 *
 			 * @return void
 			 */
-			public function updateGender(string $idGender, string $gender, string $state)
+			public function update(string $idGender, string $gender, string $state)
 			{
 				try {
-					if (!empty($idGender) && !empty($gender)) {
 						$sql = "
 							UPDATE gender
 							SET description = UPPER(?), state = ?
@@ -86,22 +73,11 @@
 						";
 						$stmt = $this->pdo->prepare($sql);
 						$stmt->execute([$gender, $state, $idGender]);
-
-						Message::showSuccessMessage(
-							"Registro Actualizado Exitosamente.",
-							'../../views/atributes/genderView.php'
-						);
-					} else {
-						Message::showWarningMessage(
-							"Debes llenar todos los campos.",
-							'../../views/atributes/genderView.php'
-						);
-					}
 				} catch (Exception $e) {
-					Message::showErrorMessage(
-						"Ocurrió un error interno. Consulta al Administrador.",
-						'../../views/atributes/genderView.php'
-					);
+						Message::showErrorMessage(
+								"Ocurrió un error interno. Consulta al Administrador.",
+								'../../views/genderView.php'
+						);
 				}
 			}
 			
@@ -111,10 +87,9 @@
 			 * @param string $idGender The gender id to be deleted.
 			 * @return void
 			 */
-			public function deleteGender(string $idGender)
+			public function delete(string $idGender)
 			{
 				try {
-					if (!empty($idGender)) { // Check if gender id is not empty
 						$sql = "
 							UPDATE gender
 							SET state = 3
@@ -123,25 +98,11 @@
 						$stmt = $this->pdo->prepare($sql);
 						$stmt->bindParam(1, $idGender);
 						$stmt->execute();
-
-						// Show success message after deleting the gender
-						Message::showSuccessMessage(
-							"Registro Eliminado Exitosamente.",
-							'../../views/atributes/genderView.php'
-						);
-					} else {
-						// Show warning message if gender id is empty
-						Message::showWarningMessage(
-							"Debes llenar todos los campos.",
-							'../../views/atributes/genderView.php'
-						);
-					}
 				} catch (Exception $e) {
-					// Show error message if an error occurs while deleting the gender
-					Message::showErrorMessage(
-						"Ocurrió un error interno. Consulta al Administrador.",
-						'../../views/atributes/genderView.php'
-					);
+						Message::showErrorMessage(
+								"Ocurrió un error interno. Consulta al Administrador.",
+								'../../views/genderView.php'
+						);
 				}
 			}
 	}

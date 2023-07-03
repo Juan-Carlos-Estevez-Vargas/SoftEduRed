@@ -11,12 +11,12 @@
 
 <body>
   <?php
-	require_once '../../utils/Message.php';
+	require_once '../persistence/database/Database.php';
+	require_once '../persistence/SecurityQuestionDAO.php';
+	require_once '../utils/Message.php';
 
-	class SecurityQuestionDAO
+	class SecurityQuestionService
 	{
-		private $pdo;
-
 		/**
 		 * Constructor function for the class.
 		 * Establishes a connection to the database using the Database class.
@@ -25,7 +25,7 @@
 		 */
 		public function __construct() {
 				try {
-						$this->pdo = Database::connect();
+            $this->question = new addSecurityQuestionDAO();
 				} catch (PDOException $e) {
 						throw new PDOException($e->getMessage());
 				}
@@ -39,35 +39,35 @@
 		 *
 		 * @return void
 		 */
-		public function addSecurityQuestion(string $question, string $state): void
+		public function register(string $question, string $state): void
 		{
 				try {
 						if (!empty($question)) {
-								$sql = "
-										INSERT INTO security_question (description, state)
-										VALUES (UPPER(:description), :state)
-								";
-
-								$stmt = $this->pdo->prepare($sql);
-								$stmt->execute([
-										':description' => $question,
-										':state' => $state,
-								]);
+                if (Message::isRegistered(Database::connect(), 'security_question', 'description', $question, false, null))
+                {
+                    Message::showErrorMessage(
+                        "La pregunta de seguridad ingresada ya se encuentra registrado en la plataforma",
+                        '../../views/questionView.php'
+                    );
+                    return;
+                }
+                
+                $this->question->register($question, $state);
 			
 								Message::showSuccessMessage(
 										"Registro Agregado Exitosamente.",
-										'../../views/atributes/questionView.php'
+										'../../views/questionView.php'
 								);
 						} else {
 								Message::showWarningMessage(
 										"Debes llenar todos los campos.",
-										'../../views/atributes/questionView.php'
+										'../../views/questionView.php'
 								);
 						}
 				} catch (Exception $e) {
 						Message::showErrorMessage(
 								"Ocurrió un error interno. Consulta al Administrador.",
-								'../../views/atributes/questionView.php'
+								'../../views/questionView.php'
 						);
 				}
 		}
@@ -83,28 +83,22 @@
 		{
 				try {
 						if (!empty($idSecurityQuestion)) {
-								$query = '
-										UPDATE security_question
-										SET state = ?
-										WHERE id_security_question = ?
-								';
-								$stmt = $this->pdo->prepare($query);
-								$stmt->execute([$state, $idSecurityQuestion]);
-
+                $this->question->update($state, $idSecurityQuestion);
+                
 								Message::showSuccessMessage(
 										"Registro Actualizado Exitosamente.",
-										'../../views/atributes/questionView.php'
+										'../../views/questionView.php'
 								);
 						} else {
 								Message::showWarningMessage(
 										"Debes llenar todos los campos.",
-										'../../views/atributes/questionView.php'
+										'../../views/questionView.php'
 								);
 						}
 				} catch (Exception $e) {
 						Message::showErrorMessage(
 								"Ocurrió un error interno. Consulta al Administrador.",
-								'../../views/atributes/questionView.php'
+								'../../views/questionView.php'
 						);
 				}
 		}
@@ -115,32 +109,26 @@
 		 * @param string $idSecurityQuestion The ID of the question to delete from the table.
 		 * @throws Exception If an error occurs while executing the SQL statement.
 		 */
-		public function deleteQuestion(string $idSecurityQuestion): void
+		public function delete(string $idSecurityQuestion): void
 		{
 				try {
 						if (!empty($idSecurityQuestion)) {
-								$sql = "
-										UPDATE security_question
-										SET state = 3
-										WHERE id_security_question = ?
-								";
-								$stmt = $this->pdo->prepare($sql);
-								$stmt->execute([$idSecurityQuestion]);
+                $this->question->delete($idSecurityQuestion);
 
 								Message::showSuccessMessage(
 										"Registro Eliminado Exitosamente.",
-										'../../views/atributes/questionView.php'
+										'../../views/questionView.php'
 								);
 						} else {
 								Message::showWarningMessage(
 										"Debes llenar todos los campos.",
-										'../../views/atributes/questionView.php'
+										'../../views/questionView.php'
 								);
 						}
 				} catch (Exception $e) {
 						Message::showErrorMessage(
 								"Ocurrió un error interno. Consulta al Administrador.",
-								'../../views/atributes/questionView.php'
+								'../../views/questionView.php'
 						);
 				}
 		}

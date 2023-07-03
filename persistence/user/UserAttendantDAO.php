@@ -11,6 +11,9 @@
 
 <body>
   <?php
+  require_once '../../utils/Message.php';
+  require_once '../../utils/User.php';
+	
 	class UserAttendantDAO
 	{
 		private $pdo;
@@ -62,63 +65,59 @@
 						&& !empty($username) && !empty($password) && !empty($securityAnswer)
 						&& !empty($securityQuestion))
 						{
-								$sql = "
-										INSERT INTO user(
-												first_name,
-												second_name,
-												surname,
-												second_surname,
-												gender_id,
-												address,
-												email,
-												phone,
-												username,
-												password,
-												security_answer,
-												document_type_id,
-												security_question_id,
-												identification_number)
-										VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, UPPER(?), ?, ?, ?);
-								";
-								
-								$stmt = $this->pdo->prepare($sql);
-								$stmt->execute([
-										$firstName, $secondName, $surname, $secondSurname,	$gender,
-										$address, $email, $phone, $username, $password,
-										$securityAnswer, $documentType, $securityQuestion, $identificationNumber
-								]);
-					
-								$userId = $this->pdo->lastInsertId();
+								if (Message::isRegistered($this->pdo, 'identification_number', $identificationNumber, false, null)) {
+										Utils::showErrorMessage(
+												"El número de identificación ingresado ya se encuentra registrado en la plataforma",
+												'../../views/user/userStudentView.php'
+										);
+										return;
+								}
 
-								$stmtAttendant = $this->pdo->prepare("
-										INSERT INTO attendant (
-												user_id,
-												relationship_id)
-										VALUES (?, ?)
-								");
-								$stmtAttendant->execute([$userId, $relationId]);
+								if (Message::isRegistered($this->pdo, 'email', $email, false, null)) {
+										Utils::showErrorMessage(
+												"El correo electrónico ingresado ya se encuentra registrado en la plataforma.",
+												'../../views/user/userStudentView.php'
+										);
+										return;
+								}
 
-								$stmtRole = $this->pdo->prepare("
-										INSERT INTO user_has_role (
-												user_id,
-												role_id,
-												state)
-										VALUES (?, 5, 1)
-								");
-								$stmtRole->execute([$userId]);
+								if (!empty($phone) && Message::isRegistered($this->pdo, 'phone', $phone, false, null)) {
+										Utils::showErrorMessage(
+												"El teléfono ingresado ya se encuentra registrado en la plataforma.",
+												'../../views/user/userStudentView.php'
+										);
+										return;
+								}
+
+								if (Message::isRegistered($this->pdo, 'username', $username, false, null)) {
+										Utils::showErrorMessage(
+												"El usuario ingresado ya se encuentra registrado en la plataforma.",
+												'../../views/user/userStudentView.php'
+										);
+										return;
+								}
+
+								$userId = User::createUser(
+										$documentType, $identificationNumber, $firstName, $secondName, $surname,
+										$secondSurname, $gender, $address, $email, $phone, $username, $password, $securityQuestion,
+										$securityAnswer, $this->pdo
+								);
+
+								$this->createAttendant($userId, $relationId);
+								$this->assignUserRole($userId);
 								
-								$this->showSuccessMessage(
+								Message::showSuccessMessage(
 										"Registro Agregado Exitosamente.",
 										'../../views/user/userAttendantView.php'
 								);
 						} else {
-								$this->showWarningMessage(
+								Message::showWarningMessage(
 										"Debes llenar todos los campos.",
 										'../../views/user/userAttendantView.php'
 								);
 						}
 				} catch (Exception $e) {
-						$this->showErrorMessage(
+						Message::showErrorMessage(
 								"Ocurrió un error interno. Consulta al Administrador.",
 								'../../views/user/userAttendantView.php'
 						);
@@ -157,48 +156,46 @@
 						&& !empty($username) && !empty($password) && !empty($securityAnswer)
 						&& !empty($securityQuestion) && !empty($relationId))
 						{
-								$sqlUpdateUser = "
-										UPDATE
-												user
-										SET
-												first_name = ?,
-												second_name = ?,
-												surname = ?,
-												second_surname = ?,
-												gender_id = ?,
-												address = ?,
-												email = ?,
-												phone = ?,
-												username = ?,
-												password = ?,
-												security_answer = ?,
-												document_type_id = ?,
-												security_question_id = ?,
-												identification_number = ?
-										WHERE
-												id_user = ?
-								";
-							
-								// Update student information query
-								$sqlUpdateStudent = "
-										UPDATE
-												attendant
-										SET
-												relationship_id = ?
-										WHERE
-												user_id = ?
-								";
+								if (Message::isRegistered($this->pdo, 'identification_number', $identificationNumber, true, $userId)) {
+										Message::showErrorMessage(
+												"El número de identificación ingresado ya se encuentra registrado en la plataforma",
+												'../../views/user/userStudentView.php'
+										);
+										return;
+								}
+
+								if (Message::isRegistered($this->pdo, 'email', $email, true, $userId)) {
+										Message::showErrorMessage(
+												"El correo electrónico ingresado ya se encuentra registrado en la plataforma.",
+												'../../views/user/userStudentView.php'
+										);
+										return;
+								}
+
+								if (!empty($phone) && Message::isRegistered($this->pdo, 'phone', $phone, true, $userId)) {
+										Message::showErrorMessage(
+												"El teléfono ingresado ya se encuentra registrado en la plataforma.",
+												'../../views/user/userStudentView.php'
+										);
+										return;
+								}
+
+								if (Message::isRegistered($this->pdo, 'username', $username, true, $userId)) {
+										Message::showErrorMessage(
+												"El usuario ingresado ya se encuentra registrado en la plataforma.",
+												'../../views/user/userStudentView.php'
+										);
+										return;
+								}
 								
-								// Execute queries
-								$this->pdo->prepare($sqlUpdateUser)->execute([
-										$firstName, $secondName, $surname, $secondSurname, $gender,
-										$address,	$email, $phone, $username, $password, $securityAnswer,
-										$idType, $securityQuestion,	$identificationNumber, $userId
-								]);
-							
-								$this->pdo->prepare($sqlUpdateStudent)->execute([
-										$relationId, $userId
-								]);
+								User::updateUser(
+										$firstName,	$secondName, $surname, $secondSurname,
+										$gender, $address, $email, $phone, $username,
+										$password, $securityAnswer, $idType, $securityQuestion,
+										$identificationNumber, $userId, $this->pdo
+								);
+
+								$this->updateAttendant($attendantId, $relationId,	$userId);
 								
 								$this->showSuccessMessage(
 										"Registro Actualizado Exitosamente.",
@@ -234,7 +231,8 @@
 								$stmtRole->execute(['id_user' => $userId]);
 								
 								$stmt = $this->pdo->prepare("
-										DELETE FROM attendant
+										UPDATE attendant
+										SET state = 2
 										WHERE user_id = :id_user
 								");
 								$stmt->execute(['id_user' => $userId]);
@@ -258,72 +256,50 @@
 		}
 
 		/**
-		 * Displays a success message using SweetAlert and redirects the user to a specified location.
+		 * Create an attendant record in the database.
 		 *
-		 * @param string $message The success message to display
-		 * @param string $redirectURL The URL to redirect to after displaying the message
+		 * @param int $userId The ID of the user.
+		 * @param string $relationId The ID of the relationship.
+		 * @return void
 		 */
-		private function showSuccessMessage(string $message, string $redirectURL): void
-		{
-				echo "
-						<script>
-								Swal.fire({
-										position: 'top-end',
-										icon: 'success',
-										title: '$message',
-										showConfirmButton: false,
-										timer: 2000
-								}).then(() => {
-										window.location = '$redirectURL';
-								});
-						</script>
-				";
+		private function createAttendant(int $userId, string $relationId): void {
+				$stmtAttendant = $this->pdo->prepare("
+						INSERT INTO attendant (user_id, relationship_id, state)
+						VALUES (?, ?, 1)
+				");
+				$stmtAttendant->execute([$userId, $relationId]);
 		}
 
 		/**
-		 * Displays an error message using SweetAlert and redirects the user to a specified location.
+		 * Update the relationship ID of an attendant for a given user ID.
 		 *
-		 * @param string $message The error message to display
-		 * @param string $redirectURL The URL to redirect to after displaying the message
+		 * @param string $attendantId The ID of the attendant.
+		 * @param int $relationId The new relationship ID.
+		 * @param int $userId The user ID.
+		 * @return void
 		 */
-		private function showErrorMessage(string $message, string $redirectURL): void
-		{
-				echo "
-						<script>
-								Swal.fire({
-										position: 'top-center',
-										icon: 'error',
-										title: '$message',
-										showConfirmButton: false,
-										timer: 2000
-								}).then(() => {
-										window.location = '$redirectURL';
-								});
-						</script>
-				";
+		private function updateAttendant(string $attendantId, int $relationId, int $userId): void {
+				$stmt = $this->pdo->prepare(
+						"UPDATE attendant
+						SET relationship_id = ?
+						WHERE user_id = ?"
+				);
+				$stmt->execute([$attendantId, $relationId, $userId]);
 		}
 
 		/**
-		 * Displays an warning message using SweetAlert and redirects the user to a specified location.
+		 * Assigns a user role to a user with the given ID.
 		 *
-		 * @param string $message The error message to display
-		 * @param string $redirectURL The URL to redirect to after displaying the message
+		 * @param int $userId The ID of the user.
+		 *
+		 * @return void
 		 */
-		private function showWarningMessage(string $message, string $redirectURL): void
-		{
-				echo "
-						<script>
-								Swal.fire({
-										position: 'top-center',
-										icon: 'warning',
-										title: '$message',
-										showConfirmButton: false,
-										timer: 2000
-								}).then(() => {
-										window.location = '$redirectURL';
-								});
-						</script>
-				";
+		private function assignUserRole(int $userId): void {
+				$stmt = $this->pdo->prepare("
+						INSERT INTO user_has_role (user_id, role_id, state)
+						VALUES (?, 5, 1)
+				");
+				$stmt->execute([$userId]);
 		}
 	}
 ?>

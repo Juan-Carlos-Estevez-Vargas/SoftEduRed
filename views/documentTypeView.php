@@ -1,33 +1,11 @@
-<?php
-	require_once "../../persistence/database/Database.php";
-	require_once "../../persistence/atributes/SecurityQuestionDAO.php";
-  
-	$db = database::connect();
-
-	if (isset($_REQUEST['action'])) {
-		$action = $_REQUEST['action'];
-
-		if ($action == 'update') {
-			$update = new SecurityQuestionDAO();
-			$update->updateQuestionState($_POST['id_security_question'], $_POST['state']);
-		} elseif ($action == 'register') {
-			$insert = new SecurityQuestionDAO();
-			$insert ->addSecurityQuestion($_POST['question'],$_POST['state']);
-		} elseif ($action == 'delete') {
-			$delete = new SecurityQuestionDAO();
-			$delete->deleteQuestion($_GET['id_security_question']);
-		} elseif ($action == 'edit') {
-			$id = $_GET['id_security_question'];
-		}
-	}
-?>
+<?php require_once "../controllers/documentTypeController.php"; ?>
 
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
   <meta charset="utf-8">
-  <title>Pregunta de Seguridad</title>
+  <title>Tipo de Documento</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
@@ -36,16 +14,16 @@
 
 <body>
   <section class="h-100 bg-white">
-    <div class="container py-4 h-100">
+    <div class="container py-3 h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col">
           <div class="card card-registration my-4">
             <div class="row g-0">
               <div class="col-xl-12">
-                <div class="card-body p-md-5 text-black" style="background-color: hsl(0, 0%, 96%)">
+                <div class="card-body p-md-4 text-black" style="background-color: hsl(0, 0%, 96%)">
                   <?php if (!isset($_REQUEST['action']) || ($_REQUEST['action'] !== 'ver' && $_REQUEST['action'] !== 'edit')) : ?>
                   <h3 class="text-center d-flex justify-content-center justify-content-md-end">
-                    <a class="btn btn-success" href="?action=ver&m=1">Agregar Pregunta</a>
+                    <a class="btn btn-success" href="?action=ver&m=1">Agregar Documento</a>
                   </h3>
                   <?php endif; ?>
 
@@ -56,39 +34,34 @@
                         <form action="#" method="post" enctype="multipart/form-data">
                           <div class="row justify-content-end align-items-center mb-5">
                             <div class="col-md-11 d-flex align-items-center justify-content-center">
-                              <h4 class="text-uppercase text-success">Nueva Pregunta de Seguridad</h4>
+                              <h4 class="text-uppercase text-success">Nuevo Tipo de Documento</h4>
                             </div>
                             <div class="col-md-1 d-flex align-items-center justify-content-end">
                               <a href="?action=&m=" class="btn btn-danger btn-block">X</a>
                             </div>
                           </div>
 
-                          <div class="row">
+                          <div class="row mb-4">
+                            <div class="col-md-3">
+                              <div class="form-outline">
+                                <input type="text" name="document_type" placeholder="Ej: C.C" required
+                                  style="text-transform:uppercase" class="form-control" maxlength="6" />
+                                <label class="form-label" for="document_type">Tipo de Documento:</label>
+                              </div>
+                            </div>
+
                             <div class="col-md-6">
                               <div class="form-outline">
-                                <input type="text" name="question" placeholder="Ingresa la pregunta" required
-                                  style="text-transform:uppercase" size="100" maxlength="100" class="form-control" />
-                                <label class="form-label" for="question">Pregunta de Seguridad:</label>
+                                <input type="text" name="description" placeholder="Ej: Cedula de Ciudadania"
+                                  style="text-transform:uppercase" class="form-control" required maxlength="50"
+                                  minlength="2" />
+                                <label class="form-label" for="description">Descripción</label>
                               </div>
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                               <div class="form-outline">
-                                <label class="mr-5">Estado: </label>
-                                <div class="form-check form-check-inline">
-                                  <input type="radio" class="form-check-input" name="state" value="1" checked />
-                                  <label class="form-check-label">Activo</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                  <input type="radio" class="form-check-input" name="state" value="0" />
-                                  <label class="form-check-label">Inactivo</label>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div class="col-md-2">
-                              <div class="form-outline">
-                                <input id="boton" type="submit" class="btn btn-primary btn-block" value="Guardar"
+                                <input type="submit" class="btn btn-primary btn-block" value="Guardar"
                                   onclick="this.form.action ='?action=register'" />
                               </div>
                             </div>
@@ -102,13 +75,16 @@
                   <div class="container-fluid">
                     <div class="row">
                       <div class="col-md-12">
-                        <?php if (!empty($_GET['id_security_question']) && !empty($_GET['action']) && !empty($id)) { ?>
+                        <?php if (!empty($id) && !empty($_GET['action'])) { ?>
                         <form action="#" method="post" enctype="multipart/form-data">
                           <?php
-														$sql = "SELECT * FROM security_question WHERE id_security_question = '$id'";
-														$query = $db->query($sql);
-														while ($r = $query->fetch(PDO::FETCH_ASSOC)) {
-													?>
+                            $sql = "
+                              SELECT * FROM document_type
+                              WHERE id_document_type = '$id'
+                            ";
+                            $query = $db->query($sql);
+                            while ($r = $query->fetch(PDO::FETCH_ASSOC)) {
+                          ?>
                           <div class="row justify-content-end align-items-center mb-5">
                             <div class="col-md-11 d-flex align-items-center justify-content-center">
                               <h4 class="text-uppercase text-success">Actualizar Tipo de Documento</h4>
@@ -119,14 +95,24 @@
                           </div>
 
                           <div class="row">
-                            <div class="col-md-6">
+                            <input type="text" name="id_document_type" value="<?php echo $r['id_document_type']?>"
+                              style="display: none;" />
+
+                            <div class="col-md-2">
                               <div class="form-outline">
-                                <input type="text" name="id_security_question"
-                                  value="<?php echo $r['id_security_question']?>" required style="display: none;" />
-                                <input type="text" name="question" class="form-control"
-                                  value="<?php echo $r['description']?>" required style="text-transform:uppercase"
-                                  size="100" maxlenght="100" readonly />
-                                <label class="form-label" for="question">Pregunta de Seguridad:</label>
+                                <input type="text" name="document_type" placeholder="Ej: C.C" required
+                                  style="text-transform:uppercase" class="form-control" maxlength="6"
+                                  value="<?php echo $r['type']?>" />
+                                <label class="form-label" for="document_type">Tipo de Documento:</label>
+                              </div>
+                            </div>
+
+                            <div class="col-md-4">
+                              <div class="form-outline">
+                                <input type="text" name="description" placeholder="Ej: Cedula de Ciudadania"
+                                  style="text-transform:uppercase" class="form-control"
+                                  value="<?php echo $r['description']?>" required maxlength="50" minlength="2" />
+                                <label class="form-label" for="description">Descripción</label>
                               </div>
                             </div>
 
@@ -154,7 +140,10 @@
                             </div>
                           </div>
                         </form>
-                        <?php } } ?>
+                        <?php
+                            }
+                          }
+                        ?>
                       </div>
                     </div>
                   </div>
@@ -162,10 +151,10 @@
                   <?php if (!isset($_REQUEST['action']) || ($_REQUEST['action'] !== 'ver' && $_REQUEST['action'] !== 'edit')) : ?>
                   <div class="col-md-12 text-center mt-4">
                     <?php
-											// Obtener el número total de registros
+                      // Obtener el número total de registros
                       $sqlCount = "
                           SELECT COUNT(*) AS total
-                          FROM security_question
+                          FROM document_type
                           WHERE state != 3
                       ";
                       $countQuery = $db->query($sqlCount);
@@ -178,7 +167,7 @@
 
                       // Consulta para obtener los registros de la página actual con límite y desplazamiento
                       $sql = "
-                          SELECT * FROM security_question
+                          SELECT * FROM document_type
                           WHERE state != 3
                           LIMIT $offset, $recordsPerPage
                       ";
@@ -186,15 +175,16 @@
 
                       // Verificar si existen registros
                       $hasRecords = $query->rowCount() > 0;
-										?>
-                    <h4 class="mb-5 text-uppercase text-primary">Preguntas de Seguridad</h4>
+                    ?>
+                    <h4 class="mb-5 text-uppercase text-primary">Tipos de Documento</h4>
                     <?php if ($hasRecords) : ?>
                     <div class="table-responsive">
                       <table class="table table-bordered">
                         <caption class="text-center">Listado de Resultados</caption>
                         <thead>
                           <tr>
-                            <th>Pregunta de Seguridad</th>
+                            <th>Tipo de Documento</th>
+                            <th>Descripción</th>
                             <th>Estado</th>
                             <th>Acciones</th>
                           </tr>
@@ -202,6 +192,7 @@
                         <tbody>
                           <?php while ($row = $query->fetch(PDO::FETCH_ASSOC)): ?>
                           <tr>
+                            <td><?php echo $row['type']; ?></td>
                             <td><?php echo $row['description']; ?></td>
                             <?php
                               if ($row['state'] == 1) {
@@ -212,11 +203,11 @@
                             ?>
                             <td>
                               <a class="btn btn-primary"
-                                href="?action=edit&id_security_question=<?php echo $row['id_security_question'];?>">
+                                href="?action=edit&id_document_type=<?php echo $row['id_document_type'];?>">
                                 Actualizar
                               </a>
                               <a class="btn btn-danger"
-                                href="?action=delete&id_security_question=<?php echo $row['id_security_question'];?>"
+                                href="?action=delete&id_document_type=<?php echo $row['id_document_type'];?>"
                                 onclick="confirmDelete(event)">
                                 Eliminar
                               </a>
@@ -248,7 +239,7 @@
                                   }
                                   echo '"><a class="page-link" href="?page=' . $i . '">' . $i . '</a></li>';
                               }
-                              
+                                              
                               // Mostrar el botón "Siguiente" solo si no estamos en la última página
                               if ($currentPage < $totalPages) {
                                   echo '<li class="page-item"><a class="page-link" href="?page=' . ($currentPage + 1) . '">Siguiente</a></li>';

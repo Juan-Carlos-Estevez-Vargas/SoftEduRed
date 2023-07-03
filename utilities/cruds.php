@@ -33,11 +33,11 @@
                               <select name="select_crud" class="form-control"
                                 onchange="window.location.href=this.value">
                                 <option selected disabled>Acción:</option>
-                                <option value='../views/atributes/documentTypeView.php'>Tipo de Documento</option>
-                                <option value='../views/atributes/genderView.php'>Género</option>
-                                <option value='../views/atributes/relationshipView.php'>Parentesco</option>
-                                <option value='../views/atributes/questionView.php'>Pregunta de Seguridad</option>
-                                <option value='../views/relationship/roleView.php'>Rol</option>
+                                <option value='../views/documentTypeView.php'>Tipo de Documento</option>
+                                <option value='../views/genderView.php'>Género</option>
+                                <option value='../views/relationshipView.php'>Parentesco</option>
+                                <option value='../views/questionView.php'>Pregunta de Seguridad</option>
+                                <option value='../views/roleView.php'>Rol</option>
                                 <option value='../views/relationship/roleHasUserView.php'>Rol por Usuario</option>
                                 <option value='../views/user/userStudentView.php'>Estudiante</option>
                                 <option value='../views/user/userTeacherView.php'>Docente</option>

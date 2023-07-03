@@ -11,12 +11,12 @@
 
 <body>
   <?php
- 	require_once '../../utils/Message.php';
+  require_once '../persistence/database/Database.php';
+  require_once '../persistence/RelationshipDAO.php';
+  require_once '../utils/Message.php';
 
-	class RelationshipDAO
+	class RelationshipService
 	{
-		private $pdo;
-
 		/**
 		 * Initializes a new instance of the class by setting up a PDO connection to the database
 		 *
@@ -25,7 +25,7 @@
 		public function __construct()
 		{
 				try {
-						$this->pdo = Database::connect();
+            $this->relationship = new RelationshipDAO();
 				} catch (PDOException $e) {
 						throw new PDOException($e->getMessage());
 				}
@@ -38,34 +38,35 @@
 		 * @param string $state The state of the relationship to be registered.
 		 * @return void
 		 */
-		public function registerRelationship(string $description, string $state): void
+		public function register(string $description, string $state): void
 		{
 				try {
 						if (!empty($description)) {
-								$query = "
-										INSERT INTO relationship (description, state)
-										VALUES (UPPER(:description), :state)
-								";
-			
-								$statement = $this->pdo->prepare($query);
-								$statement->bindParam(':description', $description);
-								$statement->bindParam(':state', $state);
-								$statement->execute();
+                if (Message::isRegistered(Database::connect(), 'relationship', 'description', $description, false, null))
+                {
+                    Message::showErrorMessage(
+                        "El parentesco ingresado ya se encuentra registrado en la plataforma",
+                        '../../views/relationshipView.php'
+                    );
+                    return;
+                }
+                
+                $this->relationship->register($description, $state);
 			
 								Message::showSuccessMessage(
 										"Registro Agregado Exitosamente.",
-										'../../views/atributes/relationshipView.php'
+										'../../views/relationshipView.php'
 								);
 						} else {
 								Message::showWarningMessage(
 										"Debes llenar todos los campos.",
-										'../../views/atributes/relationshipView.php'
+										'../../views/relationshipView.php'
 								);
 						}
 				} catch (Exception $e) {
 						Message::showErrorMessage(
 								"Ocurrió un error interno. Consulta al Administrador.",
-								'../../views/atributes/relationshipView.php'
+								'../../views/relationshipView.php'
 						);
 				}
 		}
@@ -81,42 +82,39 @@
 		 *
 		 * @return void
 		 */
-		public function updateRecord(string $idRelationship, string $relationship, string $state)
+		public function update(string $idRelationship, string $relationship, string $state)
 		{
 				try {
 						// Check that required fields are not empty
 						if (!empty($idRelationship) && !empty($relationship)) {
-								// Update the record in the database
-								$sql = "
-										UPDATE relationship
-										SET description = UPPER(:description),
-												state = :state
-										WHERE id_relationship = :id
-								";
-								$stmt = $this->pdo->prepare($sql);
-								$stmt->execute([
-										'description' => $relationship,
-										'state' => $state,
-										'id' => $idRelationship
-								]);
+                if (Message::isRegistered(Database::connect(), 'relationship', 'description', $relationship, true, $idRelationship, 'id_relationship'))
+                {
+                  Message::showErrorMessage(
+                    "El parentesco ingresado ya se encuentra registrado en la plataforma",
+                    '../../views/relationshipView.php'
+                  );
+                  return;
+                }
+                
+                $this->relationship->update($idRelationship, $relationship, $state);
 
 								// Show success message
 								Message::showSuccessMessage(
 										"Registro Actualizado Exitosamente.",
-										'../../views/atributes/relationshipView.php'
+										'../../views/relationshipView.php'
 								);
 						} else {
 								// Show warning message if required fields are empty
 								Message::showWarningMessage(
 										"Debes llenar todos los campos.",
-										'../../views/atributes/relationshipView.php'
+										'../../views/relationshipView.php'
 								);
 						}
 				} catch (Exception $e) {
 						// Show error message if there is an error updating the record
 						Message::showErrorMessage(
 								"Ocurrió un error interno. Consulta al Administrador.",
-								'../../views/atributes/relationshipView.php'
+								'../../views/relationshipView.php'
 						);
 						throw $e;
 				}
@@ -128,36 +126,29 @@
 		 * @param string $idRelationship The ID of the relationship to delete.
 		 * @return void
 		 */
-		public function deleteRelationship(string $idRelationship): void
+		public function delete(string $idRelationship): void
 		{
 				try {
 						if (!empty($idRelationship)) { // Check if ID is not empty
-								$sql = "
-									UPDATE relationship
-									SET state = 3
-									WHERE id_relationship = :id
-								";
-								$stmt = $this->pdo->prepare($sql);
-								$stmt->bindParam(':id', $idRelationship, PDO::PARAM_STR);
-								$stmt->execute();
+                $this->relationship->delete($idRelationship);
 
 								// Show success message and redirect to relationship view
 								Message::showSuccessMessage(
 										"Registro Eliminado Exitosamente.",
-										'../../views/atributes/relationshipView.php'
+										'../../views/relationshipView.php'
 								);
 						} else {
 								// Show warning message and redirect to relationship view
 								Message::showWarningMessage(
 										"Debes llenar todos los campos.",
-										'../../views/atributes/relationshipView.php'
+										'../../views/relationshipView.php'
 								);
 						}
 				} catch (Exception $e) {
 						// Show error message and redirect to relationship view
 						Message::showErrorMessage(
 								"Ocurrió un error interno. Consulta al Administrador.",
-								'../../views/atributes/relationshipView.php'
+								'../../views/relationshipView.php'
 						);
 				}
 		}

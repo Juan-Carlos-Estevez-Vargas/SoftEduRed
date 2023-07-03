@@ -1,33 +1,11 @@
-<?php
-	require_once "../../persistence/database/Database.php";
-	require_once "../../persistence/atributes/GenderDAO.php";
-  
-	$db = database::connect();
-
-	if (isset($_REQUEST['action'])) {
-		$action = $_REQUEST['action'];
-
-		if ($action == 'update') {
-			$update = new GenderDAO();
-			$update->updateGender($_POST['id_gender'], $_POST['gender'], $_POST['state']);
-		} elseif ($action == 'register') {
-			$insert = new GenderDAO();
-			$insert ->registerGender($_POST['gender'], $_POST['state']);
-		} elseif ($action == 'delete') {
-			$delete = new GenderDAO();
-			$delete->deleteGender($_GET['id_gender']);
-		} elseif ($action == 'edit') {
-			$id = $_GET['id_gender'];
-		}
-	}
-?>
+<?php require_once "../controllers/relationshipController.php"; ?>
 
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
   <meta charset="utf-8">
-  <title>Género</title>
+  <title>Relación</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
@@ -36,16 +14,16 @@
 
 <body>
   <section class="h-100 bg-white">
-    <div class="container py-4 h-100">
+    <div class="container py-3 h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col">
           <div class="card card-registration my-4">
             <div class="row g-0">
               <div class="col-xl-12">
-                <div class="card-body p-md-5 text-black" style="background-color: hsl(0, 0%, 96%)">
+                <div class="card-body p-md-4 text-black" style="background-color: hsl(0, 0%, 96%)">
                   <?php if (!isset($_REQUEST['action']) || ($_REQUEST['action'] !== 'ver' && $_REQUEST['action'] !== 'edit')) : ?>
                   <h3 class="text-center d-flex justify-content-center justify-content-md-end">
-                    <a class="btn btn-success" href="?action=ver&m=1">Agregar Género</a>
+                    <a class="btn btn-success" href="?action=ver&m=1">Agregar Parentesco</a>
                   </h3>
                   <?php endif; ?>
 
@@ -56,7 +34,7 @@
                         <form action="#" method="post" enctype="multipart/form-data">
                           <div class="row justify-content-end align-items-center mb-5">
                             <div class="col-md-11 d-flex align-items-center justify-content-center">
-                              <h4 class="text-uppercase text-success">Nuevo Género</h4>
+                              <h4 class="text-uppercase text-success">Nuevo Parentesco</h4>
                             </div>
                             <div class="col-md-1 d-flex align-items-center justify-content-end">
                               <a href="?action=&m=" class="btn btn-danger btn-block">X</a>
@@ -66,9 +44,9 @@
                           <div class="row">
                             <div class="col-md-6">
                               <div class="form-outline">
-                                <input type="text" name="gender" placeholder="Ej: Masculino, Femenino" required
-                                  style="text-transform:uppercase" maxlength="20" class="form-control" />
-                                <label class="form-label" for="gender">Género:</label>
+                                <input type="text" name="relation" placeholder="Tipo de Relación" required
+                                  style="text-transform:uppercase" class="form-control" maxlength="30" />
+                                <label class="form-label" for="relation">Tipo de Parentesco:</label>
                               </div>
                             </div>
 
@@ -86,7 +64,7 @@
                               </div>
                             </div>
 
-                            <div class="col-md-2 col-xs-12">
+                            <div class="col-md-2">
                               <div class="form-outline">
                                 <input id="boton" type="submit" class="btn btn-primary btn-block" value="Guardar"
                                   onclick="this.form.action ='?action=register'" />
@@ -102,16 +80,19 @@
                   <div class="container-fluid">
                     <div class="row">
                       <div class="col-md-12">
-                        <?php if (!empty($_GET['id_gender']) && !empty($_GET['action']) && !empty($id)) { ?>
+                        <?php if (!empty($_GET['id_relationship']) && !empty($_GET['action']) && !empty($id)) { ?>
                         <form action="#" method="post" enctype="multipart/form-data">
                           <?php
-														$sql = "SELECT * FROM gender WHERE id_gender = '$id'";
+														$sql = "
+                              SELECT * FROM relationship
+                              WHERE id_relationship = '$id'
+                            ";
 														$query = $db->query($sql);
 														while ($r = $query->fetch(PDO::FETCH_ASSOC)) {
 													?>
                           <div class="row justify-content-end align-items-center mb-5">
                             <div class="col-md-11 d-flex align-items-center justify-content-center">
-                              <h4 class="text-uppercase text-success">Actualizar Género</h4>
+                              <h4 class="text-uppercase text-success">Actualizar Parentesco</h4>
                             </div>
                             <div class="col-md-1 d-flex align-items-center justify-content-end">
                               <a href="?action=&m=" class="btn btn-danger btn-block">X</a>
@@ -121,12 +102,12 @@
                           <div class="row">
                             <div class="col-md-6">
                               <div class="form-outline">
-                                <input type="text" name="id_gender" value=" <?php echo $r['id_gender']?>"
-                                  style="display: none" />
-                                <input type="text" name="gender" class="form-control"
-                                  value="<?php echo $r['description']?>" style="text-transform:uppercase" maxlength="20"
+                                <input type="text" class="form-control" name="id_relationship"
+                                  value="<?php echo $r['id_relationship']?>" style="display: none" />
+                                <input type="text" class="form-control" name=" relation"
+                                  style="text-transform:uppercase" value="<?php echo $r['description']?>" maxlength="30"
                                   required />
-                                <label class="form-label">Género:</label>
+                                <label class="form-label" for="relation">Tipo de Parentesco:</label>
                               </div>
                             </div>
 
@@ -146,7 +127,7 @@
                               </div>
                             </div>
 
-                            <div class="col-md-2 col-xs-12">
+                            <div class=" col-md-2">
                               <div class="form-outline">
                                 <input id="boton" type="submit" class="btn btn-primary btn-block" value="Actualizar"
                                   onclick="this.form.action = '?action=update';" />
@@ -154,7 +135,10 @@
                             </div>
                           </div>
                         </form>
-                        <?php } } ?>
+                        <?php
+                            }
+                          }
+                        ?>
                       </div>
                     </div>
                   </div>
@@ -164,37 +148,37 @@
                     <?php
                       // Obtener el número total de registros
                       $sqlCount = "
-                          SELECT COUNT(*) AS total
-                          FROM gender
-                          WHERE state != 3
+                        SELECT COUNT(*) AS total
+                        FROM relationship
+                        WHERE state != 3
                       ";
                       $countQuery = $db->query($sqlCount);
                       $totalRecords = $countQuery->fetch(PDO::FETCH_ASSOC)['total'];
-  
+
                       // Calcular el límite y el desplazamiento para la consulta actual
                       $recordsPerPage = 5; // Número de registros por página
                       $currentPage = isset($_GET['page']) ? $_GET['page'] : 1; // Página actual
                       $offset = ($currentPage - 1) * $recordsPerPage;
-  
+
                       // Consulta para obtener los registros de la página actual con límite y desplazamiento
                       $sql = "
-                          SELECT * FROM gender
+                          SELECT * FROM relationship
                           WHERE state != 3
                           LIMIT $offset, $recordsPerPage
                       ";
                       $query = $db->query($sql);
-  
+
                       // Verificar si existen registros
                       $hasRecords = $query->rowCount() > 0;
-                    ?>
-                    <h4 class="mb-5 text-uppercase text-primary">Géneros</h4>
+										?>
+                    <h4 class="mb-5 text-uppercase text-primary">Parentescos</h4>
                     <?php if ($hasRecords) : ?>
                     <div class="table-responsive">
                       <table class="table table-bordered">
-                        <caption class="text-center">Listado de Registros</caption>
+                        <caption class="text-center">Listado de Resultados</caption>
                         <thead>
                           <tr>
-                            <th>Género</th>
+                            <th>Parentesco</th>
                             <th>Estado</th>
                             <th>Acciones</th>
                           </tr>
@@ -211,10 +195,12 @@
                               }
                             ?>
                             <td>
-                              <a class="btn btn-primary" href="?action=edit&id_gender=<?php echo $row['id_gender'];?>">
-                                Actualizar
+                              <a class="btn btn-primary"
+                                href="?action=edit&id_relationship=<?php echo $row['id_relationship'];?>" />
+                              Actualizar
                               </a>
-                              <a class="btn btn-danger" href="?action=delete&id_gender=<?php echo $row['id_gender'];?>"
+                              <a class="btn btn-danger"
+                                href="?action=delete&id_relationship=<?php echo $row['id_relationship'];?>"
                                 onclick="confirmDelete(event)">
                                 Eliminar
                               </a>
@@ -230,27 +216,27 @@
                         <nav aria-label="Page navigation">
                           <ul class="pagination justify-content-center">
                             <?php
-                                // Calcular el número total de páginas
-                                $totalPages = ceil($totalRecords / $recordsPerPage);
-                                
-                                // Mostrar el botón "Anterior" solo si no estamos en la primera página
-                                if ($currentPage > 1) {
-                                    echo '<li class="page-item"><a class="page-link" href="?page=' . ($currentPage - 1) . '">Anterior</a></li>';
-                                }
-                                
-                                // Mostrar enlaces a las páginas individuales
-                                for ($i = 1; $i <= $totalPages; $i++) {
-                                    echo '<li class="page-item';
-                                    if ($i == $currentPage) {
-                                        echo ' active';
-                                    }
-                                    echo '"><a class="page-link" href="?page=' . $i . '">' . $i . '</a></li>';
-                                }
-                                
-                                // Mostrar el botón "Siguiente" solo si no estamos en la última página
-                                if ($currentPage < $totalPages) {
-                                    echo '<li class="page-item"><a class="page-link" href="?page=' . ($currentPage + 1) . '">Siguiente</a></li>';
-                                }
+                              // Calcular el número total de páginas
+                              $totalPages = ceil($totalRecords / $recordsPerPage);
+                              
+                              // Mostrar el botón "Anterior" solo si no estamos en la primera página
+                              if ($currentPage > 1) {
+                                  echo '<li class="page-item"><a class="page-link" href="?page=' . ($currentPage - 1) . '">Anterior</a></li>';
+                              }
+                              
+                              // Mostrar enlaces a las páginas individuales
+                              for ($i = 1; $i <= $totalPages; $i++) {
+                                  echo '<li class="page-item';
+                                  if ($i == $currentPage) {
+                                      echo ' active';
+                                  }
+                                  echo '"><a class="page-link" href="?page=' . $i . '">' . $i . '</a></li>';
+                              }
+                              
+                              // Mostrar el botón "Siguiente" solo si no estamos en la última página
+                              if ($currentPage < $totalPages) {
+                                  echo '<li class="page-item"><a class="page-link" href="?page=' . ($currentPage + 1) . '">Siguiente</a></li>';
+                              }
                             ?>
                           </ul>
                         </nav>

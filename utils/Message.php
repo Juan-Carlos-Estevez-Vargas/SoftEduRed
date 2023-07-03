@@ -6,18 +6,28 @@ class Message {
      * Check if a user with the given field and value is registered.
      *
      * @param PDO $pdo The database connection.
-     * @param string $field The field to search in the user table.
+     * @param string $table The table to search in.
+     * @param string $field The field to search in the specified table.
      * @param mixed $value The value to search for in the specified field.
      * @param bool $excludeCurrentUser Whether to exclude the current user (optional).
-     * @param int $currentUserId The ID of the current user to exclude (optional).
+     * @param string $currentUserId The ID of the current user to exclude (optional).
+     * @param string $userField The field in the specified table where the current user is stored (optional).
      * @return bool Returns true if a registered user is found, false otherwise.
      */
-    public static function isRegistered(PDO $pdo, string $field, $value, bool $excludeCurrentUser = false, int $currentUserId = null): bool
+    public static function isRegistered(
+        PDO $pdo,
+        string $table,
+        string $field,
+        $value,
+        bool $excludeCurrentUser = false,
+        string $currentUserId = null,
+        string $userField = null
+    ): bool
     {
         // Define the SQL query to find the registered user
-        $findRegister = "SELECT * FROM user WHERE $field = ?";
-        if ($excludeCurrentUser && $currentUserId !== null) {
-            $findRegister .= " AND id_user != ?";
+        $findRegister = "SELECT COUNT(*) FROM $table WHERE $field = ?";
+        if ($excludeCurrentUser && $currentUserId !== null && $userField !== null) {
+            $findRegister .= " AND $userField != ?";
         }
 
         // Prepare and execute the SQL query
@@ -29,8 +39,9 @@ class Message {
         }
 
         // Check if a registered user was found
-        return $stmt->rowCount() > 0;
+        return $stmt->fetchColumn() > 0;
     }
+
 
     /**
      * Shows a success message and redirects to a specified URL.

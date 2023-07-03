@@ -55,16 +55,25 @@
             <div class="row g-0">
               <div class="col-xl-12">
                 <div class="card-body p-md-5 text-black" style="background-color: hsl(0, 0%, 96%)">
+                  <?php if (!isset($_REQUEST['action']) || ($_REQUEST['action'] !== 'ver' && $_REQUEST['action'] !== 'edit')) : ?>
                   <h3 class="text-center d-flex justify-content-center justify-content-md-end">
                     <a class="btn btn-success" href="?action=ver&m=1">Agregar Acudiente</a>
                   </h3>
+                  <?php endif; ?>
 
                   <div class="container-fluid">
                     <div class="row">
                       <div class="col-md-12">
                         <?php if (!empty($_GET['m']) && !empty($_GET['action'])) { ?>
                         <form action="#" method="post" enctype="multipart/form-data">
-                          <h4 class="mb-5 text-uppercase text-center text-success">Nuevo Acudiente</h4>
+                          <div class="row justify-content-end align-items-center mb-5">
+                            <div class="col-md-11 d-flex align-items-center justify-content-center">
+                              <h4 class="text-uppercase text-success">Nuevo Acudiente</h4>
+                            </div>
+                            <div class="col-md-1 d-flex align-items-center justify-content-end">
+                              <a href="?action=&m=" class="btn btn-danger btn-block">X</a>
+                            </div>
+                          </div>
 
                           <div class="row mb-4">
                             <div class="col-md-3">
@@ -129,7 +138,7 @@
                                     foreach ($db->query('SELECT * FROM gender') as $row) {
                                         echo '<option value="'.$row['id_gender'].'">'.$row["description"].'</option>';
                                     }
-                                ?>
+                                  ?>
                                 </select>
                                 <label class="form-label" for="gender">Género:</label>
                               </div>
@@ -233,21 +242,38 @@
                       <div class="col-md-12">
                         <?php if (!empty($_GET['action']) && !empty($id)) { ?>
                         <form action="#" method="post" enctype="multipart/form-data">
-                          <?php $sql = "SELECT * FROM user WHERE id_user = '$id'";
+                          <?php
+                            $sql = "
+                              SELECT * FROM user AS u
+                              JOIN attendant AS a ON a.user_id = '$id'
+                              WHERE u.id_user = '$id'
+                            ";
                             $query = $db->query($sql);
                             while ($r = $query->fetch(PDO::FETCH_ASSOC)) {
                           ?>
-                          <h4 class="mb-5 text-uppercase text-center text-success">Actualizar Acudiente</h4>
+                          <div class="row justify-content-end align-items-center mb-5">
+                            <div class="col-md-11 d-flex align-items-center justify-content-center">
+                              <h4 class="text-uppercase text-success">Actualizar Acudiente</h4>
+                            </div>
+                            <div class="col-md-1 d-flex align-items-center justify-content-end">
+                              <a href="?action=&m=" class="btn btn-danger btn-block">X</a>
+                            </div>
+                          </div>
 
-                          <div name="id_user" style="display: none;"><input type="text" name="id_user"
-                              value="<?php echo $r['id_user'];?>"></div>
+                          <div name="id_user" style="display: none;">
+                            <input type="text" name="id_user" value="<?php echo $r['id_user'];?>" />
+                          </div>
+
                           <div class=" row mb-4">
                             <div class="col-md-3">
                               <div class="form-outline">
                                 <select class="form-control" name="document_type">
                                   <?php
-                                    foreach ($db->query('SELECT * FROM document_type') as $row) {
-                                        echo '<option value="'.$row['id_document_type'].'">'.$row["description"].'</option>';
+                                    $editField = $r['document_type_id'];
+
+                                    foreach ($db->query('SELECT * FROM document_type WHERE state = 1') as $row) {
+                                      $selected = ($row['id_document_type'] == $editField) ? 'selected' : '';
+                                      echo '<option value="'.$row['id_document_type'].'" '.$selected.'>'.$row["description"].'</option>';
                                     }
                                   ?>
                                 </select>
@@ -259,7 +285,7 @@
                               <div class="form-outline">
                                 <input type="number" class="form-control" name="identification_number"
                                   placeholder="Número de Identificación" maxlength="15"
-                                  value="<?php echo $r['identification_number'];?>" required />
+                                  value="<?php echo $r['identification_number'];?>" readonly required />
                                 <label class="form-label" for="identification_number">Número de Identificación:</label>
                               </div>
                             </div>
@@ -303,8 +329,11 @@
                               <div class="form-outline">
                                 <select class="form-control" name="gender">
                                   <?php
-                                    foreach ($db->query('SELECT * FROM gender') as $row) {
-                                        echo '<option value="'.$row['id_gender'].'">'.$row["description"].'</option>';
+                                    $editField = $r['gender_id'];
+
+                                    foreach ($db->query('SELECT * FROM gender WHERE state = 1') as $row) {
+                                      $selected = ($row['id_gender'] == $editField) ? 'selected' : '';
+                                      echo '<option value="'.$row['id_gender'].'" '.$selected.'>'.$row["description"].'</option>';
                                     }
                                   ?>
                                 </select>
@@ -360,10 +389,11 @@
                               <div class="form-outline">
                                 <select class="form-control" name="relation">
                                   <?php
-                                      foreach ($db->query('SELECT * FROM relationship WHERE state = 1') as $row)
-                                      {
-                                          echo '<option value="'.$row['id_relationship'].'">'.$row["description"].'</option>';
-                                      }
+                                    $editField = $r['relationship_id'];
+                                    foreach ($db->query("SELECT * FROM relationship WHERE state = 1") as $row) {
+                                      $selected = ($row['id_relationship'] == $editField) ? 'selected' : '';
+                                      echo '<option value="'.$row['id_relationship'].'"'.$selected.'>'.$row["description"].'</option>';
+                                    }
                                   ?>
                                 </select>
                                 <label class="form-label">Parentesco:</label>
@@ -376,8 +406,11 @@
                               <div class="form-outline">
                                 <select class="form-control" name="security_question">
                                   <?php
-                                    foreach ($db->query('SELECT * FROM security_question') as $row2) {
-                                      echo '<option value="'.$row2['id_security_question'].'">'.$row2["description"].'</option>';
+                                    $editField = $r['security_question_id'];
+
+                                    foreach ($db->query('SELECT * FROM security_question WHERE state = 1') as $row) {
+                                      $selected = ($row['id_security_question'] == $editField) ? 'selected' : '';
+                                      echo '<option value="'.$row['id_security_question'].'" '.$selected.'>'.$row["description"].'</option>';
                                     }
                                   ?>
                                 </select>
@@ -409,21 +442,75 @@
                     </div>
                   </div>
 
+                  <?php if (!isset($_REQUEST['action']) || ($_REQUEST['action'] !== 'ver' && $_REQUEST['action'] !== 'edit')) : ?>
                   <div class="col-md-12 text-center mt-4">
                     <?php
-                        $sql = "
-                          SELECT u.*, dt.type AS document_type
+                      $sqlCount = "
+                        SELECT u.*, dt.type AS document_type, total_registros.total
+                        FROM `user` AS u
+                        INNER JOIN `user_has_role` AS uhr ON u.id_user = uhr.user_id
+                        INNER JOIN `role` AS r ON uhr.role_id = r.id_role
+                        INNER JOIN `document_type` AS dt ON u.document_type_id = dt.id_document_type
+                        CROSS JOIN (
+                          SELECT COUNT(*) AS total
                           FROM `user` AS u
                           INNER JOIN `user_has_role` AS uhr ON u.id_user = uhr.user_id
                           INNER JOIN `role` AS r ON uhr.role_id = r.id_role
                           INNER JOIN `document_type` AS dt ON u.document_type_id = dt.id_document_type
-                          WHERE r.description = 'ACUDIENTE'
-                        ";
-                        $query = $db ->query($sql);
-                        
-                        if ($query->rowCount()>0):
+                          WHERE r.description = 'acudiente'
+                          AND r.state != 3
+                          AND uhr.state != 3
+                          AND dt.state != 3
+                          AND u.state != 3
+                        ) AS total_registros
+                        WHERE r.description = 'acudiente'
+                          AND r.state != 3
+                          AND uhr.state != 3
+                          AND dt.state != 3
+                          AND u.state != 3;
+                      ";
+
+                      $countQuery = $db->query($sqlCount);
+                      $totalRecords = $countQuery->fetch(PDO::FETCH_ASSOC)['total'];
+
+                      // Calcular el límite y el desplazamiento para la consulta actual
+                      $recordsPerPage = 5; // Número de registros por página
+                      $currentPage = isset($_GET['page']) ? $_GET['page'] : 1; // Página actual
+                      $offset = ($currentPage - 1) * $recordsPerPage;
+
+                      // Consulta para obtener los registros de la página actual con límite y desplazamiento
+                      $sql = "
+                        SELECT u.*, dt.type AS document_type, total_registros.total
+                        FROM `user` AS u
+                        INNER JOIN `user_has_role` AS uhr ON u.id_user = uhr.user_id
+                        INNER JOIN `role` AS r ON uhr.role_id = r.id_role
+                        INNER JOIN `document_type` AS dt ON u.document_type_id = dt.id_document_type
+                        CROSS JOIN (
+                          SELECT COUNT(*) AS total
+                          FROM `user` AS u
+                          INNER JOIN `user_has_role` AS uhr ON u.id_user = uhr.user_id
+                          INNER JOIN `role` AS r ON uhr.role_id = r.id_role
+                          INNER JOIN `document_type` AS dt ON u.document_type_id = dt.id_document_type
+                          WHERE r.description = 'acudiente'
+                          AND r.state != 3
+                          AND uhr.state != 3
+                          AND dt.state != 3
+                          AND u.state != 3
+                        ) AS total_registros
+                        WHERE r.description = 'acudiente'
+                          AND r.state != 3
+                          AND uhr.state != 3
+                          AND dt.state != 3
+                          AND u.state != 3
+                        LIMIT $offset, $recordsPerPage
+                      ";
+                      $query = $db->query($sql);
+
+                      // Verificar si existen registros
+                      $hasRecords = $query->rowCount() > 0;
                     ?>
-                    <h4 class="mb-5 text-uppercase text-primary">Acuendientes</h4>
+                    <h4 class="mb-5 text-uppercase text-primary">Acudientes</h4>
+                    <?php if ($hasRecords) : ?>
                     <div class="table-responsive">
                       <table class="table table-bordered">
                         <caption class="text-center">Listado de Resultados</caption>
@@ -460,10 +547,42 @@
                           <?php endwhile ?>
                         </tbody>
                       </table>
+                      <div class="row">
+                        <div class="col-md-12">
+                          <nav aria-label="Page navigation">
+                            <ul class="pagination justify-content-center">
+                              <?php
+                              // Calcular el número total de páginas
+                              $totalPages = ceil($totalRecords / $recordsPerPage);
+                              
+                              // Mostrar el botón "Anterior" solo si no estamos en la primera página
+                              if ($currentPage > 1) {
+                                  echo '<li class="page-item"><a class="page-link" href="?page=' . ($currentPage - 1) . '">Anterior</a></li>';
+                              }
+                              
+                              // Mostrar enlaces a las páginas individuales
+                              for ($i = 1; $i <= $totalPages; $i++) {
+                                  echo '<li class="page-item';
+                                  if ($i == $currentPage) {
+                                      echo ' active';
+                                  }
+                                  echo '"><a class="page-link" href="?page=' . $i . '">' . $i . '</a></li>';
+                              }
+                              
+                              // Mostrar el botón "Siguiente" solo si no estamos en la última página
+                              if ($currentPage < $totalPages) {
+                                  echo '<li class="page-item"><a class="page-link" href="?page=' . ($currentPage + 1) . '">Siguiente</a></li>';
+                              }
+                            ?>
+                            </ul>
+                          </nav>
+                        </div>
+                      </div>
+                      <?php else: ?>
+                      <h4><?php echo "No se encontraron registros"; ?></h4>
+                      <?php endif ?>
                     </div>
-                    <?php else: ?>
-                    <h4>No se encontraron registros</h4>
-                    <?php endif; ?>
+                    <?php endif ?>
                   </div>
                 </div>
               </div>
@@ -471,7 +590,6 @@
           </div>
         </div>
       </div>
-    </div>
   </section>
 
   <footer class="bg-light text-center text-lg-start">

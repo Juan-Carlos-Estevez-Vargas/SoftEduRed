@@ -213,10 +213,10 @@
                               <div class="form-outline">
                                 <select class="form-control" name="security_question">
                                   <?php
-                                        foreach ($db->query('SELECT * FROM security_question WHERE state = 1') as $security)  {
-                                          echo '<option value="'.$security['id_security_question'].'">'.$security["description"].'</option>';
-                                        }
-                                      ?>
+                                    foreach ($db->query('SELECT * FROM security_question WHERE state = 1') as $security)  {
+                                      echo '<option value="'.$security['id_security_question'].'">'.$security["description"].'</option>';
+                                    }
+                                  ?>
                                 </select>
                                 <label class="form-label" for="security_question">Pregunta de Seguridad:</label>
                               </div>
@@ -234,10 +234,10 @@
                               <div class="form-outline">
                                 <select class="form-control" name="course">
                                   <?php
-                                      foreach ($db->query('SELECT * FROM course WHERE state = 1') as $course) {
-                                        echo '<option value="'.$course['id_course'].'">'.$course["course"].'</option>';
-                                      }
-                                    ?>
+                                    foreach ($db->query('SELECT * FROM course WHERE state = 1') as $course) {
+                                      echo '<option value="'.$course['id_course'].'">'.$course["course"].'</option>';
+                                    }
+                                  ?>
                                 </select>
                                 <label class="form-label">Curso del Estudiante:</label>
                               </div>
@@ -267,7 +267,8 @@
                             $sql = "
                               SELECT * FROM user AS u
                               JOIN student AS s ON s.user_id = '$id'
-                              WHERE u.id_user = '$id'";
+                              WHERE u.id_user = '$id'
+                            ";
                             $query = $db->query($sql);
                         
                             while ($r = $query->fetch(PDO::FETCH_ASSOC)) {

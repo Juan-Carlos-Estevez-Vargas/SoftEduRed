@@ -1,33 +1,11 @@
-<?php
-	require_once "../../persistence/database/Database.php";
-	require_once "../../persistence/atributes/RelationshipDAO.php";
-
-  $db = database::connect();
-
-	if (isset($_REQUEST['action'])) {
-		$action = $_REQUEST['action'];
-
-		if ($action == 'register') {
-			$registrar = new RelationshipDAO();
-			$registrar->registerRelationship($_POST['relation'], $_POST['state']);
-		} elseif ($action == 'update') {
-			$update = new RelationshipDAO();
-			$update->updateRecord($_POST['id_relationship'], $_POST['relation'], $_POST['state']);
-		} elseif ($action == 'delete') {
-			$delete = new RelationshipDAO();
-			$delete->deleteRelationship($_GET['id_relationship']);
-		} elseif ($action == 'edit') {
-			$id = $_GET['id_relationship'];
-		}
-	}
-?>
+<?php require_once "../controllers/securityQuestionController.php"; ?>
 
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
   <meta charset="utf-8">
-  <title>Relación</title>
+  <title>Pregunta de Seguridad</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
@@ -36,16 +14,16 @@
 
 <body>
   <section class="h-100 bg-white">
-    <div class="container py-4 h-100">
+    <div class="container py-3 h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col">
           <div class="card card-registration my-4">
             <div class="row g-0">
               <div class="col-xl-12">
-                <div class="card-body p-md-5 text-black" style="background-color: hsl(0, 0%, 96%)">
+                <div class="card-body p-md-4 text-black" style="background-color: hsl(0, 0%, 96%)">
                   <?php if (!isset($_REQUEST['action']) || ($_REQUEST['action'] !== 'ver' && $_REQUEST['action'] !== 'edit')) : ?>
                   <h3 class="text-center d-flex justify-content-center justify-content-md-end">
-                    <a class="btn btn-success" href="?action=ver&m=1">Agregar Parentesco</a>
+                    <a class="btn btn-success" href="?action=ver&m=1">Agregar Pregunta</a>
                   </h3>
                   <?php endif; ?>
 
@@ -56,7 +34,7 @@
                         <form action="#" method="post" enctype="multipart/form-data">
                           <div class="row justify-content-end align-items-center mb-5">
                             <div class="col-md-11 d-flex align-items-center justify-content-center">
-                              <h4 class="text-uppercase text-success">Nuevo Parentesco</h4>
+                              <h4 class="text-uppercase text-success">Nueva Pregunta de Seguridad</h4>
                             </div>
                             <div class="col-md-1 d-flex align-items-center justify-content-end">
                               <a href="?action=&m=" class="btn btn-danger btn-block">X</a>
@@ -66,16 +44,16 @@
                           <div class="row">
                             <div class="col-md-6">
                               <div class="form-outline">
-                                <input type="text" name="relation" placeholder="Tipo de Relación" required
-                                  style="text-transform:uppercase" class="form-control" maxlength="30" />
-                                <label class="form-label" for="relation">Tipo de Parentesco:</label>
+                                <input type="text" name="question" placeholder="Ingresa la pregunta" required
+                                  style="text-transform:uppercase" size="100" maxlength="100" class="form-control" />
+                                <label class="form-label" for="question">Pregunta de Seguridad:</label>
                               </div>
                             </div>
 
                             <div class="col-md-4">
                               <div class="form-outline">
                                 <label class="mr-5">Estado: </label>
-                                <div class=" form-check form-check-inline">
+                                <div class="form-check form-check-inline">
                                   <input type="radio" class="form-check-input" name="state" value="1" checked />
                                   <label class="form-check-label">Activo</label>
                                 </div>
@@ -102,19 +80,16 @@
                   <div class="container-fluid">
                     <div class="row">
                       <div class="col-md-12">
-                        <?php if (!empty($_GET['id_relationship']) && !empty($_GET['action']) && !empty($id)) { ?>
+                        <?php if (!empty($_GET['id_security_question']) && !empty($_GET['action']) && !empty($id)) { ?>
                         <form action="#" method="post" enctype="multipart/form-data">
                           <?php
-														$sql = "
-                              SELECT * FROM relationship
-                              WHERE id_relationship = '$id'
-                            ";
+														$sql = "SELECT * FROM security_question WHERE id_security_question = '$id'";
 														$query = $db->query($sql);
 														while ($r = $query->fetch(PDO::FETCH_ASSOC)) {
 													?>
                           <div class="row justify-content-end align-items-center mb-5">
                             <div class="col-md-11 d-flex align-items-center justify-content-center">
-                              <h4 class="text-uppercase text-success">Actualizar Parentesco</h4>
+                              <h4 class="text-uppercase text-success">Actualizar Tipo de Documento</h4>
                             </div>
                             <div class="col-md-1 d-flex align-items-center justify-content-end">
                               <a href="?action=&m=" class="btn btn-danger btn-block">X</a>
@@ -124,12 +99,12 @@
                           <div class="row">
                             <div class="col-md-6">
                               <div class="form-outline">
-                                <input type="text" class="form-control" name="id_relationship"
-                                  value="<?php echo $r['id_relationship']?>" style="display: none" />
-                                <input type="text" class="form-control" name=" relation"
-                                  style="text-transform:uppercase" value="<?php echo $r['description']?>" maxlength="30"
-                                  required />
-                                <label class="form-label" for="relation">Tipo de Parentesco:</label>
+                                <input type="text" name="id_security_question"
+                                  value="<?php echo $r['id_security_question']?>" required style="display: none;" />
+                                <input type="text" name="question" class="form-control"
+                                  value="<?php echo $r['description']?>" required style="text-transform:uppercase"
+                                  size="100" maxlenght="100" readonly />
+                                <label class="form-label" for="question">Pregunta de Seguridad:</label>
                               </div>
                             </div>
 
@@ -149,7 +124,7 @@
                               </div>
                             </div>
 
-                            <div class=" col-md-2">
+                            <div class="col-md-2">
                               <div class="form-outline">
                                 <input id="boton" type="submit" class="btn btn-primary btn-block" value="Actualizar"
                                   onclick="this.form.action = '?action=update';" />
@@ -157,10 +132,7 @@
                             </div>
                           </div>
                         </form>
-                        <?php
-                            }
-                          }
-                        ?>
+                        <?php } } ?>
                       </div>
                     </div>
                   </div>
@@ -168,11 +140,11 @@
                   <?php if (!isset($_REQUEST['action']) || ($_REQUEST['action'] !== 'ver' && $_REQUEST['action'] !== 'edit')) : ?>
                   <div class="col-md-12 text-center mt-4">
                     <?php
-                      // Obtener el número total de registros
+											// Obtener el número total de registros
                       $sqlCount = "
-                        SELECT COUNT(*) AS total
-                        FROM relationship
-                        WHERE state != 3
+                          SELECT COUNT(*) AS total
+                          FROM security_question
+                          WHERE state != 3
                       ";
                       $countQuery = $db->query($sqlCount);
                       $totalRecords = $countQuery->fetch(PDO::FETCH_ASSOC)['total'];
@@ -184,7 +156,7 @@
 
                       // Consulta para obtener los registros de la página actual con límite y desplazamiento
                       $sql = "
-                          SELECT * FROM relationship
+                          SELECT * FROM security_question
                           WHERE state != 3
                           LIMIT $offset, $recordsPerPage
                       ";
@@ -193,14 +165,14 @@
                       // Verificar si existen registros
                       $hasRecords = $query->rowCount() > 0;
 										?>
-                    <h4 class="mb-5 text-uppercase text-primary">Parentescos</h4>
+                    <h4 class="mb-5 text-uppercase text-primary">Preguntas de Seguridad</h4>
                     <?php if ($hasRecords) : ?>
                     <div class="table-responsive">
                       <table class="table table-bordered">
                         <caption class="text-center">Listado de Resultados</caption>
                         <thead>
                           <tr>
-                            <th>Parentesco</th>
+                            <th>Pregunta de Seguridad</th>
                             <th>Estado</th>
                             <th>Acciones</th>
                           </tr>
@@ -218,11 +190,11 @@
                             ?>
                             <td>
                               <a class="btn btn-primary"
-                                href="?action=edit&id_relationship=<?php echo $row['id_relationship'];?>" />
-                              Actualizar
+                                href="?action=edit&id_security_question=<?php echo $row['id_security_question'];?>">
+                                Actualizar
                               </a>
                               <a class="btn btn-danger"
-                                href="?action=delete&id_relationship=<?php echo $row['id_relationship'];?>"
+                                href="?action=delete&id_security_question=<?php echo $row['id_security_question'];?>"
                                 onclick="confirmDelete(event)">
                                 Eliminar
                               </a>
