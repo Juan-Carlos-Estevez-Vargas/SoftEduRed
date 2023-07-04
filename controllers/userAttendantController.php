@@ -27,7 +27,7 @@
             );
         } elseif ($action === 'delete') {
             $delete = new UserAttendantService();
-            $delete->delete($_GET['id_user'],$_GET['t_doc']);
+            $delete->delete($_GET['id_user']);
         } elseif ($action === 'edit') {
             $id = $_GET['id_user'];
         }

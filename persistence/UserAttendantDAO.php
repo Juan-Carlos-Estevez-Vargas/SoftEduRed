@@ -50,11 +50,9 @@
 				try {
 						$userId = UserDAO::createUser(
 								$documentType, $identificationNumber, $firstName, $secondName, $surname,
-								$secondSurname, $gender, $address, $email, $phone, $username, $password, $securityQuestion,
-								$securityAnswer, $this->pdo
+								$secondSurname, $gender, $address, $email, $phone, $username, $password,
+								$securityQuestion, $securityAnswer, $this->pdo
 						);
-
-						echo $userId;
 
 						$this->createAttendant($userId, $relationId);
 						$this->assignUserRole($userId);
@@ -86,7 +84,7 @@
 			* @param string $securityAnswer The user's security answer.
 			* @param string $relationId The attendant's relationship id to the user.
 		 */
-		public function updateAttendantUser(
+		public function update(
 			int $userId, string $idType, int $identificationNumber, string $firstName,
 			string $secondName,	string $surname, string $secondSurname, string $gender,
 			string $address, string $email,	string $phone, string $username, string $password,
@@ -100,7 +98,7 @@
 								$identificationNumber, $userId, $this->pdo
 						);
 
-						$this->updateAttendant($attendantId, $relationId,	$userId);
+						$this->updateAttendant($relationId,	$userId);
 				} catch (Exception $e) {
 						$this->showErrorMessage(
 								"Ocurrió un error interno. Consulta al Administrador.",
@@ -115,7 +113,7 @@
 		 * @param string $userId The user's ID.
 		 * @return void
 		 */
-		public function deleteAttendantUser(string $userId): void {
+		public function delete(string $userId): void {
 				try {
 						$stmtRole = $this->pdo->prepare("
 								DELETE FROM user_has_role
@@ -125,7 +123,7 @@
 						
 						$stmt = $this->pdo->prepare("
 								UPDATE attendant
-								SET state = 2
+								SET state = 3
 								WHERE user_id = :id_user
 						");
 						$stmt->execute(['id_user' => $userId]);
@@ -160,13 +158,13 @@
 		 * @param int $userId The user ID.
 		 * @return void
 		 */
-		private function updateAttendant(string $attendantId, int $relationId, int $userId): void {
+		private function updateAttendant(int $relationId, int $userId): void {
 				$stmt = $this->pdo->prepare(
 						"UPDATE attendant
 						SET relationship_id = ?
 						WHERE user_id = ?"
 				);
-				$stmt->execute([$attendantId, $relationId, $userId]);
+				$stmt->execute([$relationId, $userId]);
 		}
 
 		/**

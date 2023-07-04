@@ -128,7 +128,7 @@
 			* @param string $securityAnswer The user's security answer.
 			* @param string $relationId The attendant's relationship id to the user.
 		 */
-		public function updateAttendantUser(
+		public function update(
 			int $userId, string $idType, int $identificationNumber, string $firstName,
 			string $secondName,	string $surname, string $secondSurname, string $gender,
 			string $address, string $email,	string $phone, string $username, string $password,
@@ -140,61 +140,58 @@
 						&& !empty($username) && !empty($password) && !empty($securityAnswer)
 						&& !empty($securityQuestion) && !empty($relationId))
 						{
-								if (Message::isRegistered($this->pdo, 'identification_number', $identificationNumber, true, $userId)) {
+								if (Message::isRegistered(Database::connect(), 'user', 'identification_number', $identificationNumber, true, $userId, 'id_user')) {
 										Message::showErrorMessage(
 												"El número de identificación ingresado ya se encuentra registrado en la plataforma",
-												'../../views/user/userStudentView.php'
+												'../../views/userStudentView.php'
 										);
 										return;
 								}
 
-								if (Message::isRegistered($this->pdo, 'email', $email, true, $userId)) {
+								if (Message::isRegistered(Database::connect(), 'user', 'email', $email, true, $userId, 'id_user')) {
 										Message::showErrorMessage(
 												"El correo electrónico ingresado ya se encuentra registrado en la plataforma.",
-												'../../views/user/userStudentView.php'
+												'../../views/userStudentView.php'
 										);
 										return;
 								}
 
-								if (!empty($phone) && Message::isRegistered($this->pdo, 'phone', $phone, true, $userId)) {
+								if (!empty($phone) && Message::isRegistered(Database::connect(), 'user', 'phone', $phone, true, $userId, 'id_user')) {
 										Message::showErrorMessage(
 												"El teléfono ingresado ya se encuentra registrado en la plataforma.",
-												'../../views/user/userStudentView.php'
+												'../../views/userStudentView.php'
 										);
 										return;
 								}
 
-								if (Message::isRegistered($this->pdo, 'username', $username, true, $userId)) {
+								if (Message::isRegistered(Database::connect(), 'user', 'username', $username, true, $userId, 'id_user')) {
 										Message::showErrorMessage(
 												"El usuario ingresado ya se encuentra registrado en la plataforma.",
-												'../../views/user/userStudentView.php'
+												'../../views/userStudentView.php'
 										);
 										return;
 								}
 								
-								User::updateUser(
-										$firstName,	$secondName, $surname, $secondSurname,
-										$gender, $address, $email, $phone, $username,
-										$password, $securityAnswer, $idType, $securityQuestion,
-										$identificationNumber, $userId, $this->pdo
+								$this->attendant->update(
+										$userId, $idType, $identificationNumber, $firstName, $secondName,
+										$surname, $secondSurname, $gender, $address, $email, $phone,
+										$username, $password, $securityQuestion, $securityAnswer,	$relationId
 								);
-
-								$this->updateAttendant($attendantId, $relationId,	$userId);
 								
-								$this->showSuccessMessage(
+								Message::showSuccessMessage(
 										"Registro Actualizado Exitosamente.",
-										'../../views/user/userAttendantView.php'
+										'../../views/userAttendantView.php'
 								);
 						} else {
-								$this->showWarningMessage(
+								Message::showWarningMessage(
 										"Debes llenar todos los campos.",
-										'../../views/user/userAttendantView.php'
+										'../../views/userAttendantView.php'
 								);
 						}
 				} catch (Exception $e) {
-						$this->showErrorMessage(
+						Message::showErrorMessage(
 								"Ocurrió un error interno. Consulta al Administrador.",
-								'../../views/user/userAttendantView.php'
+								'../../views/userAttendantView.php'
 						);
 				}
 		}
@@ -205,36 +202,25 @@
 		 * @param string $userId The user's ID.
 		 * @return void
 		 */
-		public function deleteAttendantUser(string $userId): void {
+		public function delete(string $userId): void {
 				try {
 						if (!empty($userId)) {
-								$stmtRole = $this->pdo->prepare("
-										DELETE FROM user_has_role
-										WHERE user_id = :id_user
-								");
-								$stmtRole->execute(['id_user' => $userId]);
+								$this->attendant->delete($userId);
 								
-								$stmt = $this->pdo->prepare("
-										UPDATE attendant
-										SET state = 2
-										WHERE user_id = :id_user
-								");
-								$stmt->execute(['id_user' => $userId]);
-								
-								$this->showSuccessMessage(
+								Message::showSuccessMessage(
 										"Registro Eliminado Exitosamente.",
-										'../../views/user/userAttendantView.php'
+										'../../views/userAttendantView.php'
 								);
 						} else {
-								$this->showWarningMessage(
+								Message::showWarningMessage(
 										"Debes llenar todos los campos.",
-										'../../views/user/userAttendantView.php'
+										'../../views/userAttendantView.php'
 								);
 						}
 				} catch (Exception $e) {
-						$this->showErrorMessage(
+						Message::showErrorMessage(
 								"Ocurrió un error interno. Consulta al Administrador.",
-								'../../views/user/userAttendantView.php'
+								'../../views/userAttendantView.php'
 						);
 				}
 		}
