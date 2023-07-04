@@ -38,13 +38,13 @@
                                 <option value='../views/relationshipView.php'>Parentesco</option>
                                 <option value='../views/questionView.php'>Pregunta de Seguridad</option>
                                 <option value='../views/roleView.php'>Rol</option>
-                                <option value='../views/relationship/roleHasUserView.php'>Rol por Usuario</option>
-                                <option value='../views/user/userStudentView.php'>Estudiante</option>
-                                <option value='../views/user/userTeacherView.php'>Docente</option>
-                                <option value='../views/user/userAttendantView.php'>Acudiente</option>
-                                <option value='../views/atributes/subjectView.php'>Materia</option>
-                                <option value='../views/atributes/courseView.php'>Curso</option>
-                                <option value='../views/relationship/subjectHasCourseView.php'>Materia por Curso
+                                <option value='../views/roleHasUserView.php'>Rol por Usuario</option>
+                                <option value='../views/userStudentView.php'>Estudiante</option>
+                                <option value='../views/userTeacherView.php'>Docente</option>
+                                <option value='../views/userAttendantView.php'>Acudiente</option>
+                                <option value='../views/subjectView.php'>Materia</option>
+                                <option value='../views/courseView.php'>Curso</option>
+                                <option value='../views/subjectHasCourseView.php'>Materia por Curso
                                 </option>
                                 <option value='../views/atributes/noAttendanceView.php'>Asistencia</option>
                               </select>

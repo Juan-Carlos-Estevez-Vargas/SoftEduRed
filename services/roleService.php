@@ -11,9 +11,11 @@
 
 <body>
   <?php
-	require_once '../../utils/Message.php';
+  require_once '../persistence/database/Database.php';
+  require_once '../persistence/RoleDAO.php';
+  require_once '../utils/Message.php';
 
-	class RoleDAO
+	class RoleService
 	{
 		private $pdo;
 
@@ -26,7 +28,7 @@
 		public function __construct()
 		{
 				try {
-						$this->pdo = database::connect();
+						$this->role = new RoleDAO();
 				} catch (PDOException $e) {
 						throw new PDOException($e->getMessage());
 				}
@@ -39,31 +41,35 @@
 		 * @param string $state The state of the role
 		 * @return void
 		 */
-		public function addRole(string $description, string $state): void
+		public function register(string $description, string $state): void
 		{
 				try {
 						if (!empty($description)) {
-								$sql = "
-										INSERT INTO role (description, state)
-										VALUES (UPPER(:description), :state)
-								";
-								$statement = $this->pdo->prepare($sql);
-								$statement->execute(['description' => $description, 'state' => $state]);
+                if (Message::isRegistered(Database::connect(), 'role', 'description', $description, false, null))
+                {
+                    Message::showErrorMessage(
+                        "El rol ingresado ya se encuentra registrado en la plataforma",
+                        '../../views/roleView.php'
+                    );
+                    return;
+                }
+                
+                $this->role->register($description, $state);
 								
 								Message::showSuccessMessage(
 										"Registro Agregado Exitosamente.",
-										'../../views/relationship/roleView.php'
+										'../../views/roleView.php'
 								);
 					} else {
 							Message::showWarningMessage(
 									"Debes llenar todos los campos.",
-									'../../views/relationship/roleView.php'
+									'../../views/roleView.php'
 							);
 					}
 			} catch (Exception $e) {
 					Message::showErrorMessage(
 							"Ocurrió un error interno. Consulta al Administrador.",
-							'../../views/relationship/roleView.php'
+							'../../views/roleView.php'
 					);
 			}
 		}
@@ -77,42 +83,39 @@
 		 *
 		 * @return void
 		 */
-		public function updateRole(string $idRole, string $role, string $state)
+		public function update(string $idRole, string $role, string $state)
 		{
 				try {
 						// Only update if both $idRole and $role are not empty.
 						if (!empty($role) && !empty($idRole)) {
-								$sql = "
-										UPDATE role
-										SET description = UPPER(:role),
-												state = :state
-										WHERE id_role = :idRole
-								";
-								// Prepare the SQL statement.
-								$stmt = $this->pdo->prepare($sql);
-								// Bind the parameters.
-								$stmt->bindParam(':role', $role);
-								$stmt->bindParam(':state', $state);
-								$stmt->bindParam(':idRole', $idRole);
-								// Execute the statement.
-								$stmt->execute();
+                if (Message::isRegistered(Database::connect(), 'role', 'description', $role, true, $idRole, 'id_role'))
+                {
+                    Message::showErrorMessage(
+                        "El género ingresado ya se encuentra registrado en la plataforma",
+                        '../../views/roleView.php'
+                    );
+                    return;
+                }
+                
+                $this->role->update($idRole, $role, $state);
+              
 								// Show success message.
 								Message::showSuccessMessage(
 										"Registro Actualizado Exitosamente.",
-										'../../views/relationship/roleView.php'
+										'../../views/roleView.php'
 								);
 						} else {
 								// Show warning message if $idRole or $role is empty.
 								Message::showWarningMessage(
 										"Debes llenar todos los campos.",
-										'../../views/relationship/roleView.php'
+										'../../views/roleView.php'
 								);
 						}
 				} catch (Exception $e) {
 						// Show error message if an exception occurs.
 						Message::showErrorMessage(
 								"Ocurrió un error interno. Consulta al Administrador.",
-								'../../views/relationship/roleView.php'
+								'../../views/roleView.php'
 						);
 				}
 		}
@@ -123,37 +126,30 @@
 		 * @param string $idRole The ID of the role to be deleted
 		 * @throws PDOException If there is an error executing the SQL statement
 		 */
-		public function deleteRole(string $idRole)
+		public function delete(string $idRole)
 		{
 				try {
 						// Check if ID is not empty
 						if (!empty($idRole)) {
-								$sql = "
-										UPDATE role
-										SET state = 3
-										WHERE id_role = :role
-								";
-								$stmt = $this->pdo->prepare($sql);
-								$stmt->bindParam(':role', $idRole);
-								$stmt->execute();
-								
+                $this->role->delete($idRole);
+              
 								// Show success message
 								Message::showSuccessMessage(
 										"Registro Eliminado Exitosamente.",
-										'../../views/relationship/roleView.php'
+										'../../views/roleView.php'
 								);
 						} else {
 								// Show warning message if ID is empty
 								Message::showWarningMessage(
 										"Debes llenar todos los campos.",
-										'../../views/relationship/roleView.php'
+										'../../views/roleView.php'
 								);
 						}
 				} catch (Exception $e) {
 						// Show error message if there is an exception
 						Message::showErrorMessage(
 								"Ocurrió un error interno. Consulta al Administrador.",
-								'../../views/relationship/roleView.php'
+								'../../views/roleView.php'
 						);
 				}
 		}

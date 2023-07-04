@@ -55,7 +55,7 @@
           <div class="col-lg-6 mb-5 mb-lg-0">
             <div class="card">
               <div class="card-body py-5 px-md-5 text-left">
-                <form method="POST" action="login/loginValidation.php">
+                <form method="POST" action="controllers/loginController.php">
                   <h1 class="text-primary mb-4">Iniciar Sesión</h1>
                   <div class="row">
                     <div class="col-md-6 mb-4">

@@ -12,8 +12,8 @@
 <body>
 
   <?php
-  require_once '../../utils/Message.php';
-  require_once '../../utils/User.php';
+  require_once '../utils/Message.php';
+  require_once '../persistence/UserDAO.php';
 	
 	class UserStudentDAO
 	{
@@ -54,7 +54,7 @@
 		 *
 		 * @return void
 		 */
-		public function registerUserAndStudent(
+		public function register(
 			string $idType,
 			int $identificationNumber,
 			string $firstName,
@@ -73,75 +73,18 @@
 			int $courseId
 		): void {
 				try {
-						if (User::validateUserFields(
-								$idType,
-								$identificationNumber,
-								$firstName,
-								$surname,
-								$gender,
-								$email,
-								$username,
-								$password,
-								$securityAnswer,
-								$securityQuestion,
-								$attendantId,
-								$courseId
-						)) {
-								if (Message::isRegistered($this->pdo, 'identification_number', $identificationNumber, false, null)) {
-										Utils::showErrorMessage(
-												"El número de identificación ingresado ya se encuentra registrado en la plataforma",
-												'../../views/user/userStudentView.php'
-										);
-										return;
-								}
-		
-								if (Message::isRegistered($this->pdo, 'email', $email, false, null)) {
-										Utils::showErrorMessage(
-												"El correo electrónico ingresado ya se encuentra registrado en la plataforma.",
-												'../../views/user/userStudentView.php'
-										);
-										return;
-								}
-		
-								if (!empty($phone) && Message::isRegistered($this->pdo, 'phone', $phone, false, null)) {
-										Utils::showErrorMessage(
-												"El teléfono ingresado ya se encuentra registrado en la plataforma.",
-												'../../views/user/userStudentView.php'
-										);
-										return;
-								}
-		
-								if (Message::isRegistered($this->pdo, 'username', $username, false, null)) {
-										Utils::showErrorMessage(
-												"El usuario ingresado ya se encuentra registrado en la plataforma.",
-												'../../views/user/userStudentView.php'
-										);
-										return;
-								}
-		
-								$userId = User::createUser(
-										$idType, $identificationNumber, $firstName, $secondName, $surname,
-										$secondSurname, $gender, $address, $email, $phone, $username, $password, $securityQuestion,
-										$securityAnswer, $this->pdo
-								);
-		
-								$this->createStudent($userId, $attendantId, $courseId);
-								$this->assignUserRole($userId);
-		
-								Message::showSuccessMessage(
-										"Registro Agregado Exitosamente.",
-										'../../views/user/userStudentView.php'
-								);
-						} else {
-								Message::showWarningMessage(
-										"Debes llenar todos los campos.",
-										'../../views/user/userStudentView.php'
-								);
-						}
+						$userId = UserDAO::createUser(
+								$idType, $identificationNumber, $firstName, $secondName, $surname,
+								$secondSurname, $gender, $address, $email, $phone, $username, $password, $securityQuestion,
+								$securityAnswer, $this->pdo
+						);
+
+						$this->createStudent($userId, $attendantId, $courseId);
+						$this->assignUserRole($userId);
 				} catch (Exception $e) {
 						Message::showErrorMessage(
 								"Ocurrió un error interno. Consulta al Administrador.",
-								'../../views/user/userStudentView.php'
+								'../../views/userStudentView.php'
 						);
 				}
 		}
@@ -168,7 +111,7 @@
 		 * @param int $courseId - The course ID.
 		 * @return void
 		 */
-		public function updateUserStudent(
+		public function update(
 			int $userId,
 			string $idType,
 			int $identificationNumber,
@@ -188,64 +131,15 @@
 			int $courseId
 		) {
 			try {
-					if (!empty($idType) && !empty($identificationNumber) && !empty($firstName)
-					&& !empty($surname)	&& !empty($gender) && !empty($email) && !empty($userId)
-					&& !empty($username) && !empty($password) && !empty($securityAnswer)
-					&& !empty($securityQuestion) && !empty($attendantId) && !empty($courseId))
-					{
-							if (Message::isRegistered($this->pdo, 'identification_number', $identificationNumber, true, $userId)) {
-									Message::showErrorMessage(
-											"El número de identificación ingresado ya se encuentra registrado en la plataforma",
-											'../../views/user/userStudentView.php'
-									);
-									return;
-							}
-	
-							if (Message::isRegistered($this->pdo, 'email', $email, true, $userId)) {
-									Message::showErrorMessage(
-											"El correo electrónico ingresado ya se encuentra registrado en la plataforma.",
-											'../../views/user/userStudentView.php'
-									);
-									return;
-							}
-	
-							if (!empty($phone) && Message::isRegistered($this->pdo, 'phone', $phone, true, $userId)) {
-									Message::showErrorMessage(
-											"El teléfono ingresado ya se encuentra registrado en la plataforma.",
-											'../../views/user/userStudentView.php'
-									);
-									return;
-							}
-	
-							if (Message::isRegistered($this->pdo, 'username', $username, true, $userId)) {
-									Message::showErrorMessage(
-											"El usuario ingresado ya se encuentra registrado en la plataforma.",
-											'../../views/user/userStudentView.php'
-									);
-									return;
-							}
+					UserDAO::updateUser(
+							$firstName,	$secondName, $surname, $secondSurname,
+							$gender, $address, $email, $phone, $username,
+							$password,	$securityAnswer, $idType, $securityQuestion,
+							$identificationNumber, $userId, $this->pdo
+					);
 
-							User::updateUser(
-									$firstName,	$secondName, $surname, $secondSurname,
-									$gender, $address, $email, $phone, $username,
-									$password,	$securityAnswer, $idType, $securityQuestion,
-									$identificationNumber, $userId, $this->pdo
-							);
-		
-							$this->updateStudent($attendantId, $courseId,	$userId);
-	
-							Message::showSuccessMessage(
-									"Registro Actualizado Exitosamente.",
-									'../../views/user/userStudentView.php'
-							);
-					} else {
-							Message::showWarningMessage(
-									"Debes llenar todos los campos.",
-									'../../views/user/userStudentView.php'
-							);
-					}
+					$this->updateStudent($attendantId, $courseId,	$userId);
 			} catch (Exception $e) {
-				echo $e->getMessage();
 					Message::showErrorMessage(
 							"Ocurrió un error interno. Consulta al Administrador.",
 							'../../views/user/userStudentView.php'
@@ -259,33 +153,21 @@
 		 * @param int $userId The ID of the user to delete.
 		 * @throws Exception If an error occurs during the deletion process.
 		 */
-		public function deleteStudentUser($userId)
+		public function delete($userId)
 		{
 				try {
-						if (!empty($userId)) {
-								$stmtRole = $this->pdo->prepare("
-										DELETE FROM user_has_role
-										WHERE user_id = :id_user
-								");
-								$stmtRole->execute(['id_user' => $userId]);
-		
-								$stmt = $this->pdo->prepare("
-										UPDATE student
-										SET state = 3
-										WHERE user_id = :id_user
-								");
-								$stmt->execute(['id_user' => $userId]);
-		
-								Message::showSuccessMessage(
-										"Registro Eliminado Exitosamente.",
-										'../../views/user/userStudentView.php'
-								);
-						} else {
-								Message::showWarningMessage(
-										"Debes llenar todos los campos.",
-										'../../views/user/userStudentView.php'
-								);
-						}
+						$stmtRole = $this->pdo->prepare("
+								DELETE FROM user_has_role
+								WHERE user_id = :id_user
+						");
+						$stmtRole->execute(['id_user' => $userId]);
+
+						$stmt = $this->pdo->prepare("
+								UPDATE student
+								SET state = 3
+								WHERE user_id = :id_user
+						");
+						$stmt->execute(['id_user' => $userId]);
 				} catch (Exception $e) {
 						Message::showErrorMessage(
 								"Ocurrió un error interno. Consulta al Administrador.",

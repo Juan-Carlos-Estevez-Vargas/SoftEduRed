@@ -1,7 +1,6 @@
 <?php
-class User {
-  
-  /**
+  class UserDAO {
+     /**
    * Create a new user.
    *
    * @param string $idType The type of identification for the user.
@@ -202,5 +201,6 @@ class User {
         && !empty($attendantId)
         && !empty($courseId);
   }
-}
+  }
+
 ?>

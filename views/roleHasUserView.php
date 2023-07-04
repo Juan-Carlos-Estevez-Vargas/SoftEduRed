@@ -1,29 +1,4 @@
-<?php
-	require_once "../../persistence/database/Database.php";
-	require_once "../../persistence/relationship/RoleHasUserDAO.php";
-
-  $db = database::connect();
-
-	if (isset($_REQUEST['action'])) {
-		$action = $_REQUEST['action'];
-
-		if ($action == 'update') {
-			$update = new RoleHasUserDAO();
-			$update->updateUserRoles(
-				$_POST['id_user_has_role'], $_POST['state']
-			);
-		} elseif ($action == 'register') {
-			$insert = new RoleHasUserDAO();
-			$insert ->registerUserRole($_POST['id_user'], $_POST['role'], $_POST['state']);
-		} elseif ($action == 'delete') {
-			$delete = new RoleHasUserDAO();
-			$delete->deleteUserRole($_GET['id_user_has_role']);
-		} elseif ($action == 'edit') {
-			$id = $_GET['id_user'];
-			$role = $_GET['role'];
-		}
-	}
-?>
+<?php require_once "../controllers/roleHasUserController.php"; ?>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -39,13 +14,13 @@
 
 <body>
   <section class="h-100 bg-white">
-    <div class="container py-4 h-100">
+    <div class="container py-3 h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col">
           <div class="card card-registration my-4">
             <div class="row g-0">
               <div class="col-xl-12">
-                <div class="card-body p-md-5 text-black" style="background-color: hsl(0, 0%, 96%)">
+                <div class="card-body p-md-4 text-black" style="background-color: hsl(0, 0%, 96%)">
                   <h3 class="text-center d-flex justify-content-center justify-content-md-end">
                     <a class="btn btn-success" href="?action=ver&m=1">Agregar Registro</a>
                   </h3>

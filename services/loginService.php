@@ -11,8 +11,27 @@
 
 <body>
   <?php
-    class Login
+    require_once "../persistence/loginDAO.php";
+    require_once '../utils/Message.php';
+    
+    class LoginService
     {
+
+        /**
+		 * Initializes a new instance of the class.
+		 *
+		 * Creates a new PDO connection object using database::conectar().
+		 * Throws an exception with the error message if the connection fails.
+		 */
+		public function __construct()
+		{
+            try {
+                $this->login = new LoginDAO();
+            } catch (PDOException $e) {
+                throw new PDOException($e->getMessage());
+            }
+		}
+        
         /**
          * Logs in a user
          *
@@ -31,49 +50,34 @@
             $db = Database::connect();
 
             // Get user from database
-            $user = $this->getUser($db, $username, $password);
+            $user = $this->login->getUser($db, $username, $password);
 
             // If user is not found, display error message and redirect to login page
             if (!$user) {
-                $this->displayErrorMessage("Usuario y/o Contraseña Incorrectos.");
+                Message::showErrorMessage(
+                    "Usuario y/o contraseña erróneos.",
+                    '../../index.php'
+                );
                 return;
             }
 
             // Get user role from database
-            $role = $this->getUserRole($db, $user["id_user"]);
+            $role = $this->login->getUserRole($db, $user["id_user"]);
 
             // Set session variables with user information
             $this->setSessionVariables($user, $role);
              
             // If user does not have a role, display error message and redirect to login page
             if (!$role) {
-                $this->displayErrorMessage("El usuario NO se encuentra con un rol asignado.");
+                Message::showErrorMessage(
+                    "El usuario NO se encuentra con un rol asignado.",
+                    '../../index.php'
+                );
                 return;
             }
 
             // Redirect to appropriate page based on user role
             $this->redirectToRolePage($role["description"]);
-        }
-
-        /**
-         * Retrieves a user from the database based on the username and password
-         *
-         * @param PDO $db The database connection
-         * @param string $username The username of the user
-         * @param string $password The password of the user
-         *
-         * @return array|false Returns the user as an associative array if found, false otherwise
-         */
-        private function getUser(PDO $db, string $username, string $password)
-        {
-            $sql = "
-                SELECT * FROM user
-                WHERE username = :username
-                    AND password = :password
-            ";
-            $stmt = $db->prepare($sql);
-            $stmt->execute(['username' => $username, 'password' => $password]);
-            return $stmt->fetch(PDO::FETCH_ASSOC);
         }
 
         /**
@@ -93,27 +97,6 @@
             $_SESSION["LASTNAME"] = $user["surname"];
             $_SESSION["SLASTNAME"] = $user["second_surname"];
             $_SESSION["ROLE"] = $role["description"];
-        }
-
-        /**
-         * Retrieves the role of a user from the database
-         *
-         * @param PDO $db The database connection
-         * @param int $userId The ID of the user
-         *
-         * @return array|false Returns the role as an associative array if found, false otherwise
-         */
-        private function getUserRole(PDO $db, int $userId)
-        {
-            $sql = "
-                SELECT description FROM role
-                JOIN user_has_role
-                    ON id_role = role_id
-                WHERE user_id = :user_id
-            ";
-            $stmt = $db->prepare($sql);
-            $stmt->execute(['user_id' => $userId]);
-            return $stmt->fetch(PDO::FETCH_ASSOC);
         }
 
         /**
@@ -141,36 +124,7 @@
                     break;
             }
         }
-
-        /**
-         * Displays an error message using SweetAlert and redirects the user to a specified location
-         *
-         * @param string $message The error message to display
-         * @param string $location The location to redirect the user after displaying the error message
-         *
-         * @return void
-         */
-        private function displayErrorMessage(string $message, string $location = '../index.php'): void
-        {
-            echo "
-                <script>
-                    Swal.fire({
-                            position: 'top-center',
-                            icon: 'error',
-                            title: '$message',
-                            showConfirmButton: false,
-                            timer: 2000
-                    }).then(() => {
-                            window.location = '$location';
-                    });
-                </script>
-            ";
-        }
-
     }
-    
-    $new = new Login();
-    $new->loginUser($_POST["username"], $_POST["password"]);
 ?>
 </body>
 
