@@ -1,16 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
-</head>
-
-<body>
-  <?php
+<?php
+    require_once '../utils/Message.php';
+    
     class LoginDAO
     {
         /**
@@ -24,14 +14,21 @@
          */
         public function getUser(PDO $db, string $username, string $password)
         {
-            $sql = "
-                SELECT * FROM user
-                WHERE username = :username
-                    AND password = :password
-            ";
-            $stmt = $db->prepare($sql);
-            $stmt->execute(['username' => $username, 'password' => $password]);
-            return $stmt->fetch(PDO::FETCH_ASSOC);
+            try {
+                $sql = "
+                    SELECT * FROM user
+                    WHERE username = :username
+                        AND password = :password
+                ";
+                $stmt = $db->prepare($sql);
+                $stmt->execute(['username' => $username, 'password' => $password]);
+                return $stmt->fetch(PDO::FETCH_ASSOC);
+            } catch (Exception $e) {
+                Message::showErrorMessage(
+                    "Ocurrió un error interno. Consulta al Administrador.",
+                    '../../index.php'
+                );
+            }
         }
 
         /**
@@ -44,18 +41,22 @@
          */
         public function getUserRole(PDO $db, int $userId)
         {
-            $sql = "
-                SELECT description FROM role
-                JOIN user_has_role
-                    ON id_role = role_id
-                WHERE user_id = :user_id
-            ";
-            $stmt = $db->prepare($sql);
-            $stmt->execute(['user_id' => $userId]);
-            return $stmt->fetch(PDO::FETCH_ASSOC);
+            try {
+                $sql = "
+                    SELECT description FROM role
+                    JOIN user_has_role
+                        ON id_role = role_id
+                    WHERE user_id = :user_id
+                ";
+                $stmt = $db->prepare($sql);
+                $stmt->execute(['user_id' => $userId]);
+                return $stmt->fetch(PDO::FETCH_ASSOC);
+            } catch (Exception $e) {
+                Message::showErrorMessage(
+                    "Ocurrió un error interno. Consulta al Administrador.",
+                    '../../index.php'
+                );
+            }
         }
     }
 ?>
-</body>
-
-</html>

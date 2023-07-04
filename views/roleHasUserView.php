@@ -21,16 +21,25 @@
             <div class="row g-0">
               <div class="col-xl-12">
                 <div class="card-body p-md-4 text-black" style="background-color: hsl(0, 0%, 96%)">
+                  <?php if (!isset($_REQUEST['action']) || ($_REQUEST['action'] !== 'ver' && $_REQUEST['action'] !== 'edit')) : ?>
                   <h3 class="text-center d-flex justify-content-center justify-content-md-end">
                     <a class="btn btn-success" href="?action=ver&m=1">Agregar Registro</a>
                   </h3>
+                  <?php endif; ?>
 
                   <div class="container-fluid">
                     <div class="row">
                       <div class="col-md-12">
                         <?php if (!empty($_GET['m']) && !empty($_GET['action'])) { ?>
                         <form action="#" method="post" enctype="multipart/form-data">
-                          <h4 class="mb-5 text-uppercase text-center text-success">Nuevo Rol de Usuario</h4>
+                          <div class="row justify-content-end align-items-center mb-5">
+                            <div class="col-md-11 d-flex align-items-center justify-content-center">
+                              <h4 class="text-uppercase text-success">Nuevo Rol de Usuario</h4>
+                            </div>
+                            <div class="col-md-1 d-flex align-items-center justify-content-end">
+                              <a href="?action=&m=" class="btn btn-danger btn-block">X</a>
+                            </div>
+                          </div>
 
                           <div class="row">
                             <div class="col-md-4">
@@ -130,12 +139,20 @@
 										
 														while ($r = $query->fetch(PDO::FETCH_ASSOC)) {
 													?>
-                          <h4 class="mb-5 text-uppercase text-center text-success">Actualizar Rol de Usuario</h4>
+                          <div class="row justify-content-end align-items-center mb-5">
+                            <div class="col-md-11 d-flex align-items-center justify-content-center">
+                              <h4 class="text-uppercase text-success">Actualizar Rol de usuario</h4>
+                            </div>
+                            <div class="col-md-1 d-flex align-items-center justify-content-end">
+                              <a href="?action=&m=" class="btn btn-danger btn-block">X</a>
+                            </div>
+                          </div>
 
                           <div>
                             <input type="text" name="id_user_has_role" value="<?php echo $r['id_user_has_role']?>"
                               style="display: none" class="form-control" />
                           </div>
+
                           <div class="row">
                             <div class="col-md-3">
                               <div class="form-outline">
@@ -187,10 +204,26 @@
                   </div>
                 </div>
 
+                <?php if (!isset($_REQUEST['action']) || ($_REQUEST['action'] !== 'ver' && $_REQUEST['action'] !== 'edit')) : ?>
                 <div class="col-md-12 text-center mt-4">
                   <?php
-										$sql = "
-											SELECT
+                    // Obtener el número total de registros
+                    $sqlCount = "
+                      SELECT COUNT(*) AS total
+                      FROM user_has_role
+                      WHERE state != 3
+                    ";
+                    $countQuery = $db->query($sqlCount);
+                    $totalRecords = $countQuery->fetch(PDO::FETCH_ASSOC)['total'];
+
+                    // Calcular el límite y el desplazamiento para la consulta actual
+                    $recordsPerPage = 5; // Número de registros por página
+                    $currentPage = isset($_GET['page']) ? $_GET['page'] : 1; // Página actual
+                    $offset = ($currentPage - 1) * $recordsPerPage;
+
+                    // Consulta para obtener los registros de la página actual con límite y desplazamiento
+                    $sql = "
+                      SELECT
                         user.first_name,
                         user.surname,
                         user_has_role.user_id,
@@ -201,14 +234,17 @@
                       FROM user_has_role
                       JOIN user ON user.id_user = user_has_role.user_id
                       JOIN role ON role.id_role = user_has_role.role_id
-											WHERE role.state = 1
-											ORDER BY user_id, role_id ASC
-										";
-										$query = $db ->query($sql);
-									
-										if ($query->rowCount()>0):
-									?>
+                      WHERE role.state = 1
+                      ORDER BY user_id, role_id ASC
+                      LIMIT $offset, $recordsPerPage
+                    ";
+                    $query = $db->query($sql);
+
+                    // Verificar si existen registros
+                    $hasRecords = $query->rowCount() > 0;
+                  ?>
                   <h4 class="mb-5 text-uppercase text-primary">Roles por Usuario</h4>
+                  <?php if ($hasRecords) : ?>
                   <div class="table-responsive">
                     <table class="table table-bordered">
                       <caption class="text-center">Listado de Resultados</caption>
@@ -249,10 +285,43 @@
                     </table>
                   </div>
                 </div>
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <nav aria-label="Page navigation">
+                      <ul class="pagination justify-content-center">
+                        <?php
+                          // Calcular el número total de páginas
+                          $totalPages = ceil($totalRecords / $recordsPerPage);
+                          
+                          // Mostrar el botón "Anterior" solo si no estamos en la primera página
+                          if ($currentPage > 1) {
+                              echo '<li class="page-item"><a class="page-link" href="?page=' . ($currentPage - 1) . '">Anterior</a></li>';
+                          }
+                          
+                          // Mostrar enlaces a las páginas individuales
+                          for ($i = 1; $i <= $totalPages; $i++) {
+                              echo '<li class="page-item';
+                              if ($i == $currentPage) {
+                                  echo ' active';
+                              }
+                              echo '"><a class="page-link" href="?page=' . $i . '">' . $i . '</a></li>';
+                          }
+                          
+                          // Mostrar el botón "Siguiente" solo si no estamos en la última página
+                          if ($currentPage < $totalPages) {
+                              echo '<li class="page-item"><a class="page-link" href="?page=' . ($currentPage + 1) . '">Siguiente</a></li>';
+                          }
+                        ?>
+                      </ul>
+                    </nav>
+                  </div>
+                </div>
                 <?php else: ?>
-                <h4>No se encontraron registros</h4>
-                <?php endif; ?>
+                <h4><?php echo "No se encontraron registros"; ?></h4>
+                <?php endif ?>
               </div>
+              <?php endif ?>
             </div>
           </div>
         </div>

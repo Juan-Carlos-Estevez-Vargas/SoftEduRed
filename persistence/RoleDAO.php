@@ -1,16 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rol</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
-</head>
-
-<body>
-  <?php
+<?php
 	require_once '../utils/Message.php';
 
 	class RoleDAO
@@ -60,24 +48,21 @@
 		 * Updates a record in the "role" table.
 		 *
 		 * @param string $idRole  The ID of the role to update.
-		 * @param string $role    The new value for the "description" column.
 		 * @param string $state   The new value for the "state" column.
 		 *
 		 * @return void
 		 */
-		public function update(string $idRole, string $role, string $state)
+		public function update(string $idRole, string $state)
 		{
 				try {
 						$sql = "
 								UPDATE role
-								SET description = UPPER(:role),
-										state = :state
+								SET state = :state
 								WHERE id_role = :idRole
 						";
 						// Prepare the SQL statement.
 						$stmt = $this->pdo->prepare($sql);
 						// Bind the parameters.
-						$stmt->bindParam(':role', $role);
 						$stmt->bindParam(':state', $state);
 						$stmt->bindParam(':idRole', $idRole);
 						// Execute the statement.
@@ -118,6 +103,3 @@
 		}
 	}
 ?>
-</body>
-
-</html>

@@ -1,38 +1,4 @@
-<?php
-    require_once "../../persistence/user/UserAttendantDAO.php";
-    require_once "../../persistence/database/Database.php";
-
-    $db = database::connect();
-
-    if (isset($_REQUEST['action'])) {
-        $action = $_REQUEST['action'];
-
-        if ($action === 'update') {
-            $update = new UserAttendantDAO();
-            $update->updateAttendantUser(
-                $_POST['id_user'], $_POST['document_type'], $_POST['identification_number'],
-                $_POST['first_name'], $_POST['second_name'], $_POST['surname'],
-                $_POST['second_surname'], $_POST['gender'], $_POST['address'], $_POST['email'],
-                $_POST['phone'], $_POST['username'], $_POST['password'],
-                $_POST['security_question'], $_POST['answer'], $_POST['relation']
-            );
-        } elseif ($action === 'register') {
-            $insert = new UserAttendantDAO();
-            $insert ->registerAttendantUser(
-                $_POST['document_type'], $_POST['identification_number'], $_POST['first_name'],
-                $_POST['second_name'], $_POST['surname'], $_POST['second_surname'],
-                $_POST['gender'], $_POST['address'], $_POST['email'], $_POST['phone'],
-                $_POST['username'], $_POST['password'], $_POST['security_question'],
-                $_POST['answer'], $_POST['relation']
-            );
-        } elseif ($action === 'delete') {
-            $delete = new UserAttendantDAO();
-            $delete->deleteAttendantUser($_GET['id_user'],$_GET['t_doc']);
-        } elseif ($action === 'edit') {
-            $id = $_GET['id_user'];
-        }
-    }
-?>
+<?php require_once "../controllers/userAttendantController.php"; ?>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -48,13 +14,13 @@
 
 <body>
   <section class="h-100 bg-white">
-    <div class="container py-4 h-100">
+    <div class="container py-3 h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col">
           <div class="card card-registration my-4">
             <div class="row g-0">
               <div class="col-xl-12">
-                <div class="card-body p-md-5 text-black" style="background-color: hsl(0, 0%, 96%)">
+                <div class="card-body p-md-4 text-black" style="background-color: hsl(0, 0%, 96%)">
                   <?php if (!isset($_REQUEST['action']) || ($_REQUEST['action'] !== 'ver' && $_REQUEST['action'] !== 'edit')) : ?>
                   <h3 class="text-center d-flex justify-content-center justify-content-md-end">
                     <a class="btn btn-success" href="?action=ver&m=1">Agregar Acudiente</a>
@@ -520,7 +486,6 @@
                             <th>Número de Identificación</th>
                             <th>Primer Nombre</th>
                             <th>Primer Apellido</th>
-                            <th>Teléfono</th>
                             <th>Acciones</th>
                           </tr>
                         </thead>
@@ -531,14 +496,11 @@
                             <?php echo "<td>".$row['identification_number'] . "</td>";?>
                             <?php echo "<td>".$row['first_name'] . "</td>";?>
                             <?php echo "<td>".$row['surname'] . "</td>";?>
-                            <?php echo "<td>".$row['phone'] . "</td>";?>
                             <td>
-                              <a class="btn btn-primary btn-block" id="boton"
-                                href="?action=edit&id_user=<?php echo $row['id_user'];?>">
+                              <a class="btn btn-primary" href="?action=edit&id_user=<?php echo $row['id_user'];?>">
                                 Update
                               </a>
-                              <a class="btn btn-danger btn-block" id="boton"
-                                href="?action=delete&id_user=<?php echo $row['id_user'];?>"
+                              <a class="btn btn-danger" href="?action=delete&id_user=<?php echo $row['id_user'];?>"
                                 onclick="confirmDelete(event)">
                                 Delete
                               </a>

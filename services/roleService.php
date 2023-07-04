@@ -1,24 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rol</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
-</head>
-
-<body>
-  <?php
+<?php
   require_once '../persistence/database/Database.php';
   require_once '../persistence/RoleDAO.php';
   require_once '../utils/Message.php';
 
 	class RoleService
 	{
-		private $pdo;
-
 		/**
 		 * Initializes a new instance of the class.
 		 *
@@ -83,21 +69,12 @@
 		 *
 		 * @return void
 		 */
-		public function update(string $idRole, string $role, string $state)
+		public function update(string $idRole, string $state)
 		{
 				try {
 						// Only update if both $idRole and $role are not empty.
-						if (!empty($role) && !empty($idRole)) {
-                if (Message::isRegistered(Database::connect(), 'role', 'description', $role, true, $idRole, 'id_role'))
-                {
-                    Message::showErrorMessage(
-                        "El género ingresado ya se encuentra registrado en la plataforma",
-                        '../../views/roleView.php'
-                    );
-                    return;
-                }
-                
-                $this->role->update($idRole, $role, $state);
+						if (!empty($idRole)) {
+                $this->role->update($idRole, $state);
               
 								// Show success message.
 								Message::showSuccessMessage(
@@ -155,6 +132,3 @@
 		}
 	}
 ?>
-</body>
-
-</html>

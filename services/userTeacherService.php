@@ -11,10 +11,11 @@
 
 <body>
   <?php
-	require_once '../../utils/Message.php';
-	require_once '../../utils/User.php';
+	require_once '../utils/Message.php';
+	require_once '../persistence/UserDAO.php';
+	require_once '../persistence/UserTeacherDAO.php';
 		
-	class UserTeacher
+	class UserTeacherService
 	{
 		/**
 		 * Constructor for creating a database connection.
@@ -24,7 +25,7 @@
 		public function __construct()
 		{
 				try {
-						$this->pdo = Database::connect();
+						$this->teacher = new UserTeacherDAO();
 				} catch (PDOException $e) {
 						throw new PDOException("Failed to connect to database: " . $e->getMessage());
 				}
@@ -63,62 +64,59 @@
 						&& !empty($username) && !empty($password) && !empty($securityAnswer)
 						&& !empty($securityQuestion))
 						{
-								if (Message::isRegistered($this->pdo, 'identification_number', $identificationNumber, false, null)) {
+								if (Message::isRegistered(Database::connect(), 'user', 'identification_number', $identificationNumber, false, null)) {
 										Utils::showErrorMessage(
 												"El número de identificación ingresado ya se encuentra registrado en la plataforma",
-												'../../views/user/userStudentView.php'
+												'../../views/userStudentView.php'
 										);
 										return;
 								}
 
-								if (Message::isRegistered($this->pdo, 'email', $email, false, null)) {
+								if (Message::isRegistered(Database::connect(), 'user', 'email', $email, false, null)) {
 										Utils::showErrorMessage(
 												"El correo electrónico ingresado ya se encuentra registrado en la plataforma.",
-												'../../views/user/userStudentView.php'
+												'../../views/userStudentView.php'
 										);
 										return;
 								}
 
-								if (!empty($phone) && Message::isRegistered($this->pdo, 'phone', $phone, false, null)) {
+								if (!empty($phone) && Message::isRegistered(Database::connect(), 'user', 'phone', $phone, false, null)) {
 										Utils::showErrorMessage(
 												"El teléfono ingresado ya se encuentra registrado en la plataforma.",
-												'../../views/user/userStudentView.php'
+												'../../views/userStudentView.php'
 										);
 										return;
 								}
 
-								if (Message::isRegistered($this->pdo, 'username', $username, false, null)) {
+								if (Message::isRegistered(Database::connect(), 'user', 'username', $username, false, null)) {
 										Utils::showErrorMessage(
 												"El usuario ingresado ya se encuentra registrado en la plataforma.",
-												'../../views/user/userStudentView.php'
+												'../../views/userStudentView.php'
 										);
 										return;
 								}
-
-								$userId = User::createUser(
-										$documentType, $identificationNumber, $firstName, $secondName, $surname,
-										$secondSurname, $gender, $address, $email, $phone, $username, $password, $securityQuestion,
-										$securityAnswer, $this->pdo
-								);
-								$userId = $this->pdo->lastInsertId();
-
-								$this->createTeacher($userId, $salary, $documentType);
-								$this->assignUserRole($userId);
+                
+								$this->teacher->register(
+                    $documentType, $identificationNumber, $firstName,
+                    $secondName, $surname, $secondSurname, $gender,
+                    $address, $email, $phone, $username, $password,
+                    $securityQuestion, $securityAnswer, $salary
+                );
 
 								Message::showSuccessMessage(
 										"Registro Agregado Exitosamente.",
-										'../../views/user/userTeacherView.php'
+										'../../views/userTeacherView.php'
 								);
 						} else {
 								Message::showWarningMessage(
 										"Debes llenar todos los campos.",
-										'../../views/user/userTeacherView.php'
+										'../../views/userTeacherView.php'
 								);
 						}
 				} catch (Exception $e) {
 						Message::showErrorMessage(
 								"Ocurrió un error interno. Consulta al Administrador.",
-								'../../views/user/userTeacherView.php'
+								'../../views/userTeacherView.php'
 						);
 				}
 		}
@@ -144,7 +142,7 @@
 		 *
 		 * @return void
 		 */
-		public function updateUserTeacherInformation(
+		public function update(
 			int $userId, string $idType, int $identificationNumber, string $firstName,
 			string $secondName,	string $surname, string $secondSurname, string $gender,
 			string $address, string $email,	string $phone, string $username, string $password,
@@ -156,61 +154,58 @@
 						&& !empty($username) && !empty($password) && !empty($securityAnswer)
 						&& !empty($securityQuestion) && !empty($salary))
 						{
-								if (Message::isRegistered($this->pdo, 'identification_number', $identificationNumber, true, $userId)) {
+								if (Message::isRegistered(Database::connect(), 'user', 'identification_number', $identificationNumber, true, $userId, 'id_user')) {
 										Message::showErrorMessage(
 												"El número de identificación ingresado ya se encuentra registrado en la plataforma",
-												'../../views/user/userStudentView.php'
+												'../../views/userStudentView.php'
 										);
 										return;
 								}
 
-								if (Message::isRegistered($this->pdo, 'email', $email, true, $userId)) {
+								if (Message::isRegistered(Database::connect(), 'user', 'email', $email, true, $userId, 'id_user')) {
 										Message::showErrorMessage(
 												"El correo electrónico ingresado ya se encuentra registrado en la plataforma.",
-												'../../views/user/userStudentView.php'
+												'../../views/userStudentView.php'
 										);
 										return;
 								}
 
-								if (!empty($phone) && Message::isRegistered($this->pdo, 'phone', $phone, true, $userId)) {
+								if (!empty($phone) && Message::isRegistered(Database::connect(), 'user', 'phone', $phone, true, $userId, 'id_user')) {
 										Message::showErrorMessage(
 												"El teléfono ingresado ya se encuentra registrado en la plataforma.",
-												'../../views/user/userStudentView.php'
+												'../../views/userStudentView.php'
 										);
 										return;
 								}
 
-								if (Message::isRegistered($this->pdo, 'username', $username, true, $userId)) {
+								if (Message::isRegistered(Database::connect(), 'user', 'username', $username, true, $userId, 'id_user')) {
 										Message::showErrorMessage(
 												"El usuario ingresado ya se encuentra registrado en la plataforma.",
-												'../../views/user/userStudentView.php'
+												'../../views/userStudentView.php'
 										);
 										return;
 								}
 
-								User::updateUser(
-										$firstName,	$secondName, $surname, $secondSurname,
-										$gender, $address, $email, $phone, $username,
-										$password,	$securityAnswer, $idType, $securityQuestion,
-										$identificationNumber, $userId, $this->pdo
+								$this->teacher->update(
+                    $userId, $idType, $identificationNumber, $firstName, $secondName,
+                    $surname, $secondSurname, $gender, $address, $email, $phone,
+                    $username, $password, $securityQuestion, $securityAnswer, $salary
 								);
 			
-								$this->updateTeacher($salary, $idType, $userId);
-									
 								Message::showSuccessMessage(
 										"Registro Actualizado Exitosamente.",
-										'../../views/user/userTeacherView.php'
+										'../../views/userTeacherView.php'
 								);
 						} else {
 								Message::showWarningMessage(
 										"Debes llenar todos los campos.",
-										'../../views/user/userTeacherView.php'
+										'../../views/userTeacherView.php'
 								);
 						}
 				} catch (Exception $e) {
 						Message::showErrorMessage(
 								"Ocurrió un error interno. Consulta al Administrador.",
-								'../../views/user/userTeacherView.php'
+								'../../views/userTeacherView.php'
 						);
 				}
 		}
@@ -222,88 +217,28 @@
 		 * @throws PDOException if there was an error executing the SQL query
 		 * @return void
 		 */
-		public function deleteUserTeacher(int $userId): void
+		public function delete(int $userId): void
 		{
 				try {
 						if (!empty($userId)) {
-								$stmtRole = $this->pdo->prepare("
-										DELETE FROM user_has_role
-										WHERE user_id = :id_user
-								");
-								$stmtRole->execute(['id_user' => $userId]);
-
-								$stmt = $this->pdo->prepare("
-										UPDATE teacher
-										SET state = 3
-										WHERE user_id = :id_user
-								");
-								$stmt->execute(['id_user' => $userId]);
+                $this->teacher->delete($userId);
 								
 								Message::showSuccessMessage(
 										"Registro Eliminado Exitosamente.",
-										'../../views/user/userTeacherView.php'
+										'../../views/userTeacherView.php'
 								);
 						} else {
 								Message::showWarningMessage(
 										"Debes llenar todos los campos.",
-										'../../views/user/userTeacherView.php'
+										'../../views/userTeacherView.php'
 								);
 						}
 				} catch (Exception $e) {
 						Message::showErrorMessage(
 								"Ocurrió un error interno. Consulta al Administrador.",
-								'../../views/user/userTeacherView.php'
+								'../../views/userTeacherView.php'
 						);
 				}
-		}
-
-		/**
-		 * Creates a new teacher record in the database.
-		 *
-		 * @param int $userId The ID of the user associated with the teacher.
-		 * @param string $salary The salary of the teacher.
-		 * @param int $documentType The ID of the document type associated with the teacher.
-		 * @return void
-		 */
-		private function createTeacher(int $userId, string $salary, int $documentType): void {
-				$stmt = $this->pdo->prepare("
-						INSERT INTO teacher (user_id, salary, document_type_id)
-						VALUES (?, ?, ?)
-				");
-				$stmt->execute([$userId, $salary, $documentType]);
-		}
-
-		/**
-		 * Update the teacher's salary and document type based on user ID.
-		 *
-		 * @param string $salary The new salary.
-		 * @param int $idType The new document type ID.
-		 * @param int $userId The user ID.
-		 *
-		 * @return void
-		 */
-		private function updateTeacher(string $salary, int $idType, int $userId): void {
-				$stmt = $this->pdo->prepare("
-						UPDATE teacher
-						SET salary = ?, document_type_id = ?
-						WHERE user_id = ?
-				");
-				$stmt->execute([$salary, $idType, $userId]);
-		}
-
-		/**
-		 * Assigns a user role to a user with the given ID.
-		 *
-		 * @param int $userId The ID of the user.
-		 *
-		 * @return void
-		 */
-		private function assignUserRole(int $userId): void {
-				$stmt = $this->pdo->prepare("
-						INSERT INTO user_has_role (user_id, role_id, state)
-						VALUES (?, 3, 1)
-				");
-				$stmt->execute([$userId]);
 		}
 	}
 ?>

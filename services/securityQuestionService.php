@@ -1,16 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pregunta de Seguridad</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
-</head>
-
-<body>
-  <?php
+<?php
 	require_once '../persistence/database/Database.php';
 	require_once '../persistence/SecurityQuestionDAO.php';
 	require_once '../utils/Message.php';
@@ -25,7 +13,7 @@
 		 */
 		public function __construct() {
 				try {
-            $this->question = new addSecurityQuestionDAO();
+            $this->question = new SecurityQuestionDAO();
 				} catch (PDOException $e) {
 						throw new PDOException($e->getMessage());
 				}
@@ -79,11 +67,11 @@
 		 * @param string $state The new state to set.
 		 * @return string A success message.
 		 */
-		public function updateQuestionState(string $idSecurityQuestion, string $state)
+		public function update(string $idSecurityQuestion, string $state)
 		{
 				try {
 						if (!empty($idSecurityQuestion)) {
-                $this->question->update($state, $idSecurityQuestion);
+                $this->question->update($idSecurityQuestion, $state);
                 
 								Message::showSuccessMessage(
 										"Registro Actualizado Exitosamente.",
@@ -134,6 +122,3 @@
 		}
 	}
 ?>
-</body>
-
-</html>

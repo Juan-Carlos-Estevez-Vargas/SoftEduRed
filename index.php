@@ -28,10 +28,10 @@
               header("location:utilities/index.php?role=e");
               exit;
             } elseif ($sesion === 'ATTENDANT') {
-              header("location:utilities/index.php?role=att");
+              header("location:utilities/index.php?role=a");
               exit;
             } elseif ($sesion === 'STUDENT') {
-              header("location:utilities/index.php?role=st");
+              header("location:utilities/index.php?role=s");
               exit;
             } elseif ($sesion === 'TEACHER') {
               header("location:utilities/index.php?role=t");

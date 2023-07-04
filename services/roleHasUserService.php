@@ -1,16 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rol de Usuario</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
-</head>
-
-<body>
-  <?php
+<?php
 	require_once '../persistence/database/Database.php';
   require_once '../persistence/roleHasUserDAO.php';
   require_once '../utils/Message.php';
@@ -44,7 +32,14 @@
 		public function register(int $userId, int $roleId, string $state): void
 		{
 				try {
-            if (empty($userId) || empty($roleId) || ($state !== '1' && $state !== '0')) {
+            if (!empty($userId) || !empty($roleId) || ($state !== '1' && $state !== '0')) {
+								if ($this->roleHasUser->exists($userId, $roleId)){
+										Message::showErrorMessage(
+												"El usuario ya tiene asignado el rol.",
+												'../../views/roleHasUserView.php'
+										);
+										return;
+								}
                 $this->roleHasUser->register($userId, $roleId, $state);
           
                 Message::showSuccessMessage(
@@ -79,7 +74,7 @@
 				try {
 						if (!empty($id))
 						{
-                $this->roleHasUser->update($roleId, $state);
+                $this->roleHasUser->update($id, $state);
             
                 Message::showSuccessMessage(
                     "Registro Actualizado Exitosamente.",
@@ -111,7 +106,7 @@
 		{
 				try {
 						if (!empty($idUserHasRole)) {
-                $this->roleHasUser->delete($roleId);
+                $this->roleHasUser->delete($idUserHasRole);
 
 								Message::showSuccessMessage(
 										"Registro Eliminado Exitosamente.",
@@ -132,6 +127,3 @@
 		}
 	}
 ?>
-</body>
-
-</html>

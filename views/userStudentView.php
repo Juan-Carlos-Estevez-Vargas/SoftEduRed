@@ -1,3 +1,5 @@
+<?php require_once "../controllers/userStudentController.php"; ?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -529,7 +531,6 @@
                             <th>Número de Identificación</th>
                             <th>Primer Nombre</th>
                             <th>Primer Apellido</th>
-                            <th>Teléfono</th>
                             <th>Acciones</th>
                           </tr>
                         </thead>
@@ -540,13 +541,12 @@
                             <?php echo "<td>".$row['identification_number'] . "</td>";?>
                             <?php echo "<td>".$row['first_name'] . "</td>";?>
                             <?php echo "<td>".$row['surname'] . "</td>";?>
-                            <?php echo "<td>".$row['phone'] . "</td>";?>
                             <td>
-                              <a class="btn btn-primary btn-block" id="boton"
+                              <a class="btn btn-primary" id="boton"
                                 href="?action=edit&id_user=<?php echo $row['id_user'];?>">
                                 Update
                               </a>
-                              <a class="btn btn-danger btn-block" id="boton"
+                              <a class="btn btn-danger" id="boton"
                                 href="?action=delete&id_user=<?php echo $row['id_user'];?>"
                                 onclick="confirmDelete(event)">
                                 Delete

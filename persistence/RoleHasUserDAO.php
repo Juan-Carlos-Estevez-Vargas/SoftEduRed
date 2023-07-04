@@ -1,15 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rol de Usuario</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
-</head>
-
-<body>
   <?php
 	require_once '../utils/Message.php';
 
@@ -118,8 +106,30 @@
 						);
 				}
 		}
-	}
-?>
-</body>
 
-</html>
+		public function exists($idUser, $roleId): bool {
+				try {
+						$sql = "
+								SELECT COUNT(*) as total
+								FROM user_has_role
+								WHERE user_id = :user AND role_id = :role
+						";
+		
+						$statement = $this->pdo->prepare($sql);
+						$statement->bindParam(':user', $idUser);
+						$statement->bindParam(':role', $roleId);
+						$statement->execute();
+		
+						$result = $statement->fetch(PDO::FETCH_ASSOC);
+						$total = $result['total'];
+		
+						return $total > 0;
+				} catch (Exception $e) {
+						Message::showErrorMessage(
+								"Ocurrió un error interno. Consulta al Administrador.",
+								'../../views/roleHasUserView.php'
+						);
+				}
+		}
+  }
+?>

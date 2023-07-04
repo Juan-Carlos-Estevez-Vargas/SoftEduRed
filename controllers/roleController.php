@@ -9,7 +9,7 @@
 
 		if ($action == 'update') {
 			$update = new RoleService();
-			$update->update($_POST['id_role'], $_POST['role'], $_POST['state']);
+			$update->update($_POST['id_role'], $_POST['state']);
 		} elseif ($action == 'register') {
 			$insert = new RoleService();
 			$insert->register($_POST['role'], $_POST['state']);

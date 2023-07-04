@@ -1,23 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Acudiente</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
-</head>
-
-<body>
-  <?php
-  require_once '../../utils/Message.php';
-  require_once '../../utils/User.php';
+<?php
+  require_once '../utils/Message.php';
+  require_once '../persistence/UserDAO.php';
+  require_once '../persistence/UserAttendantDAO.php';
 	
-	class UserAttendantDAO
+	class UserAttendantService
 	{
-		private $pdo;
-
 		/**
 		 * Constructor for the class.
 		 *
@@ -26,7 +13,7 @@
 		public function __construct()
 		{
 				try {
-						$this->pdo = database::connect();
+						$this->attendant = new UserAttendantDAO();
 				} catch (PDOException $e) {
 						throw new PDOException($e->getMessage());
 				}
@@ -53,7 +40,7 @@
 		 *
 		 * @return void
 		 */
-		public function registerAttendantUser(
+		public function register(
 			string $documentType, int $identificationNumber, string $firstName, string $secondName,
 			string $surname, string $secondSurname, string $gender, string $address, string $email,
 			string $phone, string $username, string $password, string $securityQuestion,
@@ -65,61 +52,58 @@
 						&& !empty($username) && !empty($password) && !empty($securityAnswer)
 						&& !empty($securityQuestion))
 						{
-								if (Message::isRegistered($this->pdo, 'identification_number', $identificationNumber, false, null)) {
+								if (Message::isRegistered(Database::connect(), 'user', 'identification_number', $identificationNumber, false, null)) {
 										Utils::showErrorMessage(
 												"El número de identificación ingresado ya se encuentra registrado en la plataforma",
-												'../../views/user/userStudentView.php'
+												'../../views/userAttendantView.php'
 										);
 										return;
 								}
 
-								if (Message::isRegistered($this->pdo, 'email', $email, false, null)) {
+								if (Message::isRegistered(Database::connect(), 'user', 'email', $email, false, null)) {
 										Utils::showErrorMessage(
 												"El correo electrónico ingresado ya se encuentra registrado en la plataforma.",
-												'../../views/user/userStudentView.php'
+												'../../views/userAttendantView.php'
 										);
 										return;
 								}
 
-								if (!empty($phone) && Message::isRegistered($this->pdo, 'phone', $phone, false, null)) {
+								if (!empty($phone) && Message::isRegistered(Database::connect(), 'user', 'phone', $phone, false, null)) {
 										Utils::showErrorMessage(
 												"El teléfono ingresado ya se encuentra registrado en la plataforma.",
-												'../../views/user/userStudentView.php'
+												'../../views/userAttendantView.php'
 										);
 										return;
 								}
 
-								if (Message::isRegistered($this->pdo, 'username', $username, false, null)) {
+								if (Message::isRegistered(Database::connect(), 'user', 'username', $username, false, null)) {
 										Utils::showErrorMessage(
 												"El usuario ingresado ya se encuentra registrado en la plataforma.",
-												'../../views/user/userStudentView.php'
+												'../../views/userAttendantView.php'
 										);
 										return;
 								}
 
-								$userId = User::createUser(
-										$documentType, $identificationNumber, $firstName, $secondName, $surname,
-										$secondSurname, $gender, $address, $email, $phone, $username, $password, $securityQuestion,
-										$securityAnswer, $this->pdo
-								);
-
-								$this->createAttendant($userId, $relationId);
-								$this->assignUserRole($userId);
+                $this->attendant->register(
+                    $documentType, $identificationNumber, $firstName, $secondName,
+                    $surname, $secondSurname, $gender, $address, $email, $phone,
+                    $username, $password, $securityQuestion, $securityAnswer,	$relationId
+                );
 								
 								Message::showSuccessMessage(
 										"Registro Agregado Exitosamente.",
-										'../../views/user/userAttendantView.php'
+										'../../views/userAttendantView.php'
 								);
 						} else {
 								Message::showWarningMessage(
 										"Debes llenar todos los campos.",
-										'../../views/user/userAttendantView.php'
+										'../../views/userAttendantView.php'
 								);
 						}
 				} catch (Exception $e) {
 						Message::showErrorMessage(
 								"Ocurrió un error interno. Consulta al Administrador.",
-								'../../views/user/userAttendantView.php'
+								'../../views/userAttendantView.php'
 						);
 				}
 		}
@@ -303,6 +287,3 @@
 		}
 	}
 ?>
-</body>
-
-</html>
