@@ -81,8 +81,6 @@
                     </div>
                   </div>
 
-
-
                   <div class="row mb-4">
                     <div class="col">
                       <button type="submit" name="g-recaptcha-response"
