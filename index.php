@@ -9,6 +9,12 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <meta charset="utf-8" />
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <script>
+  function onSubmit(token) {
+    document.getElementById("form-login").submit();
+  }
+  </script>
   <title>Bienvenidos</title>
 </head>
 
@@ -55,7 +61,7 @@
           <div class="col-lg-6 mb-5 mb-lg-0">
             <div class="card">
               <div class="card-body py-5 px-md-5 text-left">
-                <form method="POST" action="controllers/loginController.php">
+                <form id="form-login" method="POST" action="controllers/loginController.php">
                   <h1 class="text-primary mb-4">Iniciar Sesión</h1>
                   <div class="row">
                     <div class="col-md-6 mb-4">
@@ -75,9 +81,14 @@
                     </div>
                   </div>
 
+
+
                   <div class="row mb-4">
                     <div class="col">
-                      <button type="submit" class="btn btn-primary btn-block col">
+                      <button type="submit" name="g-recaptcha-response"
+                        class="g-recaptcha btn btn-primary btn-block col"
+                        data-sitekey="6LfljvYmAAAAABfCT7iAG0pjC8fWf2DYFM3qpB4p" data-callback='onSubmit'
+                        data-action='submit'>
                         Iniciar Sesión
                       </button>
                     </div>
@@ -91,6 +102,7 @@
                   <div class="col text-center">
                     <a href="login/formRecPassword.php">Olvidé mi contraseña</a>
                   </div>
+
                 </form>
               </div>
             </div>

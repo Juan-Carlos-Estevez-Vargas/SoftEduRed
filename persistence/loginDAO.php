@@ -1,8 +1,17 @@
 <?php
     require_once '../utils/Message.php';
+    require_once '../persistence/database/Database.php';
     
     class LoginDAO
     {
+        public function __construct()
+		{
+            try {
+                $this->pdo = Database::connect();
+            } catch (PDOException $e) {
+                throw new PDOException($e->getMessage());
+            }
+		}
         /**
          * Retrieves a user from the database based on the username and password
          *
@@ -12,7 +21,7 @@
          *
          * @return array|false Returns the user as an associative array if found, false otherwise
          */
-        public function getUser(PDO $db, string $username, string $password)
+        public function getUser(string $username, string $password)
         {
             try {
                 $sql = "
@@ -20,7 +29,7 @@
                     WHERE username = :username
                         AND password = :password
                 ";
-                $stmt = $db->prepare($sql);
+                $stmt = $this->pdo->prepare($sql);
                 $stmt->execute(['username' => $username, 'password' => $password]);
                 return $stmt->fetch(PDO::FETCH_ASSOC);
             } catch (Exception $e) {
@@ -39,7 +48,7 @@
          *
          * @return array|false Returns the role as an associative array if found, false otherwise
          */
-        public function getUserRole(PDO $db, int $userId)
+        public function getUserRole(int $userId)
         {
             try {
                 $sql = "
@@ -48,7 +57,7 @@
                         ON id_role = role_id
                     WHERE user_id = :user_id
                 ";
-                $stmt = $db->prepare($sql);
+                $stmt = $this->pdo->prepare($sql);
                 $stmt->execute(['user_id' => $userId]);
                 return $stmt->fetch(PDO::FETCH_ASSOC);
             } catch (Exception $e) {

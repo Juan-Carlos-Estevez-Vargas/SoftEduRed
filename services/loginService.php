@@ -30,15 +30,22 @@
          */
         public function loginUser(string $username, string $password): void
         {
+            // Verificar el captcha
+            $captchaResponse = $_POST['g-recaptcha-response'];
+            $secretKey = '6LfljvYmAAAAAApKPbs6XoVZtiPxL0lxl9PnQuGa';
+            if (!$this->validateCaptcha($captchaResponse, $secretKey)) {
+                Message::showErrorMessage(
+                    "Captcha inválido.",
+                    '../../index.php'
+                );
+                return;
+            }
+    
             // Start session
             session_start();
 
-            // Connect to database
-            require_once "../persistence/database/Database.php";
-            $db = Database::connect();
-
             // Get user from database
-            $user = $this->login->getUser($db, $username, $password);
+            $user = $this->login->getUser($username, $password);
 
             // If user is not found, display error message and redirect to login page
             if (!$user) {
@@ -50,7 +57,7 @@
             }
 
             // Get user role from database
-            $role = $this->login->getUserRole($db, $user["id_user"]);
+            $role = $this->login->getUserRole($user["id_user"]);
 
             // Set session variables with user information
             $this->setSessionVariables($user, $role);
@@ -112,5 +119,37 @@
                     break;
             }
         }
+
+        /**
+         * Valida el captcha de reCAPTCHA
+         *
+         * @param string $response El valor de respuesta recibido del formulario
+         * @param string $secretKey La clave secreta (secret key) de reCAPTCHA
+         *
+         * @return bool Devuelve true si el captcha es válido, false de lo contrario
+         */
+        private function validateCaptcha(string $response, string $secretKey): bool
+        {
+            $url = 'https://www.google.com/recaptcha/api/siteverify';
+            $data = array(
+                'secret' => $secretKey,
+                'response' => $response
+            );
+
+            $options = array(
+                'http' => array(
+                    'header' => "Content-type: application/x-www-form-urlencoded\r\n",
+                    'method' => 'POST',
+                    'content' => http_build_query($data)
+                )
+            );
+
+            $context = stream_context_create($options);
+            $result = file_get_contents($url, false, $context);
+            $responseJson = json_decode($result);
+
+            return isset($responseJson->success) && $responseJson->success === true;
+        }
+
     }
 ?>
