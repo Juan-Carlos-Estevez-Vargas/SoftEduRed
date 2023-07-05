@@ -6,19 +6,20 @@
     {
 
         /**
-		 * Initializes a new instance of the class.
-		 *
-		 * Creates a new PDO connection object using database::conectar().
-		 * Throws an exception with the error message if the connection fails.
-		 */
-		public function __construct()
-		{
+         * Constructor for the class.
+         *
+         * Initializes the LoginDAO object.
+         *
+         * @throws Exception if an error occurs during LoginDAO initialization.
+         */
+        public function __construct()
+        {
             try {
                 $this->login = new LoginDAO();
             } catch (Exception $e) {
                 throw new Exception($e->getMessage());
             }
-		}
+        }
         
         /**
          * Logs in a user
@@ -34,45 +35,24 @@
             $captchaResponse = $_POST['g-recaptcha-response'];
             $secretKey = '6LfljvYmAAAAAApKPbs6XoVZtiPxL0lxl9PnQuGa';
             if (!$this->validateCaptcha($captchaResponse, $secretKey)) {
-                Message::showErrorMessage(
-                    "Captcha inválido.",
-                    '../../index.php'
-                );
+                Message::showErrorMessage("Captcha inválido.", '../../index.php');
                 return;
             }
-    
-            // Start session
-            session_start();
 
-            // Get user from database
+            session_start();
             $user = $this->login->getUser($username, $password);
 
-            // If user is not found, display error message and redirect to login page
-            if (!$user) {
-                Message::showErrorMessage(
-                    "Usuario y/o contraseña erróneos.",
-                    '../../index.php'
-                );
-                return;
+            if ($user) {
+                $role = $this->login->getUserRole($user["id_user"]);
+
+                if ($role) {
+                    $this->setSessionVariables($user, $role);
+                    $this->redirectToRolePage($role["description"]);
+                    return;
+                }
             }
 
-            // Get user role from database
-            $role = $this->login->getUserRole($user["id_user"]);
-
-            // Set session variables with user information
-            $this->setSessionVariables($user, $role);
-             
-            // If user does not have a role, display error message and redirect to login page
-            if (!$role) {
-                Message::showErrorMessage(
-                    "El usuario NO se encuentra con un rol asignado.",
-                    '../../index.php'
-                );
-                return;
-            }
-
-            // Redirect to appropriate page based on user role
-            $this->redirectToRolePage($role["description"]);
+            Message::showErrorMessage("Usuario y/o contraseña erróneos.", '../../index.php');
         }
 
         /**
@@ -103,21 +83,24 @@
          */
         private function redirectToRolePage(string $role): void
         {
-            $_SESSION['active'] = 1;
             switch ($role) {
                 case 'DOCENTE':
-                    header('location: ../utils/index.php?role=t');
+                    $redirectURL = '../utils/index.php?role=t';
                     break;
                 case 'ADMINISTRADOR':
-                    header('location: ../utils/index.php?role=e');
+                    $redirectURL = '../utils/index.php?role=e';
                     break;
                 case 'ACUDIENTE':
-                    header('location: ../utils/index.php?role=a');
+                    $redirectURL = '../utils/index.php?role=a';
                     break;
                 default:
                     $this->displayErrorMessage("Rol de usuario no válido.");
-                    break;
+                    return;
             }
+
+            $_SESSION['active'] = 1;
+            header("Location: $redirectURL");
+            exit;
         }
 
         /**

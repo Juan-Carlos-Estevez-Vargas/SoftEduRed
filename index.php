@@ -10,6 +10,14 @@
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <meta charset="utf-8" />
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <style>
+  /* Ocultar el contenido del colegio en pantallas móviles */
+  @media (max-width: 767px) {
+    .college-info {
+      display: none;
+    }
+  }
+  </style>
   <script>
   function onSubmit(token) {
     document.getElementById("form-login").submit();
@@ -19,8 +27,8 @@
 </head>
 
 <body>
-  <section class="">
-    <div class="px-4 py-5 px-md-5 text-center text-lg-start" style="background-color: hsl(0, 0%, 96%)">
+  <section>
+    <div class="px-4 py-5 px-md-5 text-center text-lg-center" style="background-color: hsl(0, 0%, 96%)">
       <div class="container">
         <?php
           require_once "persistence/database/Database.php";
@@ -46,7 +54,7 @@
           }
         ?>
         <div class="row gx-lg-5 align-items-center">
-          <div class="col-lg-6 mb-5 mb-lg-0">
+          <div class="col-lg-7 mb-5 mb-lg-0 college-info">
             <h1 class="my-5 display-3 fw-bold ls-tight">
               Liceo Campestre de Prueba <br />
             </h1>
@@ -58,25 +66,27 @@
             </p>
           </div>
 
-          <div class="col-lg-6 mb-5 mb-lg-0">
+          <div class="col-lg-5 mb-5 mb-lg-0">
             <div class="card">
               <div class="card-body py-5 px-md-5 text-left">
                 <form id="form-login" method="POST" action="controllers/loginController.php">
-                  <h1 class="text-primary mb-4">Iniciar Sesión</h1>
+                  <h1 class="text-primary mb-4 text-center">Iniciar Sesión</h1>
                   <div class="row">
-                    <div class="col-md-6 mb-4">
+                    <div class="col-md-12 mb-4">
                       <div class="form-outline">
                         <input class="form-control" type="text" name="username" id="username" placeholder="Usuario"
                           required />
                         <label class="form-label" for="username">Usuario</label>
                       </div>
                     </div>
+                  </div>
 
-                    <div class="col-md-6 mb-4">
+                  <div class="row">
+                    <div class="col-md-12 mb-4">
                       <div class="form-outline">
                         <input class="form-control" type="password" name="password" id="password"
                           placeholder="Contraseña" required />
-                        <label class="form-label" for="password">Contraseña</label>
+                        <label class="form-label " for="password">Contraseña</label>
                       </div>
                     </div>
                   </div>
@@ -89,11 +99,6 @@
                         data-action='submit'>
                         Iniciar Sesión
                       </button>
-                    </div>
-                    <div class="col">
-                      <a href="login/registerView.php" class="btn btn-success btn-block col">
-                        Registrarse
-                      </a>
                     </div>
                   </div>
 
@@ -112,8 +117,7 @@
 
   <footer class="bg-light text-center text-lg-start">
     <div class="text-center p-3" style="background-color: hsl(0, 0%, 96%)">
-      © <?php echo date('Y'); ?> Copyright:
-      <a class="text-blue" href="https://github.com/Juan-Carlos-Estevez-Vargas/SoftEduRed">SoftEduRed.com</a>
+      © <?php echo date('Y'); ?> SoftEduRed.com
     </div>
   </footer>
 </body>
