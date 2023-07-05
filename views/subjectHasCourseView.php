@@ -1,26 +1,4 @@
-<?php
-	require_once "../../persistence/relationship/SubjectHasCourseDAO.php";
-	require_once "../../persistence/database/Database.php";
-
-  $db = database::connect();
-
-	if (isset($_REQUEST['action'])) {
-		$action = $_REQUEST['action'];
-
-		if ($action == 'update') {
-			$update = new SubjectCourseDAO();
-			$update->updateSubjectHasCourse($_POST['id'], $_POST['course'], $_POST['subject'], $_POST['state']);
-		} elseif ($action == 'register') {
-			$insert = new SubjectCourseDAO();
-			$insert->addSubjectHasCourse($_POST['course'], $_POST['subject'], $_POST['state']);
-		} elseif ($action == 'delete') {
-			$delete = new SubjectCourseDAO();
-			$delete->deleteSubjectHasCourse($_GET['id_subject']);
-		} elseif ($action == 'edit') {
-			$id = $_GET['id_subject'];
-		}
-	}
-?>
+<?php require_once "../controllers/subjectHasCourseController.php"; ?>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -36,16 +14,18 @@
 
 <body>
   <section class="h-100 bg-white">
-    <div class="container py-4 h-100">
+    <div class="container py-3 h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col">
           <div class="card card-registration my-4">
             <div class="row g-0">
               <div class="col-xl-12">
-                <div class="card-body p-md-5 text-black" style="background-color: hsl(0, 0%, 96%)">
+                <div class="card-body p-md-4 text-black" style="background-color: hsl(0, 0%, 96%)">
+                  <?php if (!isset($_REQUEST['action']) || ($_REQUEST['action'] !== 'ver' && $_REQUEST['action'] !== 'edit')) : ?>
                   <h3 class="text-center d-flex justify-content-center justify-content-md-end">
                     <a class="btn btn-success" href="?action=ver&m=1">Agregar Registro</a>
                   </h3>
+                  <?php endif; ?>
 
                   <div class="container-fluid">
                     <div class="row">
@@ -55,11 +35,11 @@
                           <h4 class="mb-5 text-uppercase text-center text-success">Nueva Materia por Curso</h4>
 
                           <div class="row">
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                               <div class="form-outline">
                                 <select class="form-control" name="course">
                                   <?php
-																		foreach ($db->query('SELECT * FROM course WHERE state = 1') as $row) {
+																		foreach ($db->query('SELECT DISTINCT * FROM course WHERE state = 1') as $row) {
 																			echo '<option value="'.$row['id_course'].'">'.$row["course"].'</option>';
 																		}
 																	?>
@@ -68,11 +48,11 @@
                               </div>
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                               <div class="form-outline">
                                 <select class="form-control" name="subject">
                                   <?php
-																		foreach ($db->query('SELECT * FROM subject WHERE state = 1') as $row) {
+																		foreach ($db->query('SELECT DISTINCT * FROM subject WHERE state = 1') as $row) {
 																			echo '<option value="'.$row['id_subject'].'">'.$row["description"].'</option>';
 																		}
 																	?>
@@ -81,21 +61,7 @@
                               </div>
                             </div>
 
-                            <div class="col-md-4">
-                              <div class="form-outline">
-                                <label class="mr-5">Estado: </label>
-                                <div class=" form-check form-check-inline">
-                                  <input type="radio" class="form-check-input" name="state" value="1" checked />
-                                  <label class="form-check-label">Activo</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                  <input type="radio" class="form-check-input" name="state" value="0" />
-                                  <label class="form-check-label">Inactivo</label>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                               <div class="form-outline">
                                 <input id="boton" type="submit" class="btn btn-primary btn-block" value="Guardar"
                                   onclick="this.form.action ='?action=register'" />
@@ -119,7 +85,9 @@
                                 s.description AS subject,
                                 c.course AS course,
                                 shc.state AS state,
-                                shc.id_subject_has_course AS id
+                                shc.id_subject_has_course AS id,
+                                shc.subject_id AS subject_id,
+                                c.id_course AS course_id
                               FROM subject s
                               JOIN subject_has_course shc
                                 ON s.id_subject = shc.subject_id
@@ -131,7 +99,14 @@
 														$query = $db->query($sql);
 														while ($r = $query->fetch(PDO::FETCH_ASSOC)) {
 													?>
-                          <h4 class="mb-5 text-uppercase text-center text-success">Actualizar Materia por Curso</h4>
+                          <div class="row justify-content-end align-items-center mb-5">
+                            <div class="col-md-11 d-flex align-items-center justify-content-center">
+                              <h4 class="text-uppercase text-success">Actualizar Registro</h4>
+                            </div>
+                            <div class="col-md-1 d-flex align-items-center justify-content-end">
+                              <a href="?action=&m=" class="btn btn-danger btn-block">X</a>
+                            </div>
+                          </div>
 
                           <div>
                             <input type="text" name="id" value="<?php echo $r['id']; ?>" style="display: none;" />
@@ -142,10 +117,13 @@
                               <div class="form-outline">
                                 <select class="form-control" name="subject">
                                   <?php
-																		foreach ($db->query('SELECT * FROM subject WHERE state = 1') as $row) {
-																			echo '<option value="'.$row['id_subject'].'">'.$row["description"].'</option>';
-																		}
-																	?>
+                                    $editField = $r['subject_id'];
+
+                                    foreach ($db->query('SELECT DISTINCT * FROM subject WHERE state = 1') as $row) {
+                                      $selected = ($row['id_subject'] == $editField) ? 'selected' : '';
+                                      echo '<option value="'.$row['id_subject'].'" '.$selected.'>'.$row["description"].'</option>';
+                                    }
+                                  ?>
                                 </select>
                                 <label class="form-label">Materia:</label>
                               </div>
@@ -155,9 +133,12 @@
                               <div class="form-outline">
                                 <select class="form-control" name="course">
                                   <?php
-																		foreach ($db->query('SELECT * FROM course WHERE state = 1') as $row) {
-																			echo '<option value="'.$row['id_course'].'">'.$row["course"].'</option>';
-																		}
+                                    $editField = $r['course_id'];
+
+                                    foreach ($db->query('SELECT DISTINCT * FROM course WHERE state = 1') as $row) {
+                                      $selected = ($row['id_course'] == $editField) ? 'selected' : '';
+                                      echo '<option value="'.$row['id_course'].'" '.$selected.'>'.$row["course"].'</option>';
+                                    }
 																	?>
                                 </select>
                                 <label class="form-label">Curso:</label>
@@ -196,25 +177,44 @@
                     </div>
                   </div>
 
+                  <?php if (!isset($_REQUEST['action']) || ($_REQUEST['action'] !== 'ver' && $_REQUEST['action'] !== 'edit')) : ?>
                   <div class="col-md-12 text-center mt-4">
                     <?php
-											$sql = "
-                        SELECT
-                          s.description AS subject,
-                          c.course AS course,
-                          shc.state AS state,
-                          shc.id_subject_has_course AS id
-                        FROM subject s
-                        JOIN subject_has_course shc
-                          ON s.id_subject = shc.subject_id
-                        JOIN course c
-                          ON shc.course_id = c.id_course;
+											// Obtener el número total de registros
+                      $sqlCount = "
+                        SELECT COUNT(*) AS total
+                        FROM subject_has_course
+                        WHERE state != 3
                       ";
-											$query = $db->query($sql);
-										
-											if ($query->rowCount() > 0):
+                      $countQuery = $db->query($sqlCount);
+                      $totalRecords = $countQuery->fetch(PDO::FETCH_ASSOC)['total'];
+
+                      // Calcular el límite y el desplazamiento para la consulta actual
+                      $recordsPerPage = 5; // Número de registros por página
+                      $currentPage = isset($_GET['page']) ? $_GET['page'] : 1; // Página actual
+                      $offset = ($currentPage - 1) * $recordsPerPage;
+
+                      // Consulta para obtener los registros de la página actual con límite y desplazamiento
+                      $sql = "
+                          SELECT
+                            s.description AS subject,
+                            c.course AS course,
+                            shc.state AS state,
+                            shc.id_subject_has_course AS id
+                          FROM subject s
+                          JOIN subject_has_course shc
+                            ON s.id_subject = shc.subject_id
+                          JOIN course c
+                            ON shc.course_id = c.id_course
+                          LIMIT $offset, $recordsPerPage
+                      ";
+                      $query = $db->query($sql);
+
+                      // Verificar si existen registros
+                      $hasRecords = $query->rowCount() > 0;
 										?>
                     <h4 class="mb-5 text-uppercase text-primary">Materias por Curso</h4>
+                    <?php if ($hasRecords) : ?>
                     <div class="table-responsive">
                       <table class="table table-bordered">
                         <caption class="text-center">Listado de Resultados</caption>
@@ -252,12 +252,42 @@
                         </tbody>
                       </table>
                     </div>
-
+                    <div class="row">
+                      <div class="col-md-12">
+                        <nav aria-label="Page navigation">
+                          <ul class="pagination justify-content-center">
+                            <?php
+                                // Calcular el número total de páginas
+                                $totalPages = ceil($totalRecords / $recordsPerPage);
+                                
+                                // Mostrar el botón "Anterior" solo si no estamos en la primera página
+                                if ($currentPage > 1) {
+                                    echo '<li class="page-item"><a class="page-link" href="?page=' . ($currentPage - 1) . '">Anterior</a></li>';
+                                }
+                                
+                                // Mostrar enlaces a las páginas individuales
+                                for ($i = 1; $i <= $totalPages; $i++) {
+                                    echo '<li class="page-item';
+                                    if ($i == $currentPage) {
+                                        echo ' active';
+                                    }
+                                    echo '"><a class="page-link" href="?page=' . $i . '">' . $i . '</a></li>';
+                                }
+                                
+                                // Mostrar el botón "Siguiente" solo si no estamos en la última página
+                                if ($currentPage < $totalPages) {
+                                    echo '<li class="page-item"><a class="page-link" href="?page=' . ($currentPage + 1) . '">Siguiente</a></li>';
+                                }
+                            ?>
+                          </ul>
+                        </nav>
+                      </div>
+                    </div>
+                    <?php else: ?>
+                    <h4><?php echo "No se encontraron registros"; ?></h4>
+                    <?php endif ?>
                   </div>
-                  <?php else: ?>
-                  <h4>No se encontraron registros</h4>
                   <?php endif; ?>
-
                 </div>
               </div>
             </div>
