@@ -31,16 +31,16 @@
             $sesion = $_SESSION['ROL_ID'];
 
             if ($sesion === 'ADMINISTRADOR') {
-              header("location:utilities/index.php?role=e");
+              header("location:utils/index.php?role=e");
               exit;
             } elseif ($sesion === 'ATTENDANT') {
-              header("location:utilities/index.php?role=a");
+              header("location:utils/index.php?role=a");
               exit;
             } elseif ($sesion === 'STUDENT') {
-              header("location:utilities/index.php?role=s");
+              header("location:utils/index.php?role=s");
               exit;
             } elseif ($sesion === 'TEACHER') {
-              header("location:utilities/index.php?role=t");
+              header("location:utils/index.php?role=t");
               exit;
             }
           }

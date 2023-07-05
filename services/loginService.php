@@ -106,13 +106,13 @@
             $_SESSION['active'] = 1;
             switch ($role) {
                 case 'DOCENTE':
-                    header('location: ../utilities/index.php?role=t');
+                    header('location: ../utils/index.php?role=t');
                     break;
                 case 'ADMINISTRADOR':
-                    header('location: ../utilities/index.php?role=e');
+                    header('location: ../utils/index.php?role=e');
                     break;
                 case 'ACUDIENTE':
-                    header('location: ../utilities/index.php?role=a');
+                    header('location: ../utils/index.php?role=a');
                     break;
                 default:
                     $this->displayErrorMessage("Rol de usuario no válido.");

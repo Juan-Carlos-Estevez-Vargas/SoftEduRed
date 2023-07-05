@@ -1,22 +1,23 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <link rel="shortcut icon" href="../images/student-attendant.ico" />
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><?php session_start();?> Bienvenido</title>
 </head>
-  <?php
+<?php
     if ($_SESSION['active'] === 1 && isset($_GET['role'])) {
       $_SESSION['role_index']=$_GET['role'];
   ?>
-  <frameset rows="225,*" cols="*" framespacing="0" frameborder="no">
-    <frame src="buttons.php" name="topFrame" noresize="noresize" id="topFrame" title="titulo"></frame>
-    <frame src="home.php" name="mainFrame" id="mainFrame" title="contenido"></frame>
-  </frameset>
+<frameset rows="225,*" cols="*" framespacing="0" frameborder="no">
+  <frame src="buttons.php" name="topFrame" noresize="noresize" id="topFrame"></frame>
+  <frame src="../views/home.php" name="mainFrame" id="mainFrame"></frame>
+</frameset>
 
-  <noframes>
-    <?php
+<noframes>
+  <?php
       } else {
         session_destroy();
         print "
@@ -27,7 +28,9 @@
         ";
       }
     ?>
-  </noframes>
+</noframes>
+
 <body>
 </body>
+
 </html>

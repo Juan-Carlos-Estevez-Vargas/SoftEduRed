@@ -11,7 +11,7 @@
 <body>
   <div id="title">
     <div>
-      <?php include "roles.php"; if ($_SESSION['role_index'] === 'e'): ?>
+      <?php include "../utils/roles.php"; if ($_SESSION['role_index'] === 'e'): ?>
     </div>
     <p id="header">Bienvenido Administrador</p>
   </div>
@@ -23,7 +23,7 @@
       <p class="text">Inicio</p>
     </div>
     <div class="container" id="two">
-      <a href="cruds.php" target="mainFrame">
+      <a href="../utils/cruds.php" target="mainFrame">
         <img class="icon" src="../assets/icons/register-icon.png" alt="Registros">
       </a>
       <p class="text">Registros</p>
@@ -33,7 +33,7 @@
       <p class="text">Contáctenos</p>
     </div>
     <div class="container" id="four">
-      <a href="../login/closeSession.php" target="_parent">
+      <a href="../utils/closeSession.php" target="_parent">
         <img class="icon" src="../assets/icons/logout-icon.png" alt="Cerrar Sesión">
       </a>
       <p class="text">Cerrar Sesión</p>
@@ -64,7 +64,7 @@
       <p class="text">Información Personal</p>
     </div>
     <div class="container" id="four">
-      <a href="../login/closeSession.php" target="_parent">
+      <a href="../utils/closeSession.php" target="_parent">
         <img class="icon" src="../assets/icons/logout-icon.png" alt="Cerrar Sesión">
       </a>
       <p class="text">Cerrar Sesión</p>
@@ -94,7 +94,7 @@
       <p class="text">Información Personal</p>
     </div>
     <div class="container" id="four">
-      <a href="../login/closeSession.php" target="_parent">
+      <a href="../utils/closeSession.php" target="_parent">
         <img class="icon" src="../assets/icons/logout-icon.png" alt="Cerrar Sesión">
       </a>
       <p class="text">Cerrar Sesión</p>
@@ -124,7 +124,7 @@
       <p class="text">Información Personal</p>
     </div>
     <div class="container" id="four">
-      <a href="../login/closeSession.php" target="_parent">
+      <a href="../utils/closeSession.php" target="_parent">
         <img class="icon" src="../assets/icons/logout-icon.png" alt="Cerrar Sesión">
       </a>
       <p class="text">Cerrar Sesión</p>
