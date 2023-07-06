@@ -5,11 +5,10 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="shortcut icon" href="images/login.ico" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  <meta charset="utf-8" />
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
   <style>
   /* Ocultar el contenido del colegio en pantallas móviles */
   @media (max-width: 767px) {
@@ -18,11 +17,6 @@
     }
   }
   </style>
-  <script>
-  function onSubmit(token) {
-    document.getElementById("form-login").submit();
-  }
-  </script>
   <title>Bienvenidos</title>
 </head>
 
@@ -120,6 +114,12 @@
       © <?php echo date('Y'); ?> SoftEduRed.com
     </div>
   </footer>
+
+  <script>
+  function onSubmit(token) {
+    document.getElementById("form-login").submit();
+  }
+  </script>
 </body>
 
 </html>

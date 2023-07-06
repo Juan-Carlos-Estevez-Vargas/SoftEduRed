@@ -11,7 +11,7 @@
     if ($_SESSION['active'] === 1 && isset($_GET['role'])) {
       $_SESSION['role_index']=$_GET['role'];
   ?>
-<frameset rows="225,*" cols="*" framespacing="0" frameborder="no">
+<frameset rows="160,*" cols="*" framespacing="0" frameborder="no">
   <frame src="buttons.php" name="topFrame" noresize="noresize" id="topFrame"></frame>
   <frame src="../views/home.php" name="mainFrame" id="mainFrame"></frame>
 </frameset>

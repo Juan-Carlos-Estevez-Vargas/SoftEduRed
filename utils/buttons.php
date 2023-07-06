@@ -13,11 +13,10 @@
     <div>
       <?php include "../utils/roles.php"; if ($_SESSION['role_index'] === 'e'): ?>
     </div>
-    <p id="header">Bienvenido Administrador</p>
   </div>
   <header>
     <div class="container" id="one">
-      <a href="home.php" target="mainFrame">
+      <a href="../views/home.php" target="mainFrame">
         <img src="../assets/icons/home-icon.png" class="icon" alt="Inicio">
       </a>
       <p class="text">Inicio</p>

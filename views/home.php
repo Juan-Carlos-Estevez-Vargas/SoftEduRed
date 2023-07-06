@@ -6,17 +6,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
-  <title>Título de la página</title>
+  <style>
+  .bd-placeholder-img {
+    font-size: 1.125rem;
+    text-anchor: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+  }
+
+  @media (min-width: 768px) {
+    .bd-placeholder-img-lg {
+      font-size: 3.5rem;
+    }
+  }
+  </style>
+  <title></title>
 </head>
 
 <body>
   <section>
     <div class="container" data-aos="fade-up">
+
       <div class="row justify-content-around gy-4 text-center my-4">
         <div class="col-lg-4 my-2 d-flex justify-content-center align-items-center" data-aos="zoom-in"
           data-aos-delay="100">
-          <img src="../assets/images/escudo-seminario.png" class="img-fluid" style="width: 80%"
-            alt="Imagen Seminario" />
+          <img src="../assets/images/school-shield.png" class="img-fluid" style="width: 80%" alt="School Shield" />
         </div>
 
         <div class="col-lg-8 d-flex flex-column justify-content-center mt-4">
@@ -36,9 +51,32 @@
         </div>
       </div>
 
+      <div class="row justify-content-around gy-4 text-center my-4" style="background: hsl(0, 0%, 96%)">
+        <div class="col-lg-8 d-flex flex-column justify-content-center mt-4">
+          <h3 class="my-3 display-6 fw-bold ls-tight m-3 text-secondary">Visión</h3>
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem repellendus fugiat amet nostrum aperiam nemo,
+            quisquam, quod libero ab est impedit doloremque earum nobis. Qui mollitia adipisci aut libero praesentium.
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores explicabo sed earum sint labore quod quas
+            at atque quasi perferendis nisi amet vel, adipisci ea voluptates consectetur cum expedita cupiditate.
+            <br /><br />
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur laborum voluptate veniam corrupti
+            doloribus illo in sint nostrum eveniet necessitatibus ab excepturi sequi, molestiae similique debitis
+            quidem velit facere quod. Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores ratione,
+            deserunt voluptates commodi rem ea aut laudantium, dignissimos culpa aliquam porro nam blanditiis corporis
+            alias, doloribus ipsum officia maxime? Quas.
+          </p>
+        </div>
+
+        <div class=" col-lg-4 my-2 d-flex justify-content-center align-items-center" data-aos="zoom-in"
+          data-aos-delay="100">
+          <img src="../assets/images/school-shield.png" class="img-fluid" style="width: 80%" alt="School Shield" />
+        </div>
+      </div>
+
       <div class="row justify-content-around gy-4 text-center mb-5">
         <div class="col-lg-12 d-flex flex-column justify-content-center mt-4">
-          <h3 class="my-3 display-6 fw-bold ls-tight m-3 text-primary">Encuéntranos ...</h3>
+          <h3 class="my-3 display-6 fw-bold ls-tight m-3 text-primary">Nos ubicamos en ...</h3>
           <div class="col-lg-8 mx-auto">
             <div class="ratio ratio-16x9">
               <iframe
@@ -54,8 +92,7 @@
 
   <footer class="bg-light text-center text-lg-start">
     <div class="text-center p-3" style="background-color: hsl(0, 0%, 96%)">
-      © 2023 Copyright:
-      <a class="text-blue" href="https://github.com/Juan-Carlos-Estevez-Vargas/SoftEduRed">SoftEduRed.com</a>
+      &copy; 2023 SoftEduRed.com
     </div>
   </footer>
 </body>
