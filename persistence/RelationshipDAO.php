@@ -57,19 +57,17 @@
 		 *
 		 * @return void
 		 */
-		public function update(string $idRelationship, string $relationship, string $state)
+		public function update(string $idRelationship, string $state)
 		{
 				try {
 						// Update the record in the database
 						$sql = "
 								UPDATE relationship
-								SET description = UPPER(:description),
-										state = :state
+								SET state = :state
 								WHERE id_relationship = :id
 						";
 						$stmt = $this->pdo->prepare($sql);
 						$stmt->execute([
-								'description' => $relationship,
 								'state' => $state,
 								'id' => $idRelationship
 						]);

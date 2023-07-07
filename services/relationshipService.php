@@ -63,28 +63,18 @@
 		 * Update a record in the 'relationship' table.
 		 *
 		 * @param string $idRelationship The id of the record to update.
-		 * @param string $relationship The new value for 'description'.
 		 * @param string $state The new value for 'state'.
 		 *
 		 * @throws Exception If there is an error updating the record.
 		 *
 		 * @return void
 		 */
-		public function update(string $idRelationship, string $relationship, string $state)
+		public function update(string $idRelationship, string $state)
 		{
 				try {
 						// Check that required fields are not empty
-						if (!empty($idRelationship) && !empty($relationship)) {
-                if (Message::isRegistered(Database::connect(), 'relationship', 'description', $relationship, true, $idRelationship, 'id_relationship'))
-                {
-                  Message::showErrorMessage(
-                    "El parentesco ingresado ya se encuentra registrado en la plataforma",
-                    '../../views/relationshipView.php'
-                  );
-                  return;
-                }
-                
-                $this->relationship->update($idRelationship, $relationship, $state);
+						if (!empty($idRelationship)) {
+                $this->relationship->update($idRelationship, $state);
 
 								// Show success message
 								Message::showSuccessMessage(

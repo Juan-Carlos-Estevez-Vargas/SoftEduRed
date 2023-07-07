@@ -12,7 +12,7 @@
 			$registrar->register($_POST['relation'], $_POST['state']);
 		} elseif ($action == 'update') {
 			$update = new RelationshipService();
-			$update->update($_POST['id_relationship'], $_POST['relation'], $_POST['state']);
+			$update->update($_POST['id_relationship'], $_POST['state']);
 		} elseif ($action == 'delete') {
 			$delete = new RelationshipService();
 			$delete->delete($_GET['id_relationship']);

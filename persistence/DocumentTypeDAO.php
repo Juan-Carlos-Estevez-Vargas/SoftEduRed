@@ -87,7 +87,6 @@
 				 * Deletes a record from the "document_type" table with the given document code.
 				 *
 				 * @param string $idDocumentType The document code to be deleted.
-				 * @throws Exception If an error occurs during the deletion process.
 				 * @return void
 				 */
 				public function delete(string $idDocumentType): void

@@ -102,7 +102,7 @@
                               <div class="form-outline">
                                 <input type="text" name="document_type" placeholder="Ej: C.C" required
                                   style="text-transform:uppercase" class="form-control" maxlength="6"
-                                  value="<?php echo $r['type']?>" />
+                                  value="<?php echo $r['type']?>" readonly />
                                 <label class="form-label" for="document_type">Tipo de Documento:</label>
                               </div>
                             </div>
@@ -180,7 +180,12 @@
                     <?php if ($hasRecords) : ?>
                     <div class="table-responsive">
                       <table class="table table-bordered">
-                        <caption class="text-center">Listado de Resultados</caption>
+                        <caption class="text-center">
+                          Mostrando
+                          <?php echo $recordsPerPage * ($currentPage - 1) + 1; ?> -
+                          <?php echo $recordsPerPage * $currentPage; ?> de
+                          <?php echo $totalRecords; ?> registros
+                        </caption>
                         <thead>
                           <tr>
                             <th>Tipo de Documento</th>
@@ -223,27 +228,7 @@
                         <nav aria-label="Page navigation">
                           <ul class="pagination justify-content-center">
                             <?php
-                              // Calcular el número total de páginas
-                              $totalPages = ceil($totalRecords / $recordsPerPage);
-                              
-                              // Mostrar el botón "Anterior" solo si no estamos en la primera página
-                              if ($currentPage > 1) {
-                                  echo '<li class="page-item"><a class="page-link" href="?page=' . ($currentPage - 1) . '">Anterior</a></li>';
-                              }
-                              
-                              // Mostrar enlaces a las páginas individuales
-                              for ($i = 1; $i <= $totalPages; $i++) {
-                                  echo '<li class="page-item';
-                                  if ($i == $currentPage) {
-                                      echo ' active';
-                                  }
-                                  echo '"><a class="page-link" href="?page=' . $i . '">' . $i . '</a></li>';
-                              }
-                                              
-                              // Mostrar el botón "Siguiente" solo si no estamos en la última página
-                              if ($currentPage < $totalPages) {
-                                  echo '<li class="page-item"><a class="page-link" href="?page=' . ($currentPage + 1) . '">Siguiente</a></li>';
-                              }
+                              include_once "../utils/pagination.php";
                             ?>
                           </ul>
                         </nav>
