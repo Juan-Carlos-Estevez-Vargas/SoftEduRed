@@ -7,16 +7,18 @@
 	{
 		/**
 		 * Constructor function for the class.
-		 * Establishes a connection to the database using the Database class.
 		 *
-		 * @throws PDOException if unable to connect to the database.
+		 * This function establishes a connection to the database using the Database class.
+		 * If unable to connect to the database, it throws a PDOException.
+		 *
+		 * @throws Exception if unable to connect to the database.
 		 */
 		public function __construct() {
-				try {
-            $this->question = new SecurityQuestionDAO();
-				} catch (PDOException $e) {
-						throw new PDOException($e->getMessage());
-				}
+			try {
+				$this->question = new SecurityQuestionDAO();
+			} catch (Exception $e) {
+				throw new Exception($e->getMessage());
+			}
 		}
 
 		/**
@@ -30,29 +32,35 @@
 		public function register(string $question, string $state): void
 		{
 				try {
+						// Check if the question is not empty
 						if (!empty($question)) {
-                if (Message::isRegistered(Database::connect(), 'security_question', 'description', $question, false, null))
-                {
-                    Message::showErrorMessage(
-                        "La pregunta de seguridad ingresada ya se encuentra registrado en la plataforma",
-                        '../../views/questionView.php'
-                    );
-                    return;
-                }
-                
-                $this->question->register($question, $state);
-			
+								// Check if the question is already registered in the database
+								if (Message::isRegistered(Database::connect(), 'security_question', 'description', $question, false, null)) {
+										// Show error message if the question is already registered
+										Message::showErrorMessage(
+												"La pregunta de seguridad ingresada ya se encuentra registrado en la plataforma",
+												'../../views/questionView.php'
+										);
+										return;
+								}
+									
+								// Register the question in the database
+								$this->question->register($question, $state);
+								
+								// Show success message
 								Message::showSuccessMessage(
 										"Registro Agregado Exitosamente.",
 										'../../views/questionView.php'
 								);
 						} else {
+								// Show warning message if the question is empty
 								Message::showWarningMessage(
 										"Debes llenar todos los campos.",
 										'../../views/questionView.php'
 								);
 						}
 				} catch (Exception $e) {
+						// Show error message for internal error
 						Message::showErrorMessage(
 								"Ocurrió un error interno. Consulta al Administrador.",
 								'../../views/questionView.php'
@@ -71,19 +79,22 @@
 		{
 				try {
 						if (!empty($idSecurityQuestion)) {
-                $this->question->update($idSecurityQuestion, $state);
-                
+								$this->question->update($idSecurityQuestion, $state);
+
+								// Show success message
 								Message::showSuccessMessage(
 										"Registro Actualizado Exitosamente.",
 										'../../views/questionView.php'
 								);
 						} else {
+								// Show warning message
 								Message::showWarningMessage(
 										"Debes llenar todos los campos.",
 										'../../views/questionView.php'
 								);
 						}
 				} catch (Exception $e) {
+						// Show error message
 						Message::showErrorMessage(
 								"Ocurrió un error interno. Consulta al Administrador.",
 								'../../views/questionView.php'
@@ -99,26 +110,31 @@
 		 */
 		public function delete(string $idSecurityQuestion): void
 		{
-				try {
-						if (!empty($idSecurityQuestion)) {
-                $this->question->delete($idSecurityQuestion);
+			try {
+				// Check if the ID is not empty
+				if (!empty($idSecurityQuestion)) {
+					// Delete the question record
+					$this->question->delete($idSecurityQuestion);
 
-								Message::showSuccessMessage(
-										"Registro Eliminado Exitosamente.",
-										'../../views/questionView.php'
-								);
-						} else {
-								Message::showWarningMessage(
-										"Debes llenar todos los campos.",
-										'../../views/questionView.php'
-								);
-						}
-				} catch (Exception $e) {
-						Message::showErrorMessage(
-								"Ocurrió un error interno. Consulta al Administrador.",
-								'../../views/questionView.php'
-						);
+					// Show success message
+					Message::showSuccessMessage(
+						"Registro Eliminado Exitosamente.",
+						'../../views/questionView.php'
+					);
+				} else {
+					// Show warning message if ID is empty
+					Message::showWarningMessage(
+						"Debes llenar todos los campos.",
+						'../../views/questionView.php'
+					);
 				}
+			} catch (Exception $e) {
+				// Show error message if an exception occurs
+				Message::showErrorMessage(
+					"Ocurrió un error interno. Consulta al Administrador.",
+					'../../views/questionView.php'
+				);
+			}
 		}
 	}
 ?>

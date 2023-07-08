@@ -8,15 +8,17 @@
 		/**
 		 * Constructor method for the class.
 		 *
-		 * Establish a database connection using the database class.
+		 * Establishes a database connection by initializing the RoleHasUserDAO object.
 		 *
 		 * @throws PDOException If there is an error connecting to the database.
 		 */
 		public function __construct()
 		{
 				try {
-            $this->roleHasUser = new RoleHasUserDAO();
+						// Initialize the RoleHasUserDAO object to establish a database connection
+						$this->roleHasUser = new RoleHasUserDAO();
 				} catch (PDOException $e) {
+						// Rethrow the exception with the error message
 						throw new PDOException($e->getMessage());
 				}
 		}
@@ -32,26 +34,33 @@
 		public function register(int $userId, int $roleId, string $state): void
 		{
 				try {
-            if (!empty($userId) || !empty($roleId) || ($state !== '1' && $state !== '0')) {
+						// Check if any of the required parameters is empty or the state is not valid
+						if (!empty($userId) || !empty($roleId) || ($state !== '1' && $state !== '0')) {
+								// Check if the role is already assigned to the user
 								if ($this->roleHasUser->exists($userId, $roleId)){
+										// Show error message and return if the role is already assigned
 										Message::showErrorMessage(
 												"El usuario ya tiene asignado el rol.",
 												'../../views/roleHasUserView.php'
 										);
 										return;
 								}
-                $this->roleHasUser->register($userId, $roleId, $state);
-          
-                Message::showSuccessMessage(
-                    "Registro Agregado Exitosamente.",
-                    '../../views/roleHasUserView.php'
-                );
-            } else {
-                Message::showWarningMessage(
-                    "Debes llenar todos los campos.",
-                    '../../views/roleHasUserView.php'
-                );
-            }
+								
+								// Register the user with the role and state
+								$this->roleHasUser->register($userId, $roleId, $state);
+								
+								// Show success message after successful registration
+								Message::showSuccessMessage(
+										"Registro Agregado Exitosamente.",
+										'../../views/roleHasUserView.php'
+								);
+						} else {
+								// Show warning message if any of the required parameters is empty
+								Message::showWarningMessage(
+										"Debes llenar todos los campos.",
+										'../../views/roleHasUserView.php'
+								);
+						}
 				} catch (Exception $e) {
 						// Show error message if registration fails due to internal error.
 						Message::showErrorMessage(
@@ -72,21 +81,23 @@
 		public function update(string $id, string $state): void
 		{
 				try {
-						if (!empty($id))
-						{
-                $this->roleHasUser->update($id, $state);
-            
-                Message::showSuccessMessage(
-                    "Registro Actualizado Exitosamente.",
-                    '../../views/roleHasUserView.php'
-                );
+						if (!empty($id)) {
+								$this->roleHasUser->update($id, $state);
+
+								// Show success message
+								Message::showSuccessMessage(
+										"Registro Actualizado Exitosamente.",
+										'../../views/roleHasUserView.php'
+								);
 						} else {
+								// Show warning message if ID is empty
 								Message::showWarningMessage(
 										"Debes llenar todos los campos.",
 										'../../views/roleHasUserView.php'
 								);
 						}
 				} catch (Exception $e) {
+						// Show error message if an exception occurs
 						Message::showErrorMessage(
 								"Ocurrió un error interno. Consulta al Administrador.",
 								'../../views/roleHasUserView.php'
@@ -97,28 +108,29 @@
 		/**
 		 * Deletes a user's role from the database.
 		 *
-		 * @param string $documentType The type of document of the user.
-		 * @param int $userId The ID of the user.
-		 * @param string $role The role to be deleted.
+		 * @param string $idUserHasRole The ID of the user's role.
 		 * @return void
 		 */
 		public function delete(string $idUserHasRole)
 		{
 				try {
 						if (!empty($idUserHasRole)) {
-                $this->roleHasUser->delete($idUserHasRole);
+								$this->roleHasUser->delete($idUserHasRole);
 
+								// Show success message
 								Message::showSuccessMessage(
 										"Registro Eliminado Exitosamente.",
 										'../../views/roleHasUserView.php'
 								);
 						} else {
+								// Show warning message if the ID is empty
 								Message::showWarningMessage(
 										"Debes llenar todos los campos.",
 										'../../views/roleHasUserView.php'
 								);
 						}
 				} catch (Exception $e) {
+						// Show error message if an exception occurs
 						Message::showErrorMessage(
 								"Ocurrió un error interno. Consulta al Administrador.",
 								'../../views/roleHasUserView.php'
