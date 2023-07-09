@@ -20,14 +20,14 @@
 		/**
 		 * Constructor for creating a database connection.
 		 *
-		 * @throws PDOException if connection to database fails.
+		 * @throws Exception if connection to database fails.
 		 */
 		public function __construct()
 		{
 				try {
 						$this->teacher = new UserTeacherDAO();
-				} catch (PDOException $e) {
-						throw new PDOException("Failed to connect to database: " . $e->getMessage());
+				} catch (Exception $e) {
+						throw new Exception("Failed to connect to database: " . $e->getMessage());
 				}
 		}
 

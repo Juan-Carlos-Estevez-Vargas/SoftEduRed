@@ -446,7 +446,7 @@
 
                       // Consulta para obtener los registros de la página actual con límite y desplazamiento
                       $sql = "
-                        SELECT u.*, dt.type AS document_type, total_registros.total
+                        SELECT u.*,, uhr.user_id AS user_id, dt.type AS document_type, total_registros.total
                         FROM `user` AS u
                         INNER JOIN `user_has_role` AS uhr ON u.id_user = uhr.user_id
                         INNER JOIN `role` AS r ON uhr.role_id = r.id_role
@@ -479,7 +479,12 @@
                     <?php if ($hasRecords) : ?>
                     <div class="table-responsive">
                       <table class="table table-bordered">
-                        <caption class="text-center">Listado de Resultados</caption>
+                        <caption class="text-center">
+                          Mostrando
+                          <?php echo $recordsPerPage * ($currentPage - 1) + 1; ?> -
+                          <?php echo $recordsPerPage * $currentPage; ?> de
+                          <?php echo $totalRecords; ?> registros
+                        </caption>
                         <thead>
                           <tr>
                             <th>Tipo de Documento</th>
@@ -515,28 +520,8 @@
                           <nav aria-label="Page navigation">
                             <ul class="pagination justify-content-center">
                               <?php
-                              // Calcular el número total de páginas
-                              $totalPages = ceil($totalRecords / $recordsPerPage);
-                              
-                              // Mostrar el botón "Anterior" solo si no estamos en la primera página
-                              if ($currentPage > 1) {
-                                  echo '<li class="page-item"><a class="page-link" href="?page=' . ($currentPage - 1) . '">Anterior</a></li>';
-                              }
-                              
-                              // Mostrar enlaces a las páginas individuales
-                              for ($i = 1; $i <= $totalPages; $i++) {
-                                  echo '<li class="page-item';
-                                  if ($i == $currentPage) {
-                                      echo ' active';
-                                  }
-                                  echo '"><a class="page-link" href="?page=' . $i . '">' . $i . '</a></li>';
-                              }
-                              
-                              // Mostrar el botón "Siguiente" solo si no estamos en la última página
-                              if ($currentPage < $totalPages) {
-                                  echo '<li class="page-item"><a class="page-link" href="?page=' . ($currentPage + 1) . '">Siguiente</a></li>';
-                              }
-                            ?>
+                                include_once "../utils/pagination.php";
+                              ?>
                             </ul>
                           </nav>
                         </div>
@@ -553,6 +538,7 @@
           </div>
         </div>
       </div>
+    </div>
   </section>
 
   <footer class="bg-light text-center text-lg-start">

@@ -8,15 +8,15 @@
 
 		/**
 		 * Constructor method for the class.
-		 * It initializes a database connection using the Database class.
+		 * It initializes a database connection using the UserStudentDAO class.
 		 *
-		 * @throws PDOException if connection fails
+		 * @throws Exception if connection fails
 		 */
 		public function __construct() {
 				try {
 						$this->student = new UserStudentDAO();
-				} catch (PDOException $e) {
-						throw new PDOException($e->getMessage());
+				} catch (Exception $e) {
+						throw new Exception($e->getMessage());
 				}
 		}
 
@@ -236,7 +236,7 @@
 				try {
 						if (!empty($userId)) {
 								$this->student->delete($userId);
-		
+								
 								Message::showSuccessMessage(
 										"Registro Eliminado Exitosamente.",
 										'../../views/userStudentView.php'

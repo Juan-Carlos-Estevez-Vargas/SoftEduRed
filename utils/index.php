@@ -19,13 +19,13 @@
 <noframes>
   <?php
       } else {
+        require_once '../utils/Message.php';
+
         session_destroy();
-        print "
-          <script>
-            alert(\"No se ha iniciado sesion\");
-            window.location='../index.php';
-          </script>
-        ";
+        Message::showErrorMessage(
+            "No se ha iniciado sesión.",
+            '../../index.php'
+        );
       }
     ?>
 </noframes>

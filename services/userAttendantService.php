@@ -8,14 +8,17 @@
 		/**
 		 * Constructor for the class.
 		 *
-		 * @throws PDOException if unable to connect to database.
+		 * @throws Exception if unable to create UserAttendantDAO object.
 		 */
 		public function __construct()
 		{
 				try {
+						// Create an instance of UserAttendantDAO
 						$this->attendant = new UserAttendantDAO();
-				} catch (PDOException $e) {
-						throw new PDOException($e->getMessage());
+				} catch (Exception $e) {
+						// If an exception is thrown while creating UserAttendantDAO object,
+						// re-throw the exception with the same message
+						throw new Exception($e->getMessage());
 				}
 		}
 

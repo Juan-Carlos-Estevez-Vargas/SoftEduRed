@@ -39,6 +39,7 @@
 										state)
 								VALUES (:user, :role, :state);
 						";
+
 						$statement = $this->pdo->prepare($sql);
 						$statement->bindParam(':user', $userId);
 						$statement->bindParam(':role', $roleId);
