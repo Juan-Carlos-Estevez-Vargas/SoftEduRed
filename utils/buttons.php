@@ -22,7 +22,7 @@
       <p class="text">Inicio</p>
     </div>
     <div class="container" id="two">
-      <a href="../utils/cruds.php" target="mainFrame">
+      <a href="Cruds.php" target="mainFrame"> <!-- Cambiar esta línea para apuntar a Cruds.php -->
         <img class="icon" src="../assets/icons/register-icon.png" alt="Registros">
       </a>
       <p class="text">Registros</p>
