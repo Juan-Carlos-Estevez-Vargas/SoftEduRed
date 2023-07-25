@@ -2,6 +2,7 @@
 	require_once '../persistence/database/Database.php';
 	require_once '../persistence/DocumentTypeDAO.php';
 	require_once '../utils/Message.php';
+	require_once '../utils/constants.php';
 
 	class DocumentTypeService
 	{
@@ -31,42 +32,30 @@
 		 */
 		public function register(string $documentType, string $description): void
 		{
-				try {
-						// Check if both document type and description are not empty
-						if (!empty($documentType) && !empty($description)) {
-								// Check if the document type or description is already registered
-								if (Message::isRegistered(Database::connect(), 'document_type', 'type', $documentType, false, null)
-										|| Message::isRegistered(Database::connect(), 'document_type', 'description', $description, false, null))
-								{
-										// Show error message if document type or description is already registered
-										Message::showErrorMessage(
-												"El tipo de documento ingresado ya se encuentra registrado en la plataforma",
-												'../../views/documentTypeView.php'
-										);
-										return;
-								}
-								
-								// Register the document type
-								$this->documentType->register($documentType, $description);
-												
-								// Show success message after registration
-								Message::showSuccessMessage(
-										"Registro Agregado Exitosamente.",
-										'../../views/documentTypeView.php'
-								);
-						} else {
-								// Show warning message if any of the fields are empty
-								Message::showWarningMessage(
-										"Debes llenar todos los campos.",
-										'../../views/documentTypeView.php'
-								);
-						}
-				} catch (Exception $e) {
-						Message::showErrorMessage(
-								"Ocurrió un error interno. Consulta al Administrador.",
-								'../../views/documentTypeView.php'
-						);
+			try {
+				// Check if both document type and description are not empty
+				if (!empty($documentType) && !empty($description)) {
+					// Check if the document type or description is already registered
+					if (Message::isRegistered(Database::connect(), 'document_type', 'type', $documentType, false, null)
+						|| Message::isRegistered(Database::connect(), 'document_type', 'description', $description, false, null))
+					{
+						// Show error message if document type or description is already registered
+						Message::showErrorMessage(DOCUMENT_TYPE_ALREADY_ADDED, DOCUMENT_TYPE_URL);
+						return;
+					}
+					
+					// Register the document type
+					$this->documentType->register($documentType, $description);
+									
+					// Show success message after registration
+					Message::showSuccessMessage(ADDED_RECORD, DOCUMENT_TYPE_URL);
+				} else {
+					// Show warning message if any of the fields are empty
+					Message::showWarningMessage(EMPTY_FIELDS, DOCUMENT_TYPE_URL);
 				}
+			} catch (Exception $e) {
+				Message::showErrorMessage(INTERNAL_ERROR, DOCUMENT_TYPE_URL);
+			}
 		}
 
 		/**
@@ -80,41 +69,28 @@
 		 */
 		public function update(string $idDocumentType, string $type, string $description, string $state): void
 		{
-				try {
-						// Check if all parameters are not empty.
-						if (!empty($idDocumentType) && !empty($type) && !empty($description)) {
-								if (Message::isRegistered(Database::connect(), 'document_type', 'type', $type, true, $idDocumentType, 'id_document_type')
-										|| Message::isRegistered(Database::connect(), 'document_type', 'description', $description, true, $idDocumentType, 'id_document_type'))
-								{
-										Message::showErrorMessage(
-												"El tipo de documento ingresado ya se encuentra registrado en la plataforma",
-												'../../views/documentTypeView.php'
-										);
-										return;
-								}
-								
-								$this->documentType->update($idDocumentType, $type, $description, $state);
-								
-								// If the update is successful, show a success message.
-								Message::showSuccessMessage(
-										"Registro Actualizado Exitosamente.",
-										'../../views/documentTypeView.php'
-								);
-						} else {
-								// If any parameter is empty, show a warning message.
-								Message::showWarningMessage(
-										"Debes llenar todos los campos.",
-										'../../views/documentTypeView.php'
-								);
-						}
-				} catch (Exception $e) {
-						echo $e->getMessage();
-						// If an error occurs, show an error message.
-						Message::showErrorMessage(
-								"Ocurrió un error interno. Consulta al Administrador.",
-								'../../views/documentTypeView.php'
-						);
+			try {
+				// Check if all parameters are not empty.
+				if (!empty($idDocumentType) && !empty($type) && !empty($description)) {
+					if (Message::isRegistered(Database::connect(), 'document_type', 'type', $type, true, $idDocumentType, 'id_document_type')
+						&& Message::isRegistered(Database::connect(), 'document_type', 'description', $description, true, $idDocumentType, 'id_document_type'))
+					{
+						Message::showErrorMessage(DOCUMENT_TYPE_ALREADY_ADDED, DOCUMENT_TYPE_URL);
+						return;
+					}
+					
+					$this->documentType->update($idDocumentType, $type, $description, $state);
+					
+					// If the update is successful, show a success message.
+					Message::showSuccessMessage(UPDATED_RECORD, DOCUMENT_TYPE_URL);
+				} else {
+					// If any parameter is empty, show a warning message.
+					Message::showWarningMessage(EMPTY_FIELDS, DOCUMENT_TYPE_URL);
 				}
+			} catch (Exception $e) {
+				// If an error occurs, show an error message.
+				Message::showErrorMessage(INTERNAL_ERROR, DOCUMENT_TYPE_URL);
+			}
 		}
 
 		/**
@@ -126,28 +102,58 @@
 		 */
 		public function delete(string $idDocumentType): void
 		{
+			echo "ech";
 			try {
 				if (!empty($idDocumentType)) {
 					$this->documentType->delete($idDocumentType);
 
 					// Show success message
-					Message::showSuccessMessage(
-						"Registro Eliminado Exitosamente.",
-						'../../views/documentTypeView.php'
-					);
+					Message::showSuccessMessage(DELETED_RECORD, DOCUMENT_TYPE_URL);
 				} else {
 					// Show warning message
-					Message::showWarningMessage(
-						"Debes llenar todos los campos.",
-						'../../views/documentTypeView.php'
-					);
+					Message::showWarningMessage(EMPTY_FIELDS, DOCUMENT_TYPE_URL);
 				}
 			} catch (Exception $e) {
 				// Show error message
-				Message::showErrorMessage(
-					"Ocurrió un error interno. Consulta al Administrador.",
-					'../../views/documentTypeView.php'
-				);
+				Message::showErrorMessage(INTERNAL_ERROR, DOCUMENT_TYPE_URL);
+			}
+		}
+
+		/**
+		 * Retrieves the document type by its ID.
+		 *
+		 * @param int $id The ID of the document type.
+		 * @throws Exception If an error occurs during the retrieval process.
+		 * @return mixed The document type object if found, or null.
+		 */
+		public function getDocumentTypeById(int $id)
+		{
+			try {
+				if (!empty($id)) {
+					return $this->documentType->getDocumentTypeById($id);
+				} else {
+					Message::showWarningMessage(INTERNAL_ERROR, DOCUMENT_TYPE_URL);
+				}
+			} catch (Exception $e) {
+				Message::showErrorMessage(INTERNAL_ERROR, DOCUMENT_TYPE_URL);
+			}
+		}
+
+		/**
+		 * Retrieves the document type list data for a given page.
+		 *
+		 * @param mixed $page The page number.
+		 * @throws Exception If an error occurs while retrieving the list data.
+		 * @return mixed The document type list data.
+		 */
+		public function getDocumentTypeListData($page)
+		{
+			try {
+				if (!empty($page)) {
+					return $this->documentType->getDocumentTypeListData($page);
+				}
+			} catch (Exception $e) {
+				Message::showErrorMessage(INTERNAL_ERROR, DOCUMENT_TYPE_URL);
 			}
 		}
 	}

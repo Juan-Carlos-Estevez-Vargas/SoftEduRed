@@ -39,8 +39,7 @@ class CoursePage extends BasePage
 
         // Check if the form is submitted and the course data is provided
         if (!empty($_POST['course'])) {
-            $insert = new courseService();
-            $insert->register($_POST['course']);
+            $this->courseService->register($_POST['course']);
         }
     
         if (!empty($_GET['m']) && !empty($_GET['action'])) {
@@ -185,17 +184,17 @@ class CoursePage extends BasePage
             <div class="table-responsive">
                 <table class="table table-bordered">
                     <caption class="text-center">
-                    Mostrando
-                    <?php echo $recordsPerPage * ($currentPage - 1) + 1; ?> -
-                    <?php echo $recordsPerPage * $currentPage; ?> de
-                    <?php echo $totalRecords; ?> registros
+                        Mostrando
+                        <?php echo $recordsPerPage * ($currentPage - 1) + 1; ?> -
+                        <?php echo $recordsPerPage * $currentPage; ?> de
+                        <?php echo $totalRecords; ?> registros
                     </caption>
                     <thead>
-                    <tr>
-                        <th>Curso</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
-                    </tr>
+                        <tr>
+                            <th>Curso</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
                     </thead>
                     <tbody>
                     <?php while ($row = $query->fetch(PDO::FETCH_ASSOC)): ?>
@@ -209,13 +208,13 @@ class CoursePage extends BasePage
                         }
                         ?>
                         <td>
-                        <a class="btn btn-primary" href="?action=edit&id_course=<?php echo $row['id_course'];?>">
-                            Actualizar
-                        </a>
-                        <a class="btn btn-danger" href="?action=delete&id_course=<?php echo $row['id_course'];?>"
-                            onclick="confirmDelete(event)">
-                            Eliminar
-                        </a>
+                            <a class="btn btn-primary" href="?action=edit&id_course=<?php echo $row['id_course'];?>">
+                                Actualizar
+                            </a>
+                            <a class="btn btn-danger" href="?action=delete&id_course=<?php echo $row['id_course'];?>"
+                                onclick="confirmDelete(event)">
+                                Eliminar
+                            </a>
                         </td>
                     </tr>
                     <?php endwhile ?>
