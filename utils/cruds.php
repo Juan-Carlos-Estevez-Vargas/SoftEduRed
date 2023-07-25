@@ -22,7 +22,7 @@ class Cruds extends BasePage
                   <select name="select_crud" class="form-control" onchange="window.location.href=this.value">
                     <option selected disabled>Acción:</option>
                     <option value="../pages/documentTypePage.php">Tipo de Documento</option>
-                    <option value="../pages/genderView.php">Género</option>
+                    <option value="../pages/genderPage.php">Género</option>
                     <option value="../pages/relationshipView.php">Parentesco</option>
                     <option value="../pages/questionView.php">Pregunta de Seguridad</option>
                     <option value="../pages/roleView.php">Rol</option>

@@ -102,7 +102,6 @@
 		 */
 		public function delete(string $idDocumentType): void
 		{
-			echo "ech";
 			try {
 				if (!empty($idDocumentType)) {
 					$this->documentType->delete($idDocumentType);

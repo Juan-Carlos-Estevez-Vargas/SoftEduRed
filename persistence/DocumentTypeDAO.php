@@ -85,7 +85,6 @@
 		 */
 		public function delete(string $idDocumentType): void
 		{
-			echo "llega aca?";
 			try {
 				$query = "
 					UPDATE document_type
