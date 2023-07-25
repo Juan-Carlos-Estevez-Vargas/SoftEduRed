@@ -1,5 +1,6 @@
 <?php
 	require_once '../utils/Message.php';
+	require_once '../utils/constants.php';
 
 	class RoleDAO
 	{
@@ -13,11 +14,11 @@
 		 */
 		public function __construct()
 		{
-				try {
-						$this->pdo = database::connect();
-				} catch (PDOException $e) {
-						throw new PDOException($e->getMessage());
-				}
+			try {
+				$this->pdo = database::connect();
+			} catch (PDOException $e) {
+				throw new PDOException($e->getMessage());
+			}
 		}
 
 		/**
@@ -27,20 +28,17 @@
 		 * @param string $state The state of the role
 		 * @return void
 		 */
-		public function register(string $description, string $state): void
+		public function register(string $description): void
 		{
 			try {
-					$sql = "
-							INSERT INTO role (description, state)
-							VALUES (UPPER(:description), :state)
-					";
-					$statement = $this->pdo->prepare($sql);
-					$statement->execute(['description' => $description, 'state' => $state]);
+				$sql = "
+					INSERT INTO role (description, state)
+					VALUES (UPPER(:description), 1)
+				";
+				$statement = $this->pdo->prepare($sql);
+				$statement->execute(['description' => $description]);
 			} catch (Exception $e) {
-					Message::showErrorMessage(
-							"Ocurrió un error interno. Consulta al Administrador.",
-							'../../views/roleView.php'
-					);
+				Message::showErrorMessage(INTERNAL_ERROR, ROLE_URL);
 			}
 		}
 
@@ -54,26 +52,23 @@
 		 */
 		public function update(string $idRole, string $state)
 		{
-				try {
-						$sql = "
-								UPDATE role
-								SET state = :state
-								WHERE id_role = :idRole
-						";
-						// Prepare the SQL statement.
-						$stmt = $this->pdo->prepare($sql);
-						// Bind the parameters.
-						$stmt->bindParam(':state', $state);
-						$stmt->bindParam(':idRole', $idRole);
-						// Execute the statement.
-						$stmt->execute();
-				} catch (Exception $e) {
-						// Show error message if an exception occurs.
-						Message::showErrorMessage(
-								"Ocurrió un error interno. Consulta al Administrador.",
-								'../../views/roleView.php'
-						);
-				}
+			try {
+				$sql = "
+					UPDATE role
+					SET state = :state
+					WHERE id_role = :idRole
+				";
+				// Prepare the SQL statement.
+				$stmt = $this->pdo->prepare($sql);
+				// Bind the parameters.
+				$stmt->bindParam(':state', $state);
+				$stmt->bindParam(':idRole', $idRole);
+				// Execute the statement.
+				$stmt->execute();
+			} catch (Exception $e) {
+				// Show error message if an exception occurs.
+				Message::showErrorMessage(INTERNAL_ERROR, ROLE_URL);
+			}
 		}
 
 		/**
@@ -84,22 +79,85 @@
 		 */
 		public function delete(string $idRole)
 		{
-				try {
-						$sql = "
-								UPDATE role
-								SET state = 3
-								WHERE id_role = :role
-						";
-						$stmt = $this->pdo->prepare($sql);
-						$stmt->bindParam(':role', $idRole);
-						$stmt->execute();
-				} catch (Exception $e) {
-						// Show error message if there is an exception
-						Message::showErrorMessage(
-								"Ocurrió un error interno. Consulta al Administrador.",
-								'../../views/roleView.php'
-						);
-				}
+			try {
+				$sql = "
+					UPDATE role
+					SET state = 3
+					WHERE id_role = :role
+				";
+				$stmt = $this->pdo->prepare($sql);
+				$stmt->bindParam(':role', $idRole);
+				$stmt->execute();
+			} catch (Exception $e) {
+				// Show error message if there is an exception
+				Message::showErrorMessage(INTERNAL_ERROR, ROLE_URL);
+			}
+		}
+
+		/**
+		 * Retrieves a role from the database based on its ID.
+		 *
+		 * @param int $id The ID of the role to retrieve.
+		 * @throws Exception If an error occurs while retrieving the role.
+		 * @return array The role data as an associative array.
+		 */
+		public function getRoleById(int $id)
+		{
+			try {
+				$sql = "SELECT * FROM role WHERE id_role = :id";
+				$stmt = $this->pdo->prepare($sql);
+				$stmt->execute(['id' => $id]);
+				return $stmt->fetch(PDO::FETCH_ASSOC);
+			} catch (Exception $e) {
+				Message::showErrorMessage(INTERNAL_ERROR, ROLE_URL);
+			}
+		}
+
+		/**
+		 * Get the role list data for a specific page.
+		 *
+		 * @param int $page The page number.
+		 * @throws PDOException Exception thrown if there is an error with the database.
+		 * @return array Returns an array containing the total number of records, records per page,
+		 * current page, offset, the query result, and a boolean indicating if there are records.
+		 */
+		public function getRoleListData($page)
+		{
+			try {
+				// Obtener el número total de registros
+				$sqlCount = "SELECT COUNT(*) AS total FROM role WHERE state != 3";
+				$countQuery = $this->pdo->query($sqlCount);
+				$totalRecords = $countQuery->fetchColumn();
+
+				// Calcular el límite y el desplazamiento para la consulta actual
+				$recordsPerPage = 5; // Número de registros por página
+				$currentPage = $page; // Página actual
+				$offset = ($currentPage - 1) * $recordsPerPage;
+
+				// Consulta para obtener los registros de la página actual con límite y desplazamiento
+				$sql = "SELECT * FROM role WHERE state != 3 LIMIT :offset, :limit";
+				$query = $this->pdo->prepare($sql);
+				$query->bindValue(':offset', $offset, PDO::PARAM_INT);
+				$query->bindValue(':limit', $recordsPerPage, PDO::PARAM_INT);
+				$query->execute();
+
+				// Verificar si existen registros
+				$hasRecords = $query->rowCount() > 0;
+
+				// Devolver los resultados como un arreglo
+				return [
+					'totalRecords' => $totalRecords,
+					'recordsPerPage' => $recordsPerPage,
+					'currentPage' => $currentPage,
+					'offset' => $offset,
+					'query' => $query,
+					'hasRecords' => $hasRecords,
+				];
+			} catch (PDOException $e) {
+				// Manejo de errores de la base de datos
+				Message::showErrorMessage(INTERNAL_ERROR, ROLE_URL);
+				return null;
+			}
 		}
 	}
 ?>

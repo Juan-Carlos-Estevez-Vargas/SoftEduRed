@@ -4,6 +4,7 @@
     define('DOCUMENT_TYPE_URL', '../../pages/documentTypePage.php');
     define('GENDER_URL', '../../pages/genderPage.php');
     define('RELATIONSHIP_URL', '../../pages/relationshipPage.php');
+    define('ROLE_URL', '../../pages/rolePage.php');
     define('SECURITY_QUESTION_URL', '../../pages/questionPage.php');
 
     // Errors
