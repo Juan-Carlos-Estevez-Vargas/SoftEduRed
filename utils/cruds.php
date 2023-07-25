@@ -23,7 +23,7 @@ class Cruds extends BasePage
                     <option selected disabled>Acción:</option>
                     <option value="../pages/documentTypePage.php">Tipo de Documento</option>
                     <option value="../pages/genderPage.php">Género</option>
-                    <option value="../pages/relationshipView.php">Parentesco</option>
+                    <option value="../pages/relationshipPage.php">Parentesco</option>
                     <option value="../pages/questionView.php">Pregunta de Seguridad</option>
                     <option value="../pages/roleView.php">Rol</option>
                     <option value="../pages/roleHasUserView.php">Rol por Usuario</option>

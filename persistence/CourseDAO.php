@@ -2,7 +2,8 @@
 	require_once '../utils/Message.php';
 	require_once '../utils/constants.php';
 
-	class CourseDAO {
+	class CourseDAO
+	{
 		private $pdo;
 
 		/**

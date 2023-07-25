@@ -1,7 +1,8 @@
 <?php
-  require_once '../persistence/database/Database.php';
-  require_once '../persistence/RelationshipDAO.php';
-  require_once '../utils/Message.php';
+  	require_once '../persistence/database/Database.php';
+  	require_once '../persistence/RelationshipDAO.php';
+  	require_once '../utils/Message.php';
+	require_once '../utils/constants.php';
 
 	class RelationshipService
 	{
@@ -12,51 +13,38 @@
 		 */
 		public function __construct()
 		{
-				try {
-            $this->relationship = new RelationshipDAO();
-				} catch (PDOException $e) {
-						throw new PDOException($e->getMessage());
-				}
+			try {
+            	$this->relationship = new RelationshipDAO();
+			} catch (PDOException $e) {
+				throw new PDOException($e->getMessage());
+			}
 		}
 
 		/**
 		 * Registers a new relationship with the given description and state.
 		 *
 		 * @param string $description The description of the relationship to be registered.
-		 * @param string $state The state of the relationship to be registered.
 		 * @return void
 		 */
-		public function register(string $description, string $state): void
+		public function register(string $description): void
 		{
-				try {
-						if (!empty($description)) {
-                if (Message::isRegistered(Database::connect(), 'relationship', 'description', $description, false, null))
-                {
-                    Message::showErrorMessage(
-                        "El parentesco ingresado ya se encuentra registrado en la plataforma",
-                        '../../views/relationshipView.php'
-                    );
-                    return;
-                }
+			try {
+				if (!empty($description)) {
+            	    if (Message::isRegistered(Database::connect(), 'relationship', 'description', $description, false, null))
+                	{
+                    	Message::showErrorMessage(RELATIONSHIP_ALREADY_ADDED, RELATIONSHIP_URL);
+	                    return;
+    	            }
                 
-                $this->relationship->register($description, $state);
+        	        $this->relationship->register($description);
 			
-								Message::showSuccessMessage(
-										"Registro Agregado Exitosamente.",
-										'../../views/relationshipView.php'
-								);
-						} else {
-								Message::showWarningMessage(
-										"Debes llenar todos los campos.",
-										'../../views/relationshipView.php'
-								);
-						}
-				} catch (Exception $e) {
-						Message::showErrorMessage(
-								"Ocurrió un error interno. Consulta al Administrador.",
-								'../../views/relationshipView.php'
-						);
+					Message::showSuccessMessage(ADDED_RECORD, RELATIONSHIP_URL);
+				} else {
+					Message::showWarningMessage(EMPTY_FIELDS, RELATIONSHIP_URL);
 				}
+			} catch (Exception $e) {
+				Message::showErrorMessage(INTERNAL_ERROR, RELATIONSHIP_URL);
+			}
 		}
 
 		/**
@@ -71,31 +59,21 @@
 		 */
 		public function update(string $idRelationship, string $state)
 		{
-				try {
-						// Check that required fields are not empty
-						if (!empty($idRelationship)) {
-                $this->relationship->update($idRelationship, $state);
+			try {
+				// Check that required fields are not empty
+				if (!empty($idRelationship)) {
+            	    $this->relationship->update($idRelationship, $state);
 
-								// Show success message
-								Message::showSuccessMessage(
-										"Registro Actualizado Exitosamente.",
-										'../../views/relationshipView.php'
-								);
-						} else {
-								// Show warning message if required fields are empty
-								Message::showWarningMessage(
-										"Debes llenar todos los campos.",
-										'../../views/relationshipView.php'
-								);
-						}
-				} catch (Exception $e) {
-						// Show error message if there is an error updating the record
-						Message::showErrorMessage(
-								"Ocurrió un error interno. Consulta al Administrador.",
-								'../../views/relationshipView.php'
-						);
-						throw $e;
+					// Show success message
+					Message::showSuccessMessage(UPDATED_RECORD, RELATIONSHIP_URL);
+				} else {
+					// Show warning message if required fields are empty
+					Message::showWarningMessage(EMPTY_FIELDS, RELATIONSHIP_URL);
 				}
+			} catch (Exception $e) {
+				// Show error message if there is an error updating the record
+				Message::showErrorMessage(INTERNAL_ERROR, RELATIONSHIP_URL);
+			}
 		}
 
 		/**
@@ -106,29 +84,58 @@
 		 */
 		public function delete(string $idRelationship): void
 		{
-				try {
-						if (!empty($idRelationship)) { // Check if ID is not empty
-                $this->relationship->delete($idRelationship);
+			try {
+				if (!empty($idRelationship)) { // Check if ID is not empty
+            	    $this->relationship->delete($idRelationship);
 
-								// Show success message and redirect to relationship view
-								Message::showSuccessMessage(
-										"Registro Eliminado Exitosamente.",
-										'../../views/relationshipView.php'
-								);
-						} else {
-								// Show warning message and redirect to relationship view
-								Message::showWarningMessage(
-										"Debes llenar todos los campos.",
-										'../../views/relationshipView.php'
-								);
-						}
-				} catch (Exception $e) {
-						// Show error message and redirect to relationship view
-						Message::showErrorMessage(
-								"Ocurrió un error interno. Consulta al Administrador.",
-								'../../views/relationshipView.php'
-						);
+					// Show success message and redirect to relationship view
+					Message::showSuccessMessage(DELETED_RECORD, RELATIONSHIP_URL);
+				} else {
+					// Show warning message and redirect to relationship view
+					Message::showWarningMessage(EMPTY_FIELDS, RELATIONSHIP_URL);
 				}
+			} catch (Exception $e) {
+				// Show error message and redirect to relationship view
+				Message::showErrorMessage(INTERNAL_ERROR, RELATIONSHIP_URL);
+			}
+		}
+
+		/**
+		 * Retrieves a relationship by its ID.
+		 *
+		 * @param int $id The ID of the relationship to retrieve.
+		 * @throws Exception If an error occurs while retrieving the relationship.
+		 * @return mixed The relationship with the specified ID, or null if it doesn't exist.
+		 */
+		public function getRelationshipById(int $id)
+		{
+			try {
+				if (!empty($id)) {
+					return $this->relationship->getRelationshipById($id);
+				} else {
+					Message::showWarningMessage(INTERNAL_ERROR, RELATIONSHIP_URL);
+				}
+			} catch (Exception $e) {
+				Message::showErrorMessage(INTERNAL_ERROR, RELATIONSHIP_URL);
+			}
+		}
+
+		/**
+		 * Retrieves the relationship list data based on the specified page.
+		 *
+		 * @param mixed $page The page number to retrieve the data for.
+		 * @throws Exception If an error occurs while retrieving the data.
+		 * @return mixed The relationship list data for the specified page.
+		 */
+		public function getRelationshipListData($page)
+		{
+			try {
+				if (!empty($page)) {
+					return $this->relationship->getRelationshipListData($page);
+				}
+			} catch (Exception $e) {
+				Message::showErrorMessage(INTERNAL_ERROR, RELATIONSHIP_URL);
+			}
 		}
 	}
 ?>
