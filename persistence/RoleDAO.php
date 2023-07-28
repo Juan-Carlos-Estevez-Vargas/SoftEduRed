@@ -159,5 +159,70 @@
 				return null;
 			}
 		}
+
+		/**
+		 * Retrieves all roles from the database.
+		 *
+		 * @throws PDOException if there is an error with the database connection.
+		 * @return array|null An array of roles, or null if no roles are found.
+		 */
+		public function getAllRoles() {
+			try {
+				$sql = "SELECT * FROM role";
+				$statement = $this->pdo->prepare($sql);
+				$statement->execute();
+		
+				// Fetch all users as an associative array
+				$roles = $statement->fetchAll(PDO::FETCH_ASSOC);
+		
+				// If no users found, return null
+				if (empty($roles)) {
+					return null;
+				}
+		
+				return $roles;
+			} catch (PDOException $e) {
+				// Manejo de errores de la base de datos
+				throw new PDOException($e->getMessage());
+				return null;
+			}
+		}
+
+		/**
+		 * Gets roles that are not assigned to a specific user.
+		 *
+		 * @param int $userId The ID of the user to get unassigned roles for.
+		 * @return array|null Array containing unassigned roles, or null if no unassigned roles found.
+		 * @throws Exception When an error occurs while fetching unassigned roles.
+		 */
+		public function getUnassignedRoles(int $userId): ?array
+		{
+			try {
+				$sql = '
+					SELECT r.id_role, r.description
+					FROM role r
+					LEFT JOIN user_has_role uhr
+						ON r.id_role = uhr.role_id
+						AND uhr.user_id = :user_id
+					WHERE uhr.user_id IS NULL
+				';
+
+				$statement = $this->pdo->prepare($sql);
+				$statement->execute(['user_id' => $userId]);
+
+				// Fetch unassigned roles as an associative array
+				$unassignedRoles = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+				// If no unassigned roles found, return null
+				if (empty($unassignedRoles)) {
+					return null;
+				}
+
+				return $unassignedRoles;
+			} catch (Exception $e) {
+				// Show error message if an exception occurs.
+				throw new Exception('Error fetching unassigned roles: ' . $e->getMessage());
+			}
+		}
 	}
 ?>

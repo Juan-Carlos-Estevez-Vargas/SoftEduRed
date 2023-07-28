@@ -5,6 +5,7 @@
     define('GENDER_URL', '../../pages/genderPage.php');
     define('RELATIONSHIP_URL', '../../pages/relationshipPage.php');
     define('ROLE_URL', '../../pages/rolePage.php');
+    define('ROLE_HAS_USER_URL', '../../pages/roleHasUserPage.php');
     define('SECURITY_QUESTION_URL', '../../pages/questionPage.php');
 
     // Errors
@@ -23,4 +24,5 @@
     define('GENDER_ALREADY_ADDED', 'El género ingresado ya se encuentra registrado en la plataforma.');
     define('RELATIONSHIP_ALREADY_ADDED', 'El parentesco ingresado ya se encuentra registrado en la plataforma.');
     define('SECURITY_QUESTION_ALREADY_ADDED', 'La pregunta de seguridad ingresada ya se encuentra registrada en la plataforma.');
+    define('USER_ALREADY_ASSIGNED_ROLE', 'El usuario ya tiene asignado el rol.');
 ?>

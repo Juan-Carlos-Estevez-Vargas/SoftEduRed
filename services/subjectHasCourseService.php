@@ -1,7 +1,8 @@
 <?php
-  require_once '../persistence/database/Database.php';
-  require_once '../persistence/SubjectHasCourseDAO.php';
-  require_once '../utils/Message.php';
+	require_once '../persistence/database/Database.php';
+	require_once '../persistence/SubjectHasCourseDAO.php';
+	require_once '../utils/Message.php';
+	require_once '../utils/constants.php';
   
 	class SubjectHasCourseService
 	{
@@ -120,5 +121,7 @@
 						);
 				}
 		}
+
+		
 	}
 ?>

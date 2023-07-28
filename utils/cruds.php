@@ -26,7 +26,7 @@ class Cruds extends BasePage
                     <option value="../pages/relationshipPage.php">Parentesco</option>
                     <option value="../pages/questionPage.php">Pregunta de Seguridad</option>
                     <option value="../pages/rolePage.php">Rol</option>
-                    <option value="../pages/roleHasUserView.php">Rol por Usuario</option>
+                    <option value="../pages/roleHasUserPage.php">Rol por Usuario</option>
                     <option value="../pages/userStudentView.php">Estudiante</option>
                     <option value="../pages/userTeacherView.php">Docente</option>
                     <option value="../pages/userAttendantView.php">Acudiente</option>

@@ -141,5 +141,46 @@
 				Message::showErrorMessage(INTERNAL_ERROR, ROLE_URL);
 			}
 		}
+
+		/**
+		 * Retrieves an array of unassigned roles for a given user ID.
+		 *
+		 * @param int $userId The ID of the user.
+		 * @throws Exception If an error occurs while fetching unassigned roles.
+		 * @return array|null An array of unassigned roles or null if the user ID is empty.
+		 */
+		public function getUnassignedRoles(int $userId): ?array
+		{
+			try {
+				if (!empty($userId)) {
+					return $this->role->getUnassignedRoles($userId);
+				}
+				return null;
+			} catch (Exception $e) {
+				// Show error message if an exception occurs.
+				throw new Exception('Error fetching unassigned roles: ' . $e->getMessage());
+			}
+		}
+
+		/**
+		 * Retrieves all roles.
+		 *
+		 * @return array|null The array of roles, or null if no roles found.
+		 * @throws Exception If an error occurs while fetching the roles.
+		 */
+		public function getAllRoles(): ?array
+        {
+            try {
+                $roles = $this->role->getAllRoles();
+                if (empty($roles)) {
+                    return null;
+                }
+                return $roles;
+            } catch (Exception $e) {
+                // Show error message if an exception occurs.
+                throw new Exception('Error fetching users: ' . $e->getMessage());
+            }
+        }
+
 	}
 ?>
